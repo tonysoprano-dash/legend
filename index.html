@@ -3,91 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartPrice AI | Dynamic Pricing Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SmartPrice Analytics - Real-time Dynamic Pricing</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- CSS 변수 및 초기화 (Corporate Style) --- */
+        :root {
+            --brand-primary: #1E3A8A; /* Deep Blue - 신뢰 */
+            --brand-secondary: #60A5FA; /* Light Blue */
+            --status-success: #10B981; /* Green */
+            --status-warning: #F59E0B; /* Orange */
+            --text-main: #1F2937;
+            --text-sub: #6B7280;
+            --bg-body: #F9FAFB;
+            --bg-card: #FFFFFF;
+            --border-color: #E5E7EB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); -webkit-font-smoothing: antialiased; }
+
+        /* --- 레이아웃 --- */
+        .app-wrapper { display: flex; min-height: 100vh; }
+        
+        /* 사이드바 (기업 로고 및 메뉴) */
+        .sidebar { width: 260px; background-color: var(--bg-card); border-right: 1px solid var(--border-color); padding: 24px; display: flex; flex-direction: column; }
+        .brand-logo { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 48px; }
+        .nav-menu { flex: 1; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-sub); text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.2s; margin-bottom: 4px; }
+        .nav-item:hover { background-color: #EFF6FF; color: var(--brand-primary); }
+        .nav-item.active { background-color: var(--brand-primary); color: white; }
+
+        /* 메인 콘텐츠 Area */
+        .main-container { flex: 1; display: flex; flex-direction: column; }
+        .top-header { background-color: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+        .page-title h1 { font-size: 1.5rem; font-weight: 700; }
+        .page-title p { color: var(--text-sub); font-size: 0.9rem; margin-top: 2px; }
+        
+        .header-tools { display: flex; align-items: center; gap: 16px; }
+        .live-status { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--status-success); border: 1px solid #A7F3D0; padding: 6px 12px; border-radius: 20px; background-color: #ECFDF5; }
+        .dot { width: 8px; height: 8px; background-color: var(--status-success); border-radius: 50%; animation: pulse 1.5s infinite; }
+
+        .content-body { flex: 1; padding: 32px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-content: start; }
+
+        /* --- 카드 스타일 (MVP 핵심 요소) --- */
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; color: var(--text-sub); font-size: 0.9rem; font-weight: 500; }
+        .card-header i { font-size: 1.2rem; color: var(--brand-secondary); }
+
+        /* 지표 카드 */
+        .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--text-main); }
+        .stat-unit { font-size: 1rem; color: var(--text-sub); font-weight: 400; margin-left: 4px; }
+        .stat-meta { margin-top: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
+
+        /* 차트 카드 */
+        .chart-card { grid-column: span 2; }
+        .chart-container { height: 350px; position: relative; }
+
+        /* 상태 텍스트 색상 */
+        .text-up { color: var(--status-warning); }
+        .text-down { color: var(--brand-secondary); }
+        .text-stable { color: var(--text-sub); }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        
+        /* Responsive */
+        @media (max-width: 1024px) { .sidebar { width: 80px; padding: 16px; } .brand-logo span, .nav-item span { display: none; } .content-body { grid-template-columns: 1fr; } .chart-card { grid-column: span 1; } }
+    </style>
 </head>
 <body>
-    <div class="app-container">
+    <div class="app-wrapper">
         <aside class="sidebar">
-            <div class="logo">
-                <i data-lucide="zap"></i>
-                <span>SmartPrice AI</span>
+            <div class="brand-logo">
+                <i class="ri-funds-box-line"></i>
+                <span>SmartPrice</span>
             </div>
-            <nav>
-                <div class="nav-item active"><i data-lucide="layout-dashboard"></i> 대시보드</div>
-                <div class="nav-item"><i data-lucide="bar-chart-3"></i> 통계 분석</div>
-                <div class="nav-item"><i data-lucide="settings"></i> 정책 설정</div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><i class="ri-dashboard-3-line"></i> <span>라이브 대시보드</span></a>
+                <a href="#" class="nav-item"><i class="ri-bar-chart-2-line"></i> <span>가격 분석 리포트</span></a>
+                <a href="#" class="nav-item"><i class="ri-settings-5-line"></i> <span>정책 설정</span></a>
             </nav>
         </aside>
 
-        <main class="main-content">
-            <header class="top-bar">
-                <h1>실시간 동적 가격 관제</h1>
-                <div class="user-info">
-                    <span id="live-indicator" class="pulse"></span>
-                    LIVE MONITORING
+        <main class="main-container">
+            <header class="top-header">
+                <div class="page-title">
+                    <h1>통합 가격 관제 센터</h1>
+                    <p>지역별 유동 인구 분석 및 최적 가격 도출</p>
+                </div>
+                <div class="header-tools">
+                    <div class="live-status">
+                        <span class="dot"></span>
+                        LIVE
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=1E3A8A&color=fff" alt="User" style="width: 36px; border-radius: 50%;">
                 </div>
             </header>
 
-            <div class="dashboard-grid">
-                <div class="card stat-card">
+            <div class="content-body">
+                <article class="card">
                     <div class="card-header">
-                        <i data-lucide="users"></i>
-                        <span>현재 유동 인구</span>
+                        <span>현재 실시간 유동 인구 (지역: 강남역)</span>
+                        <i class="ri-group-line"></i>
                     </div>
                     <div class="card-body">
-                        <h2 id="pop-value">0</h2>
-                        <p>명 (실시간 집계)</p>
+                        <span id="pop-value" class="stat-value">--</span>
+                        <span class="stat-unit">명</span>
+                        <p class="stat-meta text-stable">최근 5분 평균 대비 안정적</p>
                     </div>
-                </div>
+                </article>
 
-                <div class="card stat-card highlighted">
+                <article class="card">
                     <div class="card-header">
-                        <i data-lucide="tag"></i>
-                        <span>최적 제안 가격</span>
+                        <span>AI 기반 추천 최적 가격</span>
+                        <i class="ri-price-tag-3-line"></i>
                     </div>
                     <div class="card-body">
-                        <h2 id="price-value">₩0</h2>
-                        <p id="price-trend">분석 중...</p>
+                        <span id="price-value" class="stat-value">₩ --</span>
+                        <span class="stat-unit">/ 기본 1시간</span>
+                        <p id="price-status" class="stat-meta text-stable">시장가 기반 정상 운용 중</p>
                     </div>
-                </div>
+                </article>
 
-                <div class="card chart-card">
+                <article class="card chart-card">
                     <div class="card-header">
-                        <i data-lucide="trending-up"></i>
-                        <span>인구 및 가격 변동 추이</span>
-                    </div>
-                    <div class="chart-wrapper">
-                        <canvas id="mainChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="card control-card">
-                    <div class="card-header">
-                        <i data-lucide="sliders"></i>
-                        <span>시뮬레이션 조절</span>
-                    </div>
-                    <div class="control-body">
-                        <div class="input-range">
-                            <label>인구 밀집도 수동 조정</label>
-                            <input type="range" id="pop-slider" min="0" max="1200" value="500">
-                            <div class="range-info">
-                                <span>한산함</span>
-                                <b id="slider-display">500명</b>
-                                <span>매우 혼잡</span>
-                            </div>
-                        </div>
-                        <div class="button-group">
-                            <button id="toggle-sim" class="btn-primary">자동 모드 OFF</button>
-                            <button id="export-btn" class="btn-secondary">데이터 내보내기</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+                        <span>실
