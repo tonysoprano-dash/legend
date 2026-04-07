@@ -3,56 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Dynamic Pricing Simulator</title>
+    <title>SmartPrice AI | Dynamic Pricing Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🚀 Dynamic Pricing AI</div>
-            <div id="status-badge" class="badge">실시간 모니터링 중</div>
-        </header>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="zap"></i>
+                <span>SmartPrice AI</span>
+            </div>
+            <nav>
+                <div class="nav-item active"><i data-lucide="layout-dashboard"></i> 대시보드</div>
+                <div class="nav-item"><i data-lucide="bar-chart-3"></i> 통계 분석</div>
+                <div class="nav-item"><i data-lucide="settings"></i> 정책 설정</div>
+            </nav>
+        </aside>
 
-        <main class="grid">
-            <section class="card summary">
-                <div class="stat-group">
-                    <label>실시간 유동 인구</label>
-                    <div id="current-pop" class="value">500</div>
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>실시간 동적 가격 관제</h1>
+                <div class="user-info">
+                    <span id="live-indicator" class="pulse"></span>
+                    LIVE MONITORING
                 </div>
-                <div class="stat-group">
-                    <label>계산된 최적 가격</label>
-                    <div id="current-price" class="value">₩10,000</div>
-                </div>
-                <div id="price-msg" class="msg">인구 밀도가 적정 수준입니다.</div>
-            </section>
+            </header>
 
-            <section class="card chart-container">
-                <h3>가격 변동 실시간 트렌드</h3>
-                <canvas id="priceChart"></canvas>
-            </section>
-
-            <section class="card controls">
-                <h3>시뮬레이션 설정</h3>
-                <div class="input-group">
-                    <p>유동 인구 조절 (데이터 수동 주입)</p>
-                    <input type="range" id="pop-slider" min="0" max="1000" value="500">
-                    <div class="range-labels">
-                        <span>낮음</span>
-                        <span id="slider-val">500명</span>
-                        <span>높음</span>
+            <div class="dashboard-grid">
+                <div class="card stat-card">
+                    <div class="card-header">
+                        <i data-lucide="users"></i>
+                        <span>현재 유동 인구</span>
+                    </div>
+                    <div class="card-body">
+                        <h2 id="pop-value">0</h2>
+                        <p>명 (실시간 집계)</p>
                     </div>
                 </div>
-                <div class="btn-group">
-                    <button id="auto-btn" class="active">자동 시뮬레이션 ON</button>
-                    <button id="reset-btn">데이터 초기화</button>
-                </div>
-            </section>
-        </main>
 
-        <footer>
-            <p>&copy; 2024 Dynamic Pricing Project - Powered by Vercel</p>
-        </footer>
+                <div class="card stat-card highlighted">
+                    <div class="card-header">
+                        <i data-lucide="tag"></i>
+                        <span>최적 제안 가격</span>
+                    </div>
+                    <div class="card-body">
+                        <h2 id="price-value">₩0</h2>
+                        <p id="price-trend">분석 중...</p>
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <i data-lucide="trending-up"></i>
+                        <span>인구 및 가격 변동 추이</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card control-card">
+                    <div class="card-header">
+                        <i data-lucide="sliders"></i>
+                        <span>시뮬레이션 조절</span>
+                    </div>
+                    <div class="control-body">
+                        <div class="input-range">
+                            <label>인구 밀집도 수동 조정</label>
+                            <input type="range" id="pop-slider" min="0" max="1200" value="500">
+                            <div class="range-info">
+                                <span>한산함</span>
+                                <b id="slider-display">500명</b>
+                                <span>매우 혼잡</span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button id="toggle-sim" class="btn-primary">자동 모드 OFF</button>
+                            <button id="export-btn" class="btn-secondary">데이터 내보내기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
     <script src="script.js"></script>
 </body>
