@@ -7,7 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=78c841012e66821152dd7a637eb222a1"></script>
+    
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=78c841012e66821152dd7a637eb222a1&libraries=services"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -34,9 +36,9 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; color: #1e1b13; }
         .glass-nav { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); }
+        /* 지도가 전체 화면을 채우도록 설정 */
         #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
-        /* 지도 위 톤 조절 필터 (선택 사항) */
-        .map-overlay { position: absolute; inset: 0; background: rgba(148, 74, 0, 0.03); pointer-events: none; z-index: 1; }
+        .map-overlay { position: absolute; inset: 0; background: rgba(148, 74, 0, 0.02); pointer-events: none; z-index: 1; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -54,26 +56,22 @@
                 <p class="text-secondary font-medium uppercase tracking-[0.2em] text-[10px]">The Digital Hearth</p>
             </div>
         </div>
-        
         <h2 class="text-2xl font-bold mb-10 text-on-surface tracking-tight">어떤 길목에서 만날까요?</h2>
-        
         <div class="grid grid-cols-1 gap-5 w-full max-w-sm">
             <button onclick="selectRole('owner')" class="group p-8 bg-surface-container-lowest rounded-lg transition-all text-left shadow-sm hover:shadow-md active:scale-95 border-none">
                 <span class="material-symbols-outlined text-4xl text-primary mb-4">storefront</span>
-                <h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">사장님입니다</h3>
+                <h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors font-['Plus_Jakarta_Sans']">사장님입니다</h3>
                 <p class="text-sm text-stone-500 mt-2 leading-relaxed">경기대 앞 우리 매장 데이터를 분석하고<br>동적 가격 규칙을 설정해요.</p>
             </button>
-
             <button onclick="selectRole('user')" class="group p-8 bg-surface-container-lowest rounded-lg transition-all text-left shadow-sm hover:shadow-md active:scale-95 border-none">
                 <span class="material-symbols-outlined text-4xl text-tertiary mb-4">shopping_bag</span>
-                <h3 class="text-xl font-bold text-on-surface group-hover:text-tertiary transition-colors">손님입니다</h3>
+                <h3 class="text-xl font-bold text-on-surface group-hover:text-tertiary transition-colors font-['Plus_Jakarta_Sans']">손님입니다</h3>
                 <p class="text-sm text-stone-500 mt-2 leading-relaxed">지금 내 주변 길목에서만 만나는<br>깜짝 혜택을 발견해요.</p>
             </button>
         </div>
     </div>
 
     <main id="main-app" class="hidden w-full h-screen relative">
-        
         <div id="map"></div>
         <div class="map-overlay"></div>
 
@@ -87,7 +85,6 @@
                 </svg>
                 <h1 class="text-xl font-black text-primary tracking-tighter">길목</h1>
             </div>
-            
             <button onclick="location.reload()" class="bg-surface-container-lowest/90 p-2.5 rounded-full shadow-sm active:scale-90 transition-all border-none">
                 <span class="material-symbols-outlined text-on-surface text-xl">logout</span>
             </button>
@@ -111,7 +108,7 @@
             </div>
             <a href="#" class="flex flex-col items-center text-stone-400">
                 <span class="material-symbols-outlined text-2xl">person</span>
-                <span class="text-[9px] font-extrabold mt-1.5 uppercase tracking-wider">내 정보</span>
+                <span class="text-[9px] font-extrabold mt-1.5 uppercase tracking-wider font-['Plus_Jakarta_Sans']">내 정보</span>
             </a>
         </nav>
     </main>
@@ -119,31 +116,44 @@
     <script>
         let map;
 
-        function initMap() {
+        // [중요] 지도를 그리는 핵심 함수
+        function drawMap() {
             const container = document.getElementById('map');
             const options = {
-                center: new kakao.maps.LatLng(37.3006, 127.0358), // 경기대 수원캠퍼스 중심
-                level: 3 
+                center: new kakao.maps.LatLng(37.3006, 127.0358), // 경기대 수원캠퍼스 좌표
+                level: 3 // 확대 레벨
             };
             map = new kakao.maps.Map(container, options);
 
-            // [디자인 가이드] 브랜드 컬러를 담은 원형 오버레이 (유동인구 시각화 예시)
+            // 유동인구 밀집도를 상징하는 원형 오버레이 추가
             const circle = new kakao.maps.Circle({
                 center : new kakao.maps.LatLng(37.3006, 127.0358),
-                radius: 100, 
+                radius: 120, 
                 strokeWeight: 0,
                 fillColor: '#944a00',
-                fillOpacity: 0.15 
+                fillOpacity: 0.12 
             });
             circle.setMap(map);
+            
+            // 경기대 마커 추가
+            const marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(37.3006, 127.0358)
+            });
+            marker.setMap(map);
         }
 
         function selectRole(role) {
             document.getElementById('onboarding').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             
-            // 지도 초기화
-            initMap();
+            // [Vercel 최적화] 카카오 객체가 로드된 후 지도를 그리도록 보장
+            if (window.kakao && window.kakao.maps) {
+                kakao.maps.load(function() {
+                    drawMap();
+                });
+            } else {
+                alert("지도 라이브러리를 불러오지 못했습니다. 도메인 설정을 확인해주세요.");
+            }
 
             const cardContent = document.getElementById('card-content');
             const centerIcon = document.getElementById('center-icon');
@@ -154,18 +164,18 @@
                     <p class="text-primary font-bold text-[10px] uppercase tracking-[0.15em] mb-1.5">경기대 정문 길목 데이터</p>
                     <h2 class="text-3xl font-black text-on-surface tracking-tight mb-4">현재 1,240명<span class="text-sm font-medium opacity-40 ml-2">지나가는 중</span></h2>
                     <p class="text-stone-500 text-[13px] leading-relaxed mb-8">인구가 평소보다 <span class="text-primary font-bold">24%</span> 많습니다. 지금 즉시 '마중 가격' 규칙을 실행할까요?</p>
-                    <button class="w-full bg-primary text-white py-4.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.97] transition-all border-none">동적 가격 규칙 실행</button>
+                    <button class="w-full bg-primary text-white py-4.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.97] transition-all border-none font-['Plus_Jakarta_Sans']">동적 가격 규칙 실행</button>
                 `;
             } else {
                 centerIcon.innerText = "explore"; 
                 cardContent.innerHTML = `
                     <p class="text-tertiary font-bold text-[10px] uppercase tracking-[0.15em] mb-1.5">지금 내 주변 혜택</p>
-                    <h2 class="text-2xl font-black text-on-surface leading-tight mb-4">사람들이 모여서<br><span class="text-primary text-3xl">가격이 내려갔어요!</span></h2>
+                    <h2 class="text-2xl font-black text-on-surface leading-tight mb-4 font-['Plus_Jakarta_Sans']">사람들이 모여서<br><span class="text-primary text-3xl">가격이 내려갔어요!</span></h2>
                     <div class="bg-surface-container-low p-4 rounded-DEFAULT mb-8 flex items-center gap-4 border-none shadow-inner">
                         <span class="material-symbols-outlined text-primary">local_fire_department</span>
                         <p class="text-sm font-bold text-on-surface">경기대 후문 카페 '온도' 40% 할인</p>
                     </div>
-                    <button class="w-full bg-gradient-to-br from-primary to-secondary text-white py-4.5 rounded-full font-bold text-sm shadow-xl active:scale-[0.97] transition-all border-none">혜택 받으러 가기</button>
+                    <button class="w-full bg-gradient-to-br from-primary to-secondary text-white py-4.5 rounded-full font-bold text-sm shadow-xl active:scale-[0.97] transition-all border-none font-['Plus_Jakarta_Sans']">혜택 받으러 가기</button>
                 `;
             }
         }
