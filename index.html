@@ -1,134 +1,173 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartPrice Analytics - Real-time Dynamic Pricing</title>
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        /* --- CSS 변수 및 초기화 (Corporate Style) --- */
-        :root {
-            --brand-primary: #1E3A8A; /* Deep Blue - 신뢰 */
-            --brand-secondary: #60A5FA; /* Light Blue */
-            --status-success: #10B981; /* Green */
-            --status-warning: #F59E0B; /* Orange */
-            --text-main: #1F2937;
-            --text-sub: #6B7280;
-            --bg-body: #F9FAFB;
-            --bg-card: #FFFFFF;
-            --border-color: #E5E7EB;
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>길목 (Gilmok) - 디지털 화로</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#944a00',
+                        'primary-container': '#ffdbc0',
+                        'secondary': '#77574e',
+                        'tertiary': '#5b6248', // Sage Green (DESIGN.md 반영)
+                        'surface': '#fff8ef',
+                        'surface-container-low': '#f7f2ea',
+                        'surface-container-lowest': '#ffffff',
+                        'on-surface': '#1e1b13'
+                    },
+                    borderRadius: {
+                        'DEFAULT': '1rem',
+                        'lg': '2rem',
+                        'xl': '3rem'
+                    }
+                }
+            }
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); -webkit-font-smoothing: antialiased; }
-
-        /* --- 레이아웃 --- */
-        .app-wrapper { display: flex; min-height: 100vh; }
-        
-        /* 사이드바 (기업 로고 및 메뉴) */
-        .sidebar { width: 260px; background-color: var(--bg-card); border-right: 1px solid var(--border-color); padding: 24px; display: flex; flex-direction: column; }
-        .brand-logo { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 48px; }
-        .nav-menu { flex: 1; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-sub); text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.2s; margin-bottom: 4px; }
-        .nav-item:hover { background-color: #EFF6FF; color: var(--brand-primary); }
-        .nav-item.active { background-color: var(--brand-primary); color: white; }
-
-        /* 메인 콘텐츠 Area */
-        .main-container { flex: 1; display: flex; flex-direction: column; }
-        .top-header { background-color: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
-        .page-title h1 { font-size: 1.5rem; font-weight: 700; }
-        .page-title p { color: var(--text-sub); font-size: 0.9rem; margin-top: 2px; }
-        
-        .header-tools { display: flex; align-items: center; gap: 16px; }
-        .live-status { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--status-success); border: 1px solid #A7F3D0; padding: 6px 12px; border-radius: 20px; background-color: #ECFDF5; }
-        .dot { width: 8px; height: 8px; background-color: var(--status-success); border-radius: 50%; animation: pulse 1.5s infinite; }
-
-        .content-body { flex: 1; padding: 32px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-content: start; }
-
-        /* --- 카드 스타일 (MVP 핵심 요소) --- */
-        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; color: var(--text-sub); font-size: 0.9rem; font-weight: 500; }
-        .card-header i { font-size: 1.2rem; color: var(--brand-secondary); }
-
-        /* 지표 카드 */
-        .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--text-main); }
-        .stat-unit { font-size: 1rem; color: var(--text-sub); font-weight: 400; margin-left: 4px; }
-        .stat-meta { margin-top: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
-
-        /* 차트 카드 */
-        .chart-card { grid-column: span 2; }
-        .chart-container { height: 350px; position: relative; }
-
-        /* 상태 텍스트 색상 */
-        .text-up { color: var(--status-warning); }
-        .text-down { color: var(--brand-secondary); }
-        .text-stable { color: var(--text-sub); }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        
-        /* Responsive */
-        @media (max-width: 1024px) { .sidebar { width: 80px; padding: 16px; } .brand-logo span, .nav-item span { display: none; } .content-body { grid-template-columns: 1fr; } .chart-card { grid-column: span 1; } }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; color: #1e1b13; }
+        .glass-nav { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
-    <div class="app-wrapper">
-        <aside class="sidebar">
-            <div class="brand-logo">
-                <i class="ri-funds-box-line"></i>
-                <span>SmartPrice</span>
+<body class="min-h-screen flex flex-col items-center justify-center overflow-hidden">
+
+    <div id="onboarding" class="fixed inset-0 z-50 bg-surface flex flex-col items-center justify-center p-6 text-center">
+        <div class="mb-12">
+            <h1 class="text-4xl font-extrabold text-primary tracking-tighter mb-2">길목</h1>
+            <p class="text-secondary font-medium uppercase tracking-widest text-xs">The Digital Hearth</p>
+        </div>
+        
+        <h2 class="text-2xl font-bold mb-8 text-on-surface">어떤 길목에서 만날까요?</h2>
+        
+        <div class="grid grid-cols-1 gap-4 w-full max-w-sm">
+            <button onclick="selectRole('owner')" class="group p-8 bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-all text-left border-none active:scale-95">
+                <span class="material-symbols-outlined text-4xl text-primary mb-4" data-icon="storefront">storefront</span>
+                <h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">사장님입니다</h3>
+                <p class="text-sm text-stone-500 mt-1">유동인구 데이터를 분석해<br>가게의 가격을 똑똑하게 관리해요.</p>
+            </button>
+
+            <button onclick="selectRole('user')" class="group p-8 bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-all text-left border-none active:scale-95">
+                <span class="material-symbols-outlined text-4xl text-tertiary mb-4" data-icon="shopping_bag">shopping_bag</span>
+                <h3 class="text-xl font-bold text-on-surface group-hover:text-tertiary transition-colors">손님입니다</h3>
+                <p class="text-sm text-stone-500 mt-1">지금 내 주변 길목에서만<br>특별한 마중 가격을 발견해요.</p>
+            </button>
+        </div>
+    </div>
+
+    <main id="main-app" class="hidden w-full h-screen relative">
+        
+        <div class="absolute inset-0 bg-[#e5e7eb] overflow-hidden">
+            <div class="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_50%_50%,#944a00_0%,transparent_50%)]"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span class="absolute inline-flex h-12 w-12 rounded-full bg-primary opacity-20 animate-ping"></span>
+                <div class="relative bg-primary text-white p-2 rounded-full shadow-lg">
+                    <span class="material-symbols-outlined text-2xl" id="map-icon">location_on</span>
+                </div>
             </div>
-            <nav class="nav-menu">
-                <a href="#" class="nav-item active"><i class="ri-dashboard-3-line"></i> <span>라이브 대시보드</span></a>
-                <a href="#" class="nav-item"><i class="ri-bar-chart-2-line"></i> <span>가격 분석 리포트</span></a>
-                <a href="#" class="nav-item"><i class="ri-settings-5-line"></i> <span>정책 설정</span></a>
-            </nav>
-        </aside>
+        </div>
 
-        <main class="main-container">
-            <header class="top-header">
-                <div class="page-title">
-                    <h1>통합 가격 관제 센터</h1>
-                    <p>지역별 유동 인구 분석 및 최적 가격 도출</p>
-                </div>
-                <div class="header-tools">
-                    <div class="live-status">
-                        <span class="dot"></span>
-                        LIVE
-                    </div>
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=1E3A8A&color=fff" alt="User" style="width: 36px; border-radius: 50%;">
-                </div>
-            </header>
+        <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-20">
+            <div class="bg-surface-container-lowest/80 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                <span class="text-xs font-bold text-on-surface" id="status-text">사장님 모드 라이브</span>
+            </div>
+            <button onclick="location.reload()" class="bg-surface-container-lowest p-2 rounded-full shadow-sm active:scale-90 transition-transform">
+                <span class="material-symbols-outlined text-on-surface" data-icon="settings">logout</span>
+            </button>
+        </header>
 
-            <div class="content-body">
-                <article class="card">
-                    <div class="card-header">
-                        <span>현재 실시간 유동 인구 (지역: 강남역)</span>
-                        <i class="ri-group-line"></i>
+        <div id="floating-card" class="absolute bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-20">
+            <div class="bg-surface-container-lowest rounded-lg p-6 shadow-xl border-none">
+                <div id="card-content">
                     </div>
-                    <div class="card-body">
-                        <span id="pop-value" class="stat-value">--</span>
-                        <span class="stat-unit">명</span>
-                        <p class="stat-meta text-stable">최근 5분 평균 대비 안정적</p>
-                    </div>
-                </article>
+            </div>
+        </div>
 
-                <article class="card">
-                    <div class="card-header">
-                        <span>AI 기반 추천 최적 가격</span>
-                        <i class="ri-price-tag-3-line"></i>
-                    </div>
-                    <div class="card-body">
-                        <span id="price-value" class="stat-value">₩ --</span>
-                        <span class="stat-unit">/ 기본 1시간</span>
-                        <p id="price-status" class="stat-meta text-stable">시장가 기반 정상 운용 중</p>
-                    </div>
-                </article>
+        <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md h-20 glass-nav rounded-xl flex items-center justify-around px-2 z-30 shadow-lg">
+            <a href="#" class="flex flex-col items-center text-primary">
+                <span class="material-symbols-outlined" data-icon="map">map</span>
+                <span class="text-[10px] font-bold mt-1 uppercase">지도</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-stone-400" id="nav-item-2">
+                <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                <span class="text-[10px] font-bold mt-1 uppercase">분석</span>
+            </a>
+            
+            <div class="relative -top-6">
+                <button class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full shadow-lg flex items-center justify-center text-white active:scale-90 transition-all border-4 border-surface">
+                    <span class="material-symbols-outlined text-3xl" id="center-icon">bolt</span>
+                </button>
+            </div>
 
-                <article class="card chart-card">
-                    <div class="card-header">
-                        <span>실
+            <a href="#" class="flex flex-col items-center text-stone-400" id="nav-item-4">
+                <span class="material-symbols-outlined" data-icon="rule">rule</span>
+                <span class="text-[10px] font-bold mt-1 uppercase">규칙</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-stone-400">
+                <span class="material-symbols-outlined" data-icon="person">person</span>
+                <span class="text-[10px] font-bold mt-1 uppercase">프로필</span>
+            </a>
+        </nav>
+    </main>
+
+    <script>
+        function selectRole(role) {
+            document.getElementById('onboarding').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            const cardContent = document.getElementById('card-content');
+            const statusText = document.getElementById('status-text');
+            const mapIcon = document.getElementById('map-icon');
+            const centerIcon = document.getElementById('center-icon');
+            const nav2 = document.getElementById('nav-item-2');
+            const nav4 = document.getElementById('nav-item-4');
+
+            if (role === 'owner') {
+                statusText.innerText = "사장님 모드 라이브";
+                mapIcon.innerText = "storefront";
+                centerIcon.innerText = "bolt"; // '지금 바로 홍보하기'
+                
+                cardContent.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">현재 길목 유동인구</p>
+                            <h2 class="text-3xl font-extrabold text-on-surface">1,240<span class="text-lg font-medium ml-1">명</span></h2>
+                        </div>
+                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">인구 급증</span>
+                    </div>
+                    <p class="text-stone-500 text-sm mb-6 leading-relaxed">평소보다 사람이 24% 더 많습니다.<br><strong>깜짝 타임세일 규칙</strong>을 실행해 보세요!</p>
+                    <button class="w-full bg-primary text-white py-4 rounded-full font-bold active:scale-95 transition-transform">상세 분석 보고서 보기</button>
+                `;
+            } else {
+                statusText.innerText = "주변 혜택 탐색 중";
+                statusText.parentElement.classList.replace('bg-surface-container-lowest/80', 'bg-tertiary/10');
+                mapIcon.innerText = "shopping_bag";
+                centerIcon.innerText = "explore"; // '주변 스캔하기'
+                
+                // 소비자용 내비게이션 메뉴 변경
+                nav2.innerHTML = '<span class="material-symbols-outlined">local_activity</span><span class="text-[10px] font-bold mt-1 uppercase">쿠폰</span>';
+                nav4.innerHTML = '<span class="material-symbols-outlined">favorite</span><span class="text-[10px] font-bold mt-1 uppercase">단골길목</span>';
+
+                cardContent.innerHTML = `
+                    <div class="mb-4">
+                        <p class="text-tertiary font-bold text-xs uppercase tracking-widest mb-1">지금 길목에 사람이 모여서</p>
+                        <h2 class="text-2xl font-extrabold text-on-surface leading-tight">주변 가게 5곳의<br><span class="text-primary text-3xl">가격이 내려갔어요!</span></h2>
+                    </div>
+                    <div class="bg-surface-container-low p-3 rounded-DEFAULT mb-6 flex items-center gap-3 border-none">
+                        <span class="material-symbols-outlined text-primary">local_fire_department</span>
+                        <p class="text-sm font-semibold text-on-surface">카페 '온도' 아메리카노 40% 할인 중</p>
+                    </div>
+                    <button class="w-full bg-gradient-to-br from-primary to-secondary text-white py-4 rounded-full font-bold shadow-lg active:scale-95 transition-transform">마중 나온 혜택 받으러 가기</button>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
