@@ -15,7 +15,7 @@
                         'primary': '#944a00',
                         'primary-container': '#ffdbc0',
                         'secondary': '#77574e',
-                        'tertiary': '#5b6248', // Sage Green (DESIGN.md 반영)
+                        'tertiary': '#5b6248', 
                         'surface': '#fff8ef',
                         'surface-container-low': '#f7f2ea',
                         'surface-container-lowest': '#ffffff',
@@ -39,135 +39,20 @@
 <body class="min-h-screen flex flex-col items-center justify-center overflow-hidden">
 
     <div id="onboarding" class="fixed inset-0 z-50 bg-surface flex flex-col items-center justify-center p-6 text-center">
-        <div class="mb-12">
-            <h1 class="text-4xl font-extrabold text-primary tracking-tighter mb-2">길목</h1>
-            <p class="text-secondary font-medium uppercase tracking-widest text-xs">The Digital Hearth</p>
+        <div class="mb-12 flex flex-col items-center gap-4">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="24" fill="#ffdbc0"/>
+                <path d="M15 15C18.3333 19 21.6667 23 25 27C28.3333 31 31.6667 35 35 39" stroke="#944a00" stroke-width="4" stroke-linecap="round"/>
+                <path d="M35 15C31.6667 19 28.3333 23 25 27C21.6667 31 18.3333 35 15 39" stroke="#77574e" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="25" cy="27" r="5" fill="#944a00"/>
+            </svg>
+            <div>
+                <h1 class="text-4xl font-extrabold text-primary tracking-tighter mb-1">길목</h1>
+                <p class="text-secondary font-medium uppercase tracking-widest text-xs">The Digital Hearth</p>
+            </div>
         </div>
         
         <h2 class="text-2xl font-bold mb-8 text-on-surface">어떤 길목에서 만날까요?</h2>
         
         <div class="grid grid-cols-1 gap-4 w-full max-w-sm">
-            <button onclick="selectRole('owner')" class="group p-8 bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-all text-left border-none active:scale-95">
-                <span class="material-symbols-outlined text-4xl text-primary mb-4" data-icon="storefront">storefront</span>
-                <h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">사장님입니다</h3>
-                <p class="text-sm text-stone-500 mt-1">유동인구 데이터를 분석해<br>가게의 가격을 똑똑하게 관리해요.</p>
-            </button>
-
-            <button onclick="selectRole('user')" class="group p-8 bg-surface-container-lowest rounded-lg shadow-sm hover:shadow-md transition-all text-left border-none active:scale-95">
-                <span class="material-symbols-outlined text-4xl text-tertiary mb-4" data-icon="shopping_bag">shopping_bag</span>
-                <h3 class="text-xl font-bold text-on-surface group-hover:text-tertiary transition-colors">손님입니다</h3>
-                <p class="text-sm text-stone-500 mt-1">지금 내 주변 길목에서만<br>특별한 마중 가격을 발견해요.</p>
-            </button>
-        </div>
-    </div>
-
-    <main id="main-app" class="hidden w-full h-screen relative">
-        
-        <div class="absolute inset-0 bg-[#e5e7eb] overflow-hidden">
-            <div class="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_50%_50%,#944a00_0%,transparent_50%)]"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <span class="absolute inline-flex h-12 w-12 rounded-full bg-primary opacity-20 animate-ping"></span>
-                <div class="relative bg-primary text-white p-2 rounded-full shadow-lg">
-                    <span class="material-symbols-outlined text-2xl" id="map-icon">location_on</span>
-                </div>
-            </div>
-        </div>
-
-        <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-20">
-            <div class="bg-surface-container-lowest/80 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-                <span class="text-xs font-bold text-on-surface" id="status-text">사장님 모드 라이브</span>
-            </div>
-            <button onclick="location.reload()" class="bg-surface-container-lowest p-2 rounded-full shadow-sm active:scale-90 transition-transform">
-                <span class="material-symbols-outlined text-on-surface" data-icon="settings">logout</span>
-            </button>
-        </header>
-
-        <div id="floating-card" class="absolute bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-20">
-            <div class="bg-surface-container-lowest rounded-lg p-6 shadow-xl border-none">
-                <div id="card-content">
-                    </div>
-            </div>
-        </div>
-
-        <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md h-20 glass-nav rounded-xl flex items-center justify-around px-2 z-30 shadow-lg">
-            <a href="#" class="flex flex-col items-center text-primary">
-                <span class="material-symbols-outlined" data-icon="map">map</span>
-                <span class="text-[10px] font-bold mt-1 uppercase">지도</span>
-            </a>
-            <a href="#" class="flex flex-col items-center text-stone-400" id="nav-item-2">
-                <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-                <span class="text-[10px] font-bold mt-1 uppercase">분석</span>
-            </a>
-            
-            <div class="relative -top-6">
-                <button class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full shadow-lg flex items-center justify-center text-white active:scale-90 transition-all border-4 border-surface">
-                    <span class="material-symbols-outlined text-3xl" id="center-icon">bolt</span>
-                </button>
-            </div>
-
-            <a href="#" class="flex flex-col items-center text-stone-400" id="nav-item-4">
-                <span class="material-symbols-outlined" data-icon="rule">rule</span>
-                <span class="text-[10px] font-bold mt-1 uppercase">규칙</span>
-            </a>
-            <a href="#" class="flex flex-col items-center text-stone-400">
-                <span class="material-symbols-outlined" data-icon="person">person</span>
-                <span class="text-[10px] font-bold mt-1 uppercase">프로필</span>
-            </a>
-        </nav>
-    </main>
-
-    <script>
-        function selectRole(role) {
-            document.getElementById('onboarding').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            
-            const cardContent = document.getElementById('card-content');
-            const statusText = document.getElementById('status-text');
-            const mapIcon = document.getElementById('map-icon');
-            const centerIcon = document.getElementById('center-icon');
-            const nav2 = document.getElementById('nav-item-2');
-            const nav4 = document.getElementById('nav-item-4');
-
-            if (role === 'owner') {
-                statusText.innerText = "사장님 모드 라이브";
-                mapIcon.innerText = "storefront";
-                centerIcon.innerText = "bolt"; // '지금 바로 홍보하기'
-                
-                cardContent.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <p class="text-primary font-bold text-xs uppercase tracking-widest mb-1">현재 길목 유동인구</p>
-                            <h2 class="text-3xl font-extrabold text-on-surface">1,240<span class="text-lg font-medium ml-1">명</span></h2>
-                        </div>
-                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">인구 급증</span>
-                    </div>
-                    <p class="text-stone-500 text-sm mb-6 leading-relaxed">평소보다 사람이 24% 더 많습니다.<br><strong>깜짝 타임세일 규칙</strong>을 실행해 보세요!</p>
-                    <button class="w-full bg-primary text-white py-4 rounded-full font-bold active:scale-95 transition-transform">상세 분석 보고서 보기</button>
-                `;
-            } else {
-                statusText.innerText = "주변 혜택 탐색 중";
-                statusText.parentElement.classList.replace('bg-surface-container-lowest/80', 'bg-tertiary/10');
-                mapIcon.innerText = "shopping_bag";
-                centerIcon.innerText = "explore"; // '주변 스캔하기'
-                
-                // 소비자용 내비게이션 메뉴 변경
-                nav2.innerHTML = '<span class="material-symbols-outlined">local_activity</span><span class="text-[10px] font-bold mt-1 uppercase">쿠폰</span>';
-                nav4.innerHTML = '<span class="material-symbols-outlined">favorite</span><span class="text-[10px] font-bold mt-1 uppercase">단골길목</span>';
-
-                cardContent.innerHTML = `
-                    <div class="mb-4">
-                        <p class="text-tertiary font-bold text-xs uppercase tracking-widest mb-1">지금 길목에 사람이 모여서</p>
-                        <h2 class="text-2xl font-extrabold text-on-surface leading-tight">주변 가게 5곳의<br><span class="text-primary text-3xl">가격이 내려갔어요!</span></h2>
-                    </div>
-                    <div class="bg-surface-container-low p-3 rounded-DEFAULT mb-6 flex items-center gap-3 border-none">
-                        <span class="material-symbols-outlined text-primary">local_fire_department</span>
-                        <p class="text-sm font-semibold text-on-surface">카페 '온도' 아메리카노 40% 할인 중</p>
-                    </div>
-                    <button class="w-full bg-gradient-to-br from-primary to-secondary text-white py-4 rounded-full font-bold shadow-lg active:scale-95 transition-transform">마중 나온 혜택 받으러 가기</button>
-                `;
-            }
-        }
-    </script>
-</body>
-</html>
+            <button onclick="selectRole('owner')" class="group p-8 bg-surface-container-
