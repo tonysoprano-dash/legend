@@ -35,7 +35,8 @@
     </script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; color: #1e1b13; }
-        .glass-nav { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); }
+        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        /* [2] 지도를 담을 영역: 전체 화면을 꽉 채우도록 설정 */
         #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
         .map-overlay { position: absolute; inset: 0; background: rgba(148, 74, 0, 0.02); pointer-events: none; z-index: 1; }
     </style>
@@ -56,16 +57,16 @@
             </div>
         </div>
         <h2 class="text-2xl font-bold mb-10 text-on-surface">어떤 길목에서 만날까요?</h2>
-        <div class="grid grid-cols-1 gap-5 w-full max-w-sm">
+        <div class="grid grid-cols-1 gap-5 w-full max-w-sm font-['Plus_Jakarta_Sans']">
             <button onclick="selectRole('owner')" class="group p-8 bg-surface-container-lowest rounded-lg transition-all text-left shadow-sm hover:shadow-md active:scale-95 border-none">
                 <span class="material-symbols-outlined text-4xl text-primary mb-4">storefront</span>
                 <h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">사장님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2">경기대 앞 우리 매장 데이터를 분석합니다.</p>
+                <p class="text-sm text-stone-500 mt-2">매장 유동인구 데이터를 분석합니다.</p>
             </button>
             <button onclick="selectRole('user')" class="group p-8 bg-surface-container-lowest rounded-lg transition-all text-left shadow-sm hover:shadow-md active:scale-95 border-none">
                 <span class="material-symbols-outlined text-4xl text-tertiary mb-4">shopping_bag</span>
                 <h3 class="text-xl font-bold text-on-surface group-hover:text-tertiary transition-colors">손님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2">지금 내 주변 길목 혜택을 발견합니다.</p>
+                <p class="text-sm text-stone-500 mt-2">주변 길목의 혜택을 발견합니다.</p>
             </button>
         </div>
     </div>
@@ -75,7 +76,7 @@
         <div class="map-overlay"></div>
 
         <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-20">
-            <div class="flex items-center gap-2.5 px-4 py-2.5 bg-surface-container-lowest/80 backdrop-blur-xl rounded-full shadow-sm">
+            <div class="flex items-center gap-2.5 px-4 py-2.5 bg-surface-container-lowest/90 backdrop-blur-xl rounded-full shadow-sm">
                 <h1 class="text-xl font-black text-primary tracking-tighter">길목</h1>
             </div>
             <button onclick="location.reload()" class="bg-surface-container-lowest/90 p-2.5 rounded-full shadow-sm active:scale-90 border-none">
@@ -84,7 +85,7 @@
         </header>
 
         <div id="floating-card" class="absolute bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-20">
-            <div class="bg-surface-container-lowest rounded-lg p-7 shadow-xl border-none">
+            <div class="bg-surface-container-lowest rounded-lg p-7 shadow-2xl border-none">
                 <div id="card-content"></div>
             </div>
         </div>
@@ -92,7 +93,7 @@
         <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md h-20 glass-nav rounded-xl flex items-center justify-around z-30 shadow-lg">
             <div class="flex flex-col items-center text-primary">
                 <span class="material-symbols-outlined text-2xl">map</span>
-                <span class="text-[9px] font-bold mt-1">지도</span>
+                <span class="text-[9px] font-bold mt-1 uppercase">지도</span>
             </div>
             <div class="relative -top-6">
                 <button class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full shadow-2xl flex items-center justify-center text-white active:scale-90 border-[4px] border-surface/50">
@@ -101,60 +102,70 @@
             </div>
             <div class="flex flex-col items-center text-stone-400">
                 <span class="material-symbols-outlined text-2xl">person</span>
-                <span class="text-[9px] font-bold mt-1">내 정보</span>
+                <span class="text-[9px] font-bold mt-1 uppercase">정보</span>
             </div>
         </nav>
     </main>
 
     <script>
-        let map;
+        var map; // 지도 객체를 전역 변수로 선언
 
+        // [3] 지도를 생성할 때 필요한 기본 옵션 및 실행 로직
         function drawMap() {
-            const container = document.getElementById('map');
-            const options = {
-                center: new kakao.maps.LatLng(37.3006, 127.0358), // 경기대 수원캠퍼스 정문
-                level: 3 
+            var container = document.getElementById('map'); // 지도를 담을 영역 선택
+            var options = { 
+                center: new kakao.maps.LatLng(37.3006, 127.0358), // 경기대 수원캠퍼스 중심 좌표
+                level: 3 // 확대 레벨
             };
-            map = new kakao.maps.Map(container, options);
+            
+            // 지도 생성 및 객체 리턴
+            map = new kakao.maps.Map(container, options); 
 
-            // 유동인구 표시용 원형 레이어
-            new kakao.maps.Circle({
+            // 경기대 정문에 마커 표시
+            var marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(37.3006, 127.0358)
+            });
+            marker.setMap(map);
+
+            // 유동인구 시각화를 위한 원형 오버레이
+            var circle = new kakao.maps.Circle({
                 center : new kakao.maps.LatLng(37.3006, 127.0358),
                 radius: 120, 
                 strokeWeight: 0,
                 fillColor: '#944a00',
                 fillOpacity: 0.12 
-            }).setMap(map);
-
-            // 마커 표시
-            new kakao.maps.Marker({
-                position: new kakao.maps.LatLng(37.3006, 127.0358)
-            }).setMap(map);
+            });
+            circle.setMap(map);
         }
 
         function selectRole(role) {
             document.getElementById('onboarding').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             
-            // 카카오 지도 라이브러리가 준비되었을 때만 실행
+            // Vercel 환경에서 카카오 라이브러리가 완전히 로드된 후 지도 생성
             if (window.kakao && window.kakao.maps) {
-                kakao.maps.load(drawMap);
+                kakao.maps.load(function() {
+                    drawMap();
+                });
+            } else {
+                alert("지도 라이브러리를 불러오지 못했습니다. 카카오 개발자 센터에서 도메인 설정을 확인해주세요.");
             }
 
+            // 역할별 카드 UI 업데이트
             const cardContent = document.getElementById('card-content');
             if (role === 'owner') {
                 cardContent.innerHTML = `
                     <p class="text-primary font-bold text-[10px] uppercase tracking-widest mb-1">경기대 정문 상권</p>
-                    <h2 class="text-2xl font-black text-on-surface mb-4 font-['Plus_Jakarta_Sans']">현재 유동인구 1,240명</h2>
-                    <p class="text-stone-500 text-sm mb-6">지금 즉시 '마중 가격'을 설정해 보세요.</p>
-                    <button class="w-full bg-primary text-white py-4 rounded-full font-bold shadow-lg border-none">가격 규칙 실행</button>
+                    <h2 class="text-2xl font-black text-on-surface mb-3">현재 유동인구 1,240명</h2>
+                    <p class="text-stone-500 text-sm mb-6 leading-relaxed">평소보다 유입이 많습니다.<br>지금 '마중 가격' 규칙을 실행할까요?</p>
+                    <button class="w-full bg-primary text-white py-4 rounded-full font-bold shadow-lg shadow-primary/20 border-none transition-all active:scale-[0.98]">동적 가격 규칙 실행</button>
                 `;
             } else {
                 cardContent.innerHTML = `
                     <p class="text-tertiary font-bold text-[10px] uppercase tracking-widest mb-1">실시간 길목 혜택</p>
-                    <h2 class="text-2xl font-black text-on-surface mb-4 font-['Plus_Jakarta_Sans']">커피 40% 타임세일</h2>
-                    <p class="text-stone-500 text-sm mb-6">경기대 후문 카페 '온도'에서 진행 중입니다.</p>
-                    <button class="w-full bg-gradient-to-br from-primary to-secondary text-white py-4 rounded-full font-bold shadow-lg border-none">쿠폰 받기</button>
+                    <h2 class="text-2xl font-black text-on-surface mb-3">커피 40% 타임세일</h2>
+                    <p class="text-stone-500 text-sm mb-6 leading-relaxed">사람들이 모인 지금만 가능한 가격!<br>카페 '온도'에서 혜택을 받으세요.</p>
+                    <button class="w-full bg-gradient-to-br from-primary to-secondary text-white py-4 rounded-full font-bold shadow-lg border-none transition-all active:scale-[0.98]">쿠폰 발급받기</button>
                 `;
             }
         }
