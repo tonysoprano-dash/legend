@@ -1,172 +1,95 @@
 <!DOCTYPE html>
-<html lang="ko" class="light">
+<html lang="ko">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>길목 (Gilmok) - 디지털 화로</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <title>길목 (Gilmok)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=78c841012e66821152dd7a637eb222a1&libraries=services"></script>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c6fa90ad968fa722bdc6d58024097828&libraries=services"></script>
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#944a00',
-                        'primary-container': '#ffdbc0',
-                        'secondary': '#77574e',
-                        'tertiary': '#5b6248', 
-                        'surface': '#fff8ef',
-                        'surface-container-low': '#f7f2ea',
-                        'surface-container-lowest': '#ffffff',
-                        'on-surface': '#1e1b13'
-                    },
-                    borderRadius: {
-                        'DEFAULT': '1rem',
-                        'lg': '2rem',
-                        'xl': '3rem'
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; color: #1e1b13; }
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        /* [2] 지도를 담을 영역: 전체 화면을 꽉 채우도록 설정 */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; overflow: hidden; }
         #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
-        .map-overlay { position: absolute; inset: 0; background: rgba(148, 74, 0, 0.02); pointer-events: none; z-index: 1; }
+        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center overflow-hidden">
+<body class="min-h-screen">
 
-    <div id="onboarding" class="fixed inset-0 z-50 bg-surface flex flex-col items-center justify-center p-8 text-center">
-        <div class="mb-14 flex flex-col items-center gap-5">
-            <svg width="64" height="64" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="24" cy="24" r="24" fill="#ffdbc0"/>
-                <path d="M14 14C18 18.5 22 23.5 26 27.5C30 31.5 34 35.5 38 39.5" stroke="#944a00" stroke-width="4.5" stroke-linecap="round"/>
-                <path d="M34 14C30 18.5 26 23.5 22 27.5C18 31.5 14 35.5 10 39.5" stroke="#77574e" stroke-width="4.5" stroke-linecap="round"/>
-                <circle cx="25" cy="27" r="6" fill="#944a00"/>
-            </svg>
-            <div>
-                <h1 class="text-4xl font-extrabold text-primary tracking-tighter mb-1">길목</h1>
-                <p class="text-secondary font-medium uppercase tracking-[0.2em] text-[10px]">The Digital Hearth</p>
-            </div>
+    <div id="onboarding" class="fixed inset-0 z-50 bg-[#fff8ef] flex flex-col items-center justify-center p-8">
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold text-[#944a00] tracking-tighter">길목</h1>
+            <p class="text-xs text-[#77574e] tracking-[0.2em] mt-1">THE DIGITAL HEARTH</p>
         </div>
-        <h2 class="text-2xl font-bold mb-10 text-on-surface">어떤 길목에서 만날까요?</h2>
-        <div class="grid grid-cols-1 gap-5 w-full max-w-sm font-['Plus_Jakarta_Sans']">
-            <button onclick="selectRole('owner')" class="group p-8 bg-surface-container-lowest rounded-lg transition-all text-left shadow-sm hover:shadow-md active:scale-95 border-none">
-                <span class="material-symbols-outlined text-4xl text-primary mb-4">storefront</span>
-                <h3 class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">사장님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2">매장 유동인구 데이터를 분석합니다.</p>
+        <div class="grid gap-4 w-full max-w-sm">
+            <button onclick="selectRole('owner')" class="p-6 bg-white rounded-2xl shadow-sm text-left active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-3xl text-[#944a00]">storefront</span>
+                <h3 class="font-bold text-lg mt-2">사장님입니다</h3>
             </button>
-            <button onclick="selectRole('user')" class="group p-8 bg-surface-container-lowest rounded-lg transition-all text-left shadow-sm hover:shadow-md active:scale-95 border-none">
-                <span class="material-symbols-outlined text-4xl text-tertiary mb-4">shopping_bag</span>
-                <h3 class="text-xl font-bold text-on-surface group-hover:text-tertiary transition-colors">손님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2">주변 길목의 혜택을 발견합니다.</p>
+            <button onclick="selectRole('user')" class="p-6 bg-white rounded-2xl shadow-sm text-left active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-3xl text-[#5b6248]">shopping_bag</span>
+                <h3 class="font-bold text-lg mt-2">손님입니다</h3>
             </button>
         </div>
     </div>
 
     <main id="main-app" class="hidden w-full h-screen relative">
         <div id="map"></div>
-        <div class="map-overlay"></div>
-
-        <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-20">
-            <div class="flex items-center gap-2.5 px-4 py-2.5 bg-surface-container-lowest/90 backdrop-blur-xl rounded-full shadow-sm">
-                <h1 class="text-xl font-black text-primary tracking-tighter">길목</h1>
-            </div>
-            <button onclick="location.reload()" class="bg-surface-container-lowest/90 p-2.5 rounded-full shadow-sm active:scale-90 border-none">
-                <span class="material-symbols-outlined text-on-surface text-xl">logout</span>
-            </button>
-        </header>
+        <div class="absolute inset-0 bg-[#944a00]/[0.02] pointer-events-none z-10"></div>
 
         <div id="floating-card" class="absolute bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-20">
-            <div class="bg-surface-container-lowest rounded-lg p-7 shadow-2xl border-none">
+            <div class="bg-white rounded-2xl p-6 shadow-2xl border-none">
                 <div id="card-content"></div>
             </div>
         </div>
 
-        <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md h-20 glass-nav rounded-xl flex items-center justify-around z-30 shadow-lg">
-            <div class="flex flex-col items-center text-primary">
-                <span class="material-symbols-outlined text-2xl">map</span>
-                <span class="text-[9px] font-bold mt-1 uppercase">지도</span>
+        <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md h-20 glass-nav rounded-3xl flex items-center justify-around z-30 shadow-lg">
+            <div class="flex flex-col items-center text-[#944a00]">
+                <span class="material-symbols-outlined">map</span>
+                <span class="text-[10px] font-bold">지도</span>
             </div>
             <div class="relative -top-6">
-                <button class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full shadow-2xl flex items-center justify-center text-white active:scale-90 border-[4px] border-surface/50">
+                <button class="w-16 h-16 bg-gradient-to-br from-[#944a00] to-[#77574e] rounded-full shadow-xl flex items-center justify-center text-white border-[4px] border-[#fff8ef]">
                     <span class="material-symbols-outlined text-3xl">bolt</span>
                 </button>
             </div>
             <div class="flex flex-col items-center text-stone-400">
-                <span class="material-symbols-outlined text-2xl">person</span>
-                <span class="text-[9px] font-bold mt-1 uppercase">정보</span>
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-[10px] font-bold">정보</span>
             </div>
         </nav>
     </main>
 
     <script>
-        var map; // 지도 객체를 전역 변수로 선언
-
-        // [3] 지도를 생성할 때 필요한 기본 옵션 및 실행 로직
         function drawMap() {
-            var container = document.getElementById('map'); // 지도를 담을 영역 선택
+            var container = document.getElementById('map');
             var options = { 
-                center: new kakao.maps.LatLng(37.3006, 127.0358), // 경기대 수원캠퍼스 중심 좌표
-                level: 3 // 확대 레벨
+                center: new kakao.maps.LatLng(37.3006, 127.0358), // 경기대 수원캠 정문
+                level: 3 
             };
+            var map = new kakao.maps.Map(container, options); 
             
-            // 지도 생성 및 객체 리턴
-            map = new kakao.maps.Map(container, options); 
-
-            // 경기대 정문에 마커 표시
-            var marker = new kakao.maps.Marker({
+            // 경기대 정문 마커
+            new kakao.maps.Marker({
                 position: new kakao.maps.LatLng(37.3006, 127.0358)
-            });
-            marker.setMap(map);
-
-            // 유동인구 시각화를 위한 원형 오버레이
-            var circle = new kakao.maps.Circle({
-                center : new kakao.maps.LatLng(37.3006, 127.0358),
-                radius: 120, 
-                strokeWeight: 0,
-                fillColor: '#944a00',
-                fillOpacity: 0.12 
-            });
-            circle.setMap(map);
+            }).setMap(map);
         }
 
         function selectRole(role) {
-            document.getElementById('onboarding').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('onboarding').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
             
-            // Vercel 환경에서 카카오 라이브러리가 완전히 로드된 후 지도 생성
             if (window.kakao && window.kakao.maps) {
-                kakao.maps.load(function() {
-                    drawMap();
-                });
-            } else {
-                alert("지도 라이브러리를 불러오지 못했습니다. 카카오 개발자 센터에서 도메인 설정을 확인해주세요.");
+                kakao.maps.load(drawMap);
             }
 
-            // 역할별 카드 UI 업데이트
             const cardContent = document.getElementById('card-content');
             if (role === 'owner') {
-                cardContent.innerHTML = `
-                    <p class="text-primary font-bold text-[10px] uppercase tracking-widest mb-1">경기대 정문 상권</p>
-                    <h2 class="text-2xl font-black text-on-surface mb-3">현재 유동인구 1,240명</h2>
-                    <p class="text-stone-500 text-sm mb-6 leading-relaxed">평소보다 유입이 많습니다.<br>지금 '마중 가격' 규칙을 실행할까요?</p>
-                    <button class="w-full bg-primary text-white py-4 rounded-full font-bold shadow-lg shadow-primary/20 border-none transition-all active:scale-[0.98]">동적 가격 규칙 실행</button>
-                `;
+                cardContent.innerHTML = `<h2 class="text-xl font-bold">현재 유동인구 1,240명</h2><p class="text-sm text-gray-500 mt-1">경기대 정문 상권 분석 데이터입니다.</p>`;
             } else {
-                cardContent.innerHTML = `
-                    <p class="text-tertiary font-bold text-[10px] uppercase tracking-widest mb-1">실시간 길목 혜택</p>
-                    <h2 class="text-2xl font-black text-on-surface mb-3">커피 40% 타임세일</h2>
-                    <p class="text-stone-500 text-sm mb-6 leading-relaxed">사람들이 모인 지금만 가능한 가격!<br>카페 '온도'에서 혜택을 받으세요.</p>
-                    <button class="w-full bg-gradient-to-br from-primary to-secondary text-white py-4 rounded-full font-bold shadow-lg border-none transition-all active:scale-[0.98]">쿠폰 발급받기</button>
-                `;
+                cardContent.innerHTML = `<h2 class="text-xl font-bold">커피 40% 타임세일</h2><p class="text-sm text-gray-500 mt-1">지금 '카페 온도'로 가면 할인!</p>`;
             }
         }
     </script>
