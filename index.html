@@ -3,63 +3,53 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <title>길목 (Gilmok) - 디지털 화로</title>
+    <title>길목 (Gilmok) - 공식 가이드 반영 버전</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c6fa90ad968fa722bdc6d58024097828&libraries=services&autoload=false"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c6fa90ad968fa722bdc6d58024097828&libraries=services"></script>
     
     <style>
-        /* 기본 스타일 및 지도 영역 설정 */
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #fff8ef; font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        /* [핵심] 지도를 담을 영역: 화면 전체를 꽉 채우도록 설정 */
+        /* [2] 가이드 준수: 지도를 담을 영역 (ID: map) */
+        /* 사장님 앱은 전체 화면이므로 width/height를 100%로 설정합니다. */
         #map { 
             width: 100%; 
             height: 100vh; 
             position: absolute; 
             top: 0; 
             left: 0; 
-            z-index: 1; /* 지도는 가장 아래 레이어 */
-            background-color: #e5e7eb; /* 지도 로딩 전 회색 배경 표시 */
+            z-index: 1;
+            background-color: #eee; 
         }
         
-        /* UI 레이어 설정: 지도 위에 뜨는 요소들 */
         .ui-layer { z-index: 10; position: relative; pointer-events: none; }
-        .ui-layer button, .ui-layer nav, .ui-layer .card { pointer-events: auto; } /* UI 요소는 클릭 가능하게 */
-        
-        /* 디자인 디테일 */
-        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        .onboarding-screen { z-index: 100; background-color: #fff8ef; transition: opacity 0.5s ease; }
+        .ui-layer button, .ui-layer .card { pointer-events: auto; }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-    <div id="onboarding" class="onboarding-screen fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
-        <div class="mb-14 flex flex-col items-center gap-4">
-            <div class="w-16 h-16 bg-[#ffdbc0] rounded-full flex items-center justify-center shadow-inner">
-                <span class="material-symbols-outlined text-[#944a00] text-4xl">local_fire_department</span>
+    <div id="onboarding" class="fixed inset-0 z-[100] bg-[#fff8ef] flex flex-col items-center justify-center p-8 transition-opacity duration-500">
+        <div class="mb-10 flex flex-col items-center gap-4">
+            <div class="w-16 h-16 bg-[#ffdbc0] rounded-full flex items-center justify-center shadow-sm">
+                <span class="material-symbols-outlined text-[#944a00] text-4xl font-bold">local_fire_department</span>
             </div>
-            <div>
-                <h1 class="text-4xl font-extrabold text-[#944a00] tracking-tighter">길목</h1>
-                <p class="text-[#77574e] font-bold text-[10px] uppercase tracking-[0.2em] mt-1">The Digital Hearth</p>
-            </div>
+            <h1 class="text-4xl font-extrabold text-[#944a00] tracking-tighter italic">길목</h1>
         </div>
-        
-        <h2 class="text-2xl font-bold mb-10 text-[#1e1b13]">어떤 길목에서 만날까요?</h2>
-        
         <div class="grid gap-5 w-full max-w-sm">
-            <button onclick="selectRole('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
+            <button onclick="startApp('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
                 <span class="material-symbols-outlined text-4xl text-[#944a00]">storefront</span>
-                <h3 class="text-xl font-bold text-[#1e1b13] mt-3">사장님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2 font-medium">상권 유동인구 분석 및 가격 설정</p>
+                <h3 class="text-xl font-bold mt-2">사장님입니다</h3>
+                <p class="text-sm text-stone-500 mt-1">상권 분석 및 가격 설정</p>
             </button>
-            <button onclick="selectRole('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
+            <button onclick="startApp('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
                 <span class="material-symbols-outlined text-4xl text-[#5b6248]">shopping_bag</span>
-                <h3 class="text-xl font-bold text-[#1e1b13] mt-3">손님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2 font-medium">지금 내 주변 깜짝 혜택 발견</p>
+                <h3 class="text-xl font-bold mt-2">손님입니다</h3>
+                <p class="text-sm text-stone-500 mt-1">실시간 혜택 발견</p>
             </button>
         </div>
     </div>
@@ -67,105 +57,61 @@
     <main id="main-app" class="hidden w-full h-full relative">
         <div id="map"></div>
         
-        <div class="ui-layer h-full w-full flex flex-col items-center justify-between p-6 pb-32">
-            <header class="w-full flex justify-between items-center">
-                <div class="bg-white/95 px-4 py-2 rounded-full shadow-sm backdrop-blur-md">
-                    <h1 class="text-lg font-black text-[#944a00] tracking-tight">길목</h1>
-                </div>
-                <button onclick="location.reload()" class="bg-white/95 p-2 rounded-full shadow-sm border-none backdrop-blur-md">
+        <div class="ui-layer h-full w-full flex flex-col justify-between p-6 pb-32">
+            <header class="flex justify-between items-center">
+                <div class="glass px-5 py-2 rounded-full shadow-sm font-black text-[#944a00]">길목</div>
+                <button onclick="location.reload()" class="glass p-2 rounded-full shadow-sm border-none">
                     <span class="material-symbols-outlined text-[#1e1b13]">logout</span>
                 </button>
             </header>
 
-            <div id="floating-card" class="w-full max-w-lg mb-4">
-                <div class="card bg-white rounded-3xl p-7 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-none" id="card-content">
-                    </div>
-            </div>
-
-            <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md h-20 glass-nav rounded-[2.5rem] flex items-center justify-around z-30 shadow-xl border border-white/20">
-                <div class="flex flex-col items-center text-[#944a00]">
-                    <span class="material-symbols-outlined">map</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase">지도</span>
+            <div id="card" class="card bg-white rounded-3xl p-7 shadow-2xl border-none">
                 </div>
-                <div class="relative -top-7">
-                    <button class="w-16 h-16 bg-gradient-to-br from-[#944a00] to-[#77574e] rounded-full shadow-2xl flex items-center justify-center text-white border-[5px] border-[#fff8ef] active:scale-90 transition-transform">
-                        <span class="material-symbols-outlined text-3xl">bolt</span>
-                    </button>
-                </div>
-                <div class="flex flex-col items-center text-stone-400">
-                    <span class="material-symbols-outlined">person</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase">정보</span>
-                </div>
-            </nav>
         </div>
     </main>
 
     <script>
-        var map; // 전역 변수로 지도 객체 선언
-        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대 수원캠퍼스 정문 좌표
+        var map;
+        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대 좌표
 
-        // 지도를 생성하고 초기화하는 함수
-        function initMap() {
-            var container = document.getElementById('map'); // 지도를 담을 영역
-            var options = { center: centerPos, level: 3 }; // 초기 옵션
-            map = new kakao.maps.Map(container, options); // 지도 생성
+        function startApp(role) {
+            // 1. 화면 전환
+            document.getElementById('onboarding').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
 
-            // 마커 표시
-            new kakao.maps.Marker({ position: centerPos }).setMap(map);
+            // [3] 가이드 준수: 지도를 띄우는 코드 작성
+            var container = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+            var options = { 
+                center: centerPos, // 지도의 중심좌표 (반드시 필요)
+                level: 3 // 지도의 레벨
+            };
+            
+            // 지도 생성 및 객체 리턴
+            map = new kakao.maps.Map(container, options);
 
-            // 유동인구 데이터 시각화용 원형 오버레이
-            new kakao.maps.Circle({
-                center: centerPos,
-                radius: 120, 
-                strokeWeight: 0,
-                fillColor: '#944a00',
-                fillOpacity: 0.12 
-            }).setMap(map);
-        }
+            // 마커 표시 (가이드 응용)
+            var marker = new kakao.maps.Marker({ position: centerPos });
+            marker.setMap(map);
 
-        // 역할 선택 시 앱 화면으로 전환하고 지도를 띄우는 함수
-        function selectRole(role) {
-            // 1. 온보딩 화면 숨기고 앱 화면 표시
-            document.getElementById('onboarding').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('onboarding').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                
-                // 2. 카카오 지도 웹 API 로드 및 지도 그리기
-                // [핵심] 웹 환경에서 안정적인 로딩을 위해 autoload=false 설정을 활용
-                if (window.kakao && window.kakao.maps) {
-                    kakao.maps.load(function() {
-                        // 지도가 아직 생성되지 않았을 때만 생성
-                        if (!map) {
-                            initMap();
-                        }
-                        
-                        // [배포 환경 필수] 숨겨져 있던 지도가 나타날 때 레이아웃과 중심을 재설정
-                        setTimeout(function() {
-                            map.relayout();
-                            map.setCenter(centerPos);
-                        }, 200); // 화면 전환 애니메이션 시간을 고려하여 0.2초 여유
-                    });
-                } else {
-                    alert("지도 라이브러리 로드 실패! 카카오 개발자 센터의 도메인 설정을 확인해주세요.");
-                }
-            }, 500);
+            // [추가] Vercel 배포 시 지도가 잘리는 현상 방지 코드
+            setTimeout(function() {
+                map.relayout();
+                map.setCenter(centerPos);
+            }, 150);
 
-            // 3. 역할별 카드 UI 업데이트
-            const cardContent = document.getElementById('card-content');
+            // 역할별 카드 UI 업데이트
+            const info = document.getElementById('card');
             if (role === 'owner') {
-                cardContent.innerHTML = `
-                    <p class="text-[#944a00] font-bold text-[10px] uppercase tracking-widest mb-1">경기대 정문 상권</p>
-                    <h2 class="text-2xl font-black text-[#1e1b13] mb-3">현재 유동인구 1,240명</h2>
-                    <p class="text-stone-500 text-sm mb-6 leading-relaxed font-medium">유동인구가 급증하고 있습니다.<br>지금 '마중 가격' 규칙을 실행할까요?</p>
-                    <button class="w-full bg-[#944a00] text-white py-4 rounded-full font-bold shadow-lg border-none active:scale-[0.98] transition-transform">동적 가격 규칙 실행</button>
+                info.innerHTML = `
+                    <h2 class="text-2xl font-black mb-1 italic">유동인구 1,240명</h2>
+                    <p class="text-sm text-stone-500 mb-6 font-medium">경기대 정문 상권의 실시간 데이터입니다.</p>
+                    <button class="w-full bg-[#944a00] text-white py-4 rounded-2xl font-bold border-none active:scale-[0.98]">동적 가격 규칙 실행</button>
                 `;
             } else {
-                cardContent.innerHTML = `
-                    <p class="text-[#5b6248] font-bold text-[10px] uppercase tracking-widest mb-1">실시간 길목 혜택</p>
-                    <h2 class="text-2xl font-black text-[#1e1b13] mb-3">커피 40% 타임세일</h2>
-                    <p class="text-stone-500 text-sm mb-6 leading-relaxed font-medium">사장님이 직접 제안한 파격 특가!<br>카페 '온도' 쿠폰을 확인하세요.</p>
-                    <button class="w-full bg-gradient-to-br from-[#944a00] to-[#77574e] text-white py-4 rounded-full font-bold shadow-lg border-none active:scale-[0.98] transition-transform">쿠폰 확인하기</button>
+                info.innerHTML = `
+                    <h2 class="text-2xl font-black mb-1 italic">커피 40% 타임세일</h2>
+                    <p class="text-sm text-stone-500 mb-6 font-medium">사장님이 직접 올린 오늘의 혜택입니다.</p>
+                    <button class="w-full bg-[#5b6248] text-white py-4 rounded-2xl font-bold border-none active:scale-[0.98]">쿠폰 확인하기</button>
                 `;
             }
         }
