@@ -3,117 +3,82 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <title>길목 (Gilmok) - 공식 가이드 반영 버전</title>
-    
+    <title>길목 (Gilmok)</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c6fa90ad968fa722bdc6d58024097828&libraries=services"></script>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c6fa90ad968fa722bdc6d58024097828&libraries=services&autoload=false"></script>
     
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #fff8ef; font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        /* [2] 가이드 준수: 지도를 담을 영역 (ID: map) */
-        /* 사장님 앱은 전체 화면이므로 width/height를 100%로 설정합니다. */
-        #map { 
-            width: 100%; 
-            height: 100vh; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            z-index: 1;
-            background-color: #eee; 
-        }
-        
-        .ui-layer { z-index: 10; position: relative; pointer-events: none; }
-        .ui-layer button, .ui-layer .card { pointer-events: auto; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #fff8ef; }
+        #map { width: 100%; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; background-color: #d1d5db; }
+        .ui { z-index: 10; position: relative; pointer-events: none; }
+        .ui button { pointer-events: auto; }
         .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
     </style>
 </head>
 <body>
 
-    <div id="onboarding" class="fixed inset-0 z-[100] bg-[#fff8ef] flex flex-col items-center justify-center p-8 transition-opacity duration-500">
+    <div id="onboarding" class="fixed inset-0 z-[100] bg-[#fff8ef] flex flex-col items-center justify-center p-8 text-center">
         <div class="mb-10 flex flex-col items-center gap-4">
-            <div class="w-16 h-16 bg-[#ffdbc0] rounded-full flex items-center justify-center shadow-sm">
-                <span class="material-symbols-outlined text-[#944a00] text-4xl font-bold">local_fire_department</span>
+            <div class="w-16 h-16 bg-[#ffdbc0] rounded-full flex items-center justify-center shadow-md text-[#944a00]">
+                <span class="material-symbols-outlined text-4xl font-bold">local_fire_department</span>
             </div>
             <h1 class="text-4xl font-extrabold text-[#944a00] tracking-tighter italic">길목</h1>
         </div>
         <div class="grid gap-5 w-full max-w-sm">
-            <button onclick="startApp('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
-                <span class="material-symbols-outlined text-4xl text-[#944a00]">storefront</span>
-                <h3 class="text-xl font-bold mt-2">사장님입니다</h3>
-                <p class="text-sm text-stone-500 mt-1">상권 분석 및 가격 설정</p>
-            </button>
-            <button onclick="startApp('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
-                <span class="material-symbols-outlined text-4xl text-[#5b6248]">shopping_bag</span>
-                <h3 class="text-xl font-bold mt-2">손님입니다</h3>
-                <p class="text-sm text-stone-500 mt-1">실시간 혜택 발견</p>
-            </button>
+            <button onclick="startApp('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all font-bold text-lg border-none italic">사장님입니다</button>
+            <button onclick="startApp('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all font-bold text-lg border-none italic">손님입니다</button>
         </div>
     </div>
 
     <main id="main-app" class="hidden w-full h-full relative">
         <div id="map"></div>
-        
-        <div class="ui-layer h-full w-full flex flex-col justify-between p-6 pb-32">
+        <div class="ui h-full w-full flex flex-col justify-between p-6 pb-32">
             <header class="flex justify-between items-center">
                 <div class="glass px-5 py-2 rounded-full shadow-sm font-black text-[#944a00]">길목</div>
-                <button onclick="location.reload()" class="glass p-2 rounded-full shadow-sm border-none">
-                    <span class="material-symbols-outlined text-[#1e1b13]">logout</span>
-                </button>
+                <button onclick="location.reload()" class="glass p-2 rounded-full shadow-sm border-none"><span class="material-symbols-outlined text-[#1e1b13]">logout</span></button>
             </header>
-
-            <div id="card" class="card bg-white rounded-3xl p-7 shadow-2xl border-none">
-                </div>
+            <div id="card" class="bg-white rounded-3xl p-7 shadow-2xl border-none"></div>
         </div>
     </main>
 
     <script>
         var map;
-        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대 좌표
+        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대
 
         function startApp(role) {
-            // 1. 화면 전환
             document.getElementById('onboarding').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
 
-            // [3] 가이드 준수: 지도를 띄우는 코드 작성
-            var container = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
-            var options = { 
-                center: centerPos, // 지도의 중심좌표 (반드시 필요)
-                level: 3 // 지도의 레벨
-            };
-            
-            // 지도 생성 및 객체 리턴
-            map = new kakao.maps.Map(container, options);
+            // [핵심] 카카오맵 강제 로드 로직
+            try {
+                kakao.maps.load(function() {
+                    var container = document.getElementById('map');
+                    var options = { center: centerPos, level: 3 };
+                    
+                    // 지도 생성
+                    map = new kakao.maps.Map(container, options);
+                    
+                    // 마커 추가
+                    new kakao.maps.Marker({ position: centerPos }).setMap(map);
 
-            // 마커 표시 (가이드 응용)
-            var marker = new kakao.maps.Marker({ position: centerPos });
-            marker.setMap(map);
-
-            // [추가] Vercel 배포 시 지도가 잘리는 현상 방지 코드
-            setTimeout(function() {
-                map.relayout();
-                map.setCenter(centerPos);
-            }, 150);
-
-            // 역할별 카드 UI 업데이트
-            const info = document.getElementById('card');
-            if (role === 'owner') {
-                info.innerHTML = `
-                    <h2 class="text-2xl font-black mb-1 italic">유동인구 1,240명</h2>
-                    <p class="text-sm text-stone-500 mb-6 font-medium">경기대 정문 상권의 실시간 데이터입니다.</p>
-                    <button class="w-full bg-[#944a00] text-white py-4 rounded-2xl font-bold border-none active:scale-[0.98]">동적 가격 규칙 실행</button>
-                `;
-            } else {
-                info.innerHTML = `
-                    <h2 class="text-2xl font-black mb-1 italic">커피 40% 타임세일</h2>
-                    <p class="text-sm text-stone-500 mb-6 font-medium">사장님이 직접 올린 오늘의 혜택입니다.</p>
-                    <button class="w-full bg-[#5b6248] text-white py-4 rounded-2xl font-bold border-none active:scale-[0.98]">쿠폰 확인하기</button>
-                `;
+                    // 화면 전환 후 지도가 깨지는 현상 방지
+                    setTimeout(function() {
+                        map.relayout();
+                        map.setCenter(centerPos);
+                    }, 150);
+                });
+            } catch (e) {
+                alert("카카오 지도를 불러오지 못했습니다. 도메인 설정을 다시 확인해주세요!");
+                console.error(e);
             }
+
+            const info = document.getElementById('card');
+            info.innerHTML = role === 'owner' ? 
+                '<h2 class="text-2xl font-black mb-1 italic">유동인구 1,240명</h2><p class="text-sm text-stone-500 mb-6 font-medium">경기대 상권 실시간 데이터</p><button class="w-full bg-[#944a00] text-white py-4 rounded-2xl font-bold border-none">동적 가격 규칙 실행</button>' : 
+                '<h2 class="text-2xl font-black mb-1 italic">커피 40% 타임세일</h2><p class="text-sm text-stone-500 mb-6 font-medium">지금 내 주변 깜짝 혜택</p><button class="w-full bg-[#5b6248] text-white py-4 rounded-2xl font-bold border-none">쿠폰 받기</button>';
         }
     </script>
 </body>
