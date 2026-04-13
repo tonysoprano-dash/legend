@@ -11,7 +11,8 @@
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c6fa90ad968fa722bdc6d58024097828&libraries=services"></script>
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; margin: 0; padding: 0; overflow: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; margin: 0; overflow: hidden; }
+        /* [2] 지도를 담을 영역 스타일 설정 */
         #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
         .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         .map-overlay { position: absolute; inset: 0; background: rgba(148, 74, 0, 0.03); pointer-events: none; z-index: 1; }
@@ -21,7 +22,7 @@
 
     <div id="onboarding" class="fixed inset-0 z-50 bg-[#fff8ef] flex flex-col items-center justify-center p-8 text-center">
         <div class="mb-14 flex flex-col items-center gap-4">
-            <div class="w-16 h-16 bg-[#ffdbc0] rounded-full flex items-center justify-center">
+            <div class="w-16 h-16 bg-[#ffdbc0] rounded-full flex items-center justify-center shadow-inner">
                 <span class="material-symbols-outlined text-[#944a00] text-4xl">local_fire_department</span>
             </div>
             <div>
@@ -29,19 +30,17 @@
                 <p class="text-[#77574e] font-bold text-[10px] uppercase tracking-[0.2em] mt-1">The Digital Hearth</p>
             </div>
         </div>
-        
         <h2 class="text-2xl font-bold mb-10 text-[#1e1b13]">어떤 길목에서 만날까요?</h2>
-        
         <div class="grid gap-5 w-full max-w-sm">
             <button onclick="selectRole('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
                 <span class="material-symbols-outlined text-4xl text-[#944a00]">storefront</span>
                 <h3 class="text-xl font-bold text-[#1e1b13] mt-3">사장님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2">상권 유동인구 분석 및 가격 설정</p>
+                <p class="text-sm text-stone-500 mt-2 font-medium">경기대 상권 분석 및 가격 설정</p>
             </button>
             <button onclick="selectRole('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
                 <span class="material-symbols-outlined text-4xl text-[#5b6248]">shopping_bag</span>
                 <h3 class="text-xl font-bold text-[#1e1b13] mt-3">손님입니다</h3>
-                <p class="text-sm text-stone-500 mt-2">지금 내 주변 깜짝 혜택 발견</p>
+                <p class="text-sm text-stone-500 mt-2 font-medium">지금 내 주변 깜짝 혜택 발견</p>
             </button>
         </div>
     </div>
@@ -59,8 +58,8 @@
             </button>
         </header>
 
-        <div id="floating-card" class="absolute bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-20">
-            <div class="bg-white rounded-3xl p-7 shadow-2xl border-none">
+        <div id="floating-card" class="absolute bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-20 transition-all duration-500">
+            <div class="bg-white rounded-3xl p-7 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-none">
                 <div id="card-content"></div>
             </div>
         </div>
@@ -84,14 +83,17 @@
 
     <script>
         var map;
-        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대 좌표
+        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대 수원캠 좌표
 
+        // [3] 지도 생성 및 객체 리턴 함수
         function drawMap() {
-            var container = document.getElementById('map');
-            var options = { center: centerPos, level: 3 };
-            map = new kakao.maps.Map(container, options);
+            var container = document.getElementById('map'); // 지도를 담을 영역
+            var options = { center: centerPos, level: 3 }; // 기본 옵션
+            map = new kakao.maps.Map(container, options); // 지도 생성
 
+            // 마커 표시
             new kakao.maps.Marker({ position: centerPos }).setMap(map);
+            // 범위 시각화
             new kakao.maps.Circle({
                 center: centerPos,
                 radius: 120,
@@ -102,37 +104,37 @@
         }
 
         function selectRole(role) {
-            // 1. 화면 전환
             document.getElementById('onboarding').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
             
-            // 2. 지도 초기화 및 리레이아웃 (중요!)
+            // API 로드 보장 및 화면 깨짐 방지 로직
             if (window.kakao && window.kakao.maps) {
                 kakao.maps.load(function() {
-                    if (!map) {
-                        drawMap();
-                    }
-                    // 숨겨져 있던 지도가 나타날 때 크기를 재계산하도록 강제 실행
+                    if (!map) drawMap();
+                    // 레이아웃 재계산 (화면 전환 시 지도 짤림 방지)
                     setTimeout(function() {
                         map.relayout();
                         map.setCenter(centerPos);
-                    }, 100);
+                    }, 200);
                 });
+            } else {
+                alert("지도 라이브러리 로드 실패! 도메인 설정을 확인해주세요.");
             }
 
-            // 3. 역할별 카드 내용
             const cardContent = document.getElementById('card-content');
             if (role === 'owner') {
                 cardContent.innerHTML = `
-                    <p class="text-[#944a00] font-bold text-[10px] uppercase mb-1">경기대 정문 상권</p>
+                    <p class="text-[#944a00] font-bold text-[10px] uppercase tracking-widest mb-1">경기대 정문 상권</p>
                     <h2 class="text-2xl font-black text-[#1e1b13] mb-3">현재 유동인구 1,240명</h2>
-                    <button class="w-full bg-[#944a00] text-white py-4 rounded-full font-bold shadow-lg border-none">동적 가격 규칙 실행</button>
+                    <p class="text-stone-500 text-sm mb-6 leading-relaxed font-medium">지금이 '마중 가격' 규칙을 실행하기<br>가장 좋은 타이밍입니다.</p>
+                    <button class="w-full bg-[#944a00] text-white py-4 rounded-full font-bold shadow-lg border-none active:scale-[0.98] transition-transform">동적 가격 규칙 실행</button>
                 `;
             } else {
                 cardContent.innerHTML = `
-                    <p class="text-[#5b6248] font-bold text-[10px] uppercase mb-1">실시간 길목 혜택</p>
+                    <p class="text-[#5b6248] font-bold text-[10px] uppercase tracking-widest mb-1">지금 내 주변 혜택</p>
                     <h2 class="text-2xl font-black text-[#1e1b13] mb-3">커피 40% 타임세일</h2>
-                    <button class="w-full bg-gradient-to-br from-[#944a00] to-[#77574e] text-white py-4 rounded-full font-bold shadow-lg border-none">쿠폰 발급받기</button>
+                    <p class="text-stone-500 text-sm mb-6 leading-relaxed font-medium">사람들이 모여 가격이 내려갔어요!<br>카페 '온도' 쿠폰을 확인하세요.</p>
+                    <button class="w-full bg-gradient-to-br from-[#944a00] to-[#77574e] text-white py-4 rounded-full font-bold shadow-lg border-none active:scale-[0.98] transition-transform">혜택 확인하기</button>
                 `;
             }
         }
