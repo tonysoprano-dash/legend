@@ -2,41 +2,145 @@
 <html lang="ko">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>길목 - 경기대 프로젝트</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>길목 (Gilmok) - 디지털 화로</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c6fa90ad968fa722bdc6d58024097828&libraries=services"></script>
+    
     <style>
-        /* [중요] 지도가 들어갈 상자의 크기를 명확히 지정해야 눈에 보입니다. */
-        #map {
-            width: 100%;
-            height: 100vh; /* 화면 전체 높이 */
-            background-color: #eee; /* 지도가 로드되기 전 회색으로 표시 */
-        }
-        body { margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8ef; margin: 0; overflow: hidden; }
+        /* [2] 지도를 담을 영역 스타일 설정 */
+        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .map-overlay { position: absolute; inset: 0; background: rgba(148, 74, 0, 0.03); pointer-events: none; z-index: 1; }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-    <div id="map"></div>
+    <div id="onboarding" class="fixed inset-0 z-50 bg-[#fff8ef] flex flex-col items-center justify-center p-8 text-center transition-all duration-500">
+        <div class="mb-14 flex flex-col items-center gap-4">
+            <div class="w-16 h-16 bg-[#ffdbc0] rounded-full flex items-center justify-center shadow-inner">
+                <span class="material-symbols-outlined text-[#944a00] text-4xl">local_fire_department</span>
+            </div>
+            <div>
+                <h1 class="text-4xl font-extrabold text-[#944a00] tracking-tighter">길목</h1>
+                <p class="text-[#77574e] font-bold text-[10px] uppercase tracking-[0.2em] mt-1">The Digital Hearth</p>
+            </div>
+        </div>
+        <h2 class="text-2xl font-bold mb-10 text-[#1e1b13]">어떤 길목에서 만날까요?</h2>
+        <div class="grid gap-5 w-full max-w-sm">
+            <button onclick="selectRole('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
+                <span class="material-symbols-outlined text-4xl text-[#944a00]">storefront</span>
+                <h3 class="text-xl font-bold text-[#1e1b13] mt-3 font-['Plus_Jakarta_Sans']">사장님입니다</h3>
+                <p class="text-sm text-stone-500 mt-2 font-medium">경기대 상권 분석 및 가격 설정</p>
+            </button>
+            <button onclick="selectRole('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all border-none">
+                <span class="material-symbols-outlined text-4xl text-[#5b6248]">shopping_bag</span>
+                <h3 class="text-xl font-bold text-[#1e1b13] mt-3 font-['Plus_Jakarta_Sans']">손님입니다</h3>
+                <p class="text-sm text-stone-500 mt-2 font-medium">지금 내 주변 깜짝 혜택 발견</p>
+            </button>
+        </div>
+    </div>
+
+    <main id="main-app" class="hidden w-full h-screen relative">
+        <div id="map"></div>
+        <div class="map-overlay"></div>
+
+        <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-20">
+            <div class="bg-white/90 px-4 py-2 rounded-full shadow-sm backdrop-blur-md">
+                <h1 class="text-lg font-black text-[#944a00] tracking-tight">길목</h1>
+            </div>
+            <button onclick="location.reload()" class="bg-white/90 p-2 rounded-full shadow-sm border-none">
+                <span class="material-symbols-outlined text-[#1e1b13]">logout</span>
+            </button>
+        </header>
+
+        <div id="floating-card" class="absolute bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-20 transition-all duration-500">
+            <div class="bg-white rounded-3xl p-7 shadow-2xl border-none">
+                <div id="card-content"></div>
+            </div>
+        </div>
+
+        <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md h-20 glass-nav rounded-[2.5rem] flex items-center justify-around z-30 shadow-xl border border-white/20">
+            <div class="flex flex-col items-center text-[#944a00]">
+                <span class="material-symbols-outlined">map</span>
+                <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter">지도</span>
+            </div>
+            <div class="relative -top-7">
+                <button class="w-16 h-16 bg-gradient-to-br from-[#944a00] to-[#77574e] rounded-full shadow-2xl flex items-center justify-center text-white border-[5px] border-[#fff8ef] active:scale-90 transition-transform">
+                    <span class="material-symbols-outlined text-3xl">bolt</span>
+                </button>
+            </div>
+            <div class="flex flex-col items-center text-stone-400">
+                <span class="material-symbols-outlined text-stone-400">person</span>
+                <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter font-['Plus_Jakarta_Sans']">정보</span>
+            </div>
+        </nav>
+    </main>
 
     <script>
-        // 카카오 지도 라이브러리가 완전히 로드된 후 실행되도록 보장합니다.
-        kakao.maps.load(function() {
+        var map;
+        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대 수원캠퍼스 정문
+
+        // [3] 지도 생성 및 객체 리턴 로직
+        function drawMap() {
             var container = document.getElementById('map'); // 지도를 담을 영역
-            var options = {
-                center: new kakao.maps.LatLng(37.3006, 127.0358), // 경기대 수원캠퍼스 정문 좌표
-                level: 3 // 확대 레벨
-            };
+            var options = { center: centerPos, level: 3 }; // 생성 옵션
+            map = new kakao.maps.Map(container, options); // 지도 생성
 
-            // 드디어 지도를 생성합니다!
-            var map = new kakao.maps.Map(container, options);
+            // 마커 표시
+            new kakao.maps.Marker({ position: centerPos }).setMap(map);
+            // 유동인구 시각화용 원형 오버레이
+            new kakao.maps.Circle({
+                center: centerPos,
+                radius: 120,
+                strokeWeight: 0,
+                fillColor: '#944a00',
+                fillOpacity: 0.12
+            }).setMap(map);
+        }
 
-            // 마커 하나 찍어볼까요?
-            var marker = new kakao.maps.Marker({
-                position: new kakao.maps.LatLng(37.3006, 127.0358)
-            });
-            marker.setMap(map);
-        });
+        function selectRole(role) {
+            // 1. 화면 전환 (온보딩 숨기고 앱 표시)
+            document.getElementById('onboarding').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('onboarding').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                
+                // 2. 카카오 지도 로드 및 화면 깨짐 방지 처리
+                if (window.kakao && window.kakao.maps) {
+                    kakao.maps.load(function() {
+                        if (!map) drawMap();
+                        // 숨겨진 상태에서 로드될 때 지도가 짤리는 현상을 강제로 해결
+                        setTimeout(function() {
+                            map.relayout();
+                            map.setCenter(centerPos);
+                        }, 150);
+                    });
+                }
+            }, 500);
+
+            // 3. 역할별 카드 업데이트
+            const cardContent = document.getElementById('card-content');
+            if (role === 'owner') {
+                cardContent.innerHTML = `
+                    <p class="text-[#944a00] font-bold text-[10px] uppercase tracking-widest mb-1">경기대 정문 상권</p>
+                    <h2 class="text-2xl font-black text-[#1e1b13] mb-3 font-['Plus_Jakarta_Sans']">현재 유동인구 1,240명</h2>
+                    <p class="text-stone-500 text-sm mb-6 leading-relaxed font-medium">유동인구가 급증하고 있습니다.<br>지금 '마중 가격'을 실행할까요?</p>
+                    <button class="w-full bg-[#944a00] text-white py-4 rounded-full font-bold shadow-lg shadow-[#944a00]/20 border-none transition-transform active:scale-[0.98]">동적 가격 규칙 실행</button>
+                `;
+            } else {
+                cardContent.innerHTML = `
+                    <p class="text-[#5b6248] font-bold text-[10px] uppercase tracking-widest mb-1">실시간 길목 혜택</p>
+                    <h2 class="text-2xl font-black text-[#1e1b13] mb-3 font-['Plus_Jakarta_Sans']">커피 40% 타임세일</h2>
+                    <p class="text-stone-500 text-sm mb-6 leading-relaxed font-medium">사장님이 직접 제안한 파격 특가!<br>카페 '온도'의 혜택을 확인하세요.</p>
+                    <button class="w-full bg-gradient-to-br from-[#944a00] to-[#77574e] text-white py-4 rounded-full font-bold shadow-lg border-none transition-transform active:scale-[0.98]">쿠폰 확인하기</button>
+                `;
+            }
+        }
     </script>
 </body>
 </html>
