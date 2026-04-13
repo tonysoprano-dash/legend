@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>길목 (Gilmok) - Digital Hearth</title>
+    <title>길목 (Gilmok) - Full Map View</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -13,19 +13,30 @@
     
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #fff8ef; font-family: 'Plus Jakarta Sans', sans-serif; }
-        /* 지도 영역: 전체 화면 */
+        
+        /* [핵심] 지도가 화면 전체를 덮도록 설정 */
         #map { 
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%; 
-            height: 100vh; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            z-index: 1;
-            background-color: #d1d5db; 
+            height: 100%; 
+            z-index: 1; /* 지도가 가장 아래 */
         }
-        /* UI 레이어: 지도 위 배치 */
-        .ui-layer { z-index: 10; position: relative; pointer-events: none; }
-        .ui-layer button, .ui-layer .card { pointer-events: auto; }
+        
+        /* UI 레이어: 지도 위에서 클릭이 가능하게 설정 */
+        .ui-layer { 
+            position: relative;
+            z-index: 10; 
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-col;
+            justify-content: space-between;
+            pointer-events: none; /* UI 빈 공간은 지도가 클릭되게 함 */
+        }
+        
+        .ui-content { pointer-events: auto; } /* 버튼이나 카드는 클릭 가능하게 함 */
         .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
     </style>
 </head>
@@ -41,13 +52,63 @@
                 <p class="text-[#77574e] font-bold text-[10px] uppercase tracking-[0.2em] mt-1">The Digital Hearth</p>
             </div>
         </div>
-        
         <div class="grid gap-5 w-full max-w-sm">
-            <button onclick="startApp('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all font-bold text-lg border-none italic">사장님입니다</button>
-            <button onclick="startApp('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all font-bold text-lg border-none italic">손님입니다</button>
+            <button onclick="startApp('owner')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all font-bold text-lg border-none italic ui-content">사장님입니다</button>
+            <button onclick="startApp('user')" class="p-8 bg-white rounded-3xl shadow-sm text-left active:scale-95 transition-all font-bold text-lg border-none italic ui-content">손님입니다</button>
         </div>
     </div>
 
     <main id="main-app" class="hidden w-full h-full relative">
         <div id="map"></div>
-        <div class="ui-layer h-full w-full flex flex-col justify-between p-6 pb-32">
+        
+        <div class="ui-layer p-6 pb-32">
+            <header class="flex justify-between items-center w-full ui-content">
+                <div class="glass px-5 py-2 rounded-full shadow-sm font-black text-[#944a00] tracking-tight">길목</div>
+                <button onclick="location.reload()" class="glass p-2 rounded-full shadow-sm border-none"><span class="material-symbols-outlined text-[#1e1b13]">logout</span></button>
+            </header>
+
+            <div id="floating-card" class="w-full max-w-lg mb-4 ui-content">
+                <div class="bg-white rounded-3xl p-7 shadow-2xl border-none" id="card-content"></div>
+            </div>
+
+            <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md h-20 glass rounded-[2.5rem] flex items-center justify-around shadow-xl border border-white/20 ui-content">
+                <div class="flex flex-col items-center text-[#944a00]"><span class="material-symbols-outlined">map</span><span class="text-[9px] font-bold mt-1 uppercase">지도</span></div>
+                <div class="relative -top-7"><button class="w-16 h-16 bg-gradient-to-br from-[#944a00] to-[#77574e] rounded-full shadow-2xl flex items-center justify-center text-white border-[5px] border-[#fff8ef]"><span class="material-symbols-outlined text-3xl">bolt</span></button></div>
+                <div class="flex flex-col items-center text-stone-400"><span class="material-symbols-outlined">person</span><span class="text-[9px] font-bold mt-1 uppercase">정보</span></div>
+            </nav>
+        </div>
+    </main>
+
+    <script>
+        var map;
+        var centerPos = new kakao.maps.LatLng(37.3006, 127.0358); // 경기대 수원캠 정문
+
+        function startApp(role) {
+            document.getElementById('onboarding').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+
+            // 지도 초기화 로직 (전체 화면 대응)
+            var container = document.getElementById('map');
+            var options = { center: centerPos, level: 3 };
+            
+            if (!map) {
+                map = new kakao.maps.Map(container, options);
+                new kakao.maps.Marker({ position: centerPos }).setMap(map);
+            }
+
+            // 지도가 화면 크기에 맞게 재조정되도록 강제 호출
+            setTimeout(function() {
+                map.relayout();
+                map.setCenter(centerPos);
+            }, 100);
+
+            const info = document.getElementById('card-content');
+            if (role === 'owner') {
+                info.innerHTML = `<h2 class="text-2xl font-black mb-1 italic">유동인구 1,240명</h2><p class="text-sm text-stone-500 mb-6 font-medium">경기대 정문 상권 실시간 데이터</p><button class="w-full bg-[#944a00] text-white py-4 rounded-2xl font-bold border-none active:scale-[0.98]">동적 가격 규칙 실행</button>`;
+            } else {
+                info.innerHTML = `<h2 class="text-2xl font-black mb-1 italic">커피 40% 타임세일</h2><p class="text-sm text-stone-500 mb-6 font-medium">지금 내 주변 깜짝 할인 혜택</p><button class="w-full bg-[#5b6248] text-white py-4 rounded-2xl font-bold border-none active:scale-[0.98]">쿠폰 확인하기</button>`;
+            }
+        }
+    </script>
+</body>
+</html>
