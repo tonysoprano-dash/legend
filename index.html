@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>길목 (Gilmok) App</title>
+    <title>길목 (Gilmok)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -19,7 +19,7 @@
         #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; filter: contrast(1.1); }
         .app-container { position: relative; z-index: 10; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; }
         
-        /* 모바일 앱 특유의 하단 시트 */
+        /* 앱 하단 시트 */
         .bottom-sheet {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(25px);
@@ -35,20 +35,21 @@
         .handle { width: 40px; height: 5px; background: #e5e7eb; border-radius: 10px; margin: 0 auto 1.5rem; }
         .ui-content { pointer-events: auto; }
         
-        /* 핫존 애니메이션 */
+        /* 로고 애니메이션 */
+        @keyframes fade-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .logo-fade { animation: fade-in 1s ease-out; }
+        
+        /* 마커 스타일 */
         .hot-zone-label { background: #ff4d00; color: white; padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; border: 2px solid white; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        
         .my-shop-marker { border: 4px solid #944a00; background: white; width: 28px; height: 28px; border-radius: 50%; box-shadow: 0 0 20px rgba(148, 74, 0, 0.6); }
     </style>
 </head>
 <body>
 
     <div id="onboarding" class="fixed inset-0 z-[100] bg-[#fff8ef] flex flex-col items-center justify-between p-12 py-20 text-center transition-all duration-700">
-        <div class="flex flex-col items-center gap-6 mt-10">
-            <div class="w-24 h-24 bg-gradient-to-br from-[#944a00] to-[#77574e] rounded-[2rem] flex items-center justify-center shadow-2xl rotate-3">
-                <span class="material-symbols-outlined text-6xl text-white font-bold">local_fire_department</span>
-            </div>
+        <div class="flex flex-col items-center gap-6 mt-10 logo-fade">
+            <img src="https://raw.githubusercontent.com/tonysoprano-dash/legend/main/image_8.png" alt="길목 로고" class="w-24 h-24 rounded-[2rem] shadow-2xl rotate-3">
             <h1 class="text-5xl font-extrabold text-[#944a00] tracking-tighter italic">길목</h1>
         </div>
         
@@ -85,7 +86,6 @@
                         </div>
                         <div class="text-right">
                             <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-[10px] font-black">혼잡도 상</span>
-                            <p class="text-[10px] font-bold text-stone-400 mt-1">최근 5분 기준</p>
                         </div>
                     </div>
 
@@ -107,14 +107,14 @@
 
                 <div id="user-ui" class="hidden pb-4">
                     <h2 class="text-3xl font-black italic mb-2">커피 40% 타임세일</h2>
-                    <p class="text-stone-500 font-medium mb-8 leading-tight italic text-sm">사장님이 현재 인구 폭주로 인해<br>깜짝 혜택을 제안했습니다!</p>
+                    <p class="text-stone-500 font-medium mb-8 leading-tight italic text-sm">사장님이 깜짝 혜택을 제안했습니다!</p>
                     <button class="w-full bg-[#1e1b13] text-white py-5 rounded-[1.8rem] font-bold text-lg shadow-2xl">쿠폰 즉시 받기</button>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[200] bg-black/90 text-white px-8 py-4 rounded-full font-bold text-sm hidden shadow-2xl">🚀 주변 1km 이내 소비자에게 푸시 완료!</div>
+    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[200] bg-black/90 text-white px-8 py-4 rounded-full font-bold text-sm hidden shadow-2xl">🚀 주변 소비자에게 푸시 완료!</div>
 
     <script>
         var map;
@@ -139,14 +139,12 @@
             var container = document.getElementById('map');
             map = new kakao.maps.Map(container, { center: centerPos, level: 3 });
 
-            // 내 가게 마커
             new kakao.maps.CustomOverlay({
                 position: centerPos,
                 content: '<div class="my-shop-marker"></div>'
             }).setMap(map);
 
             if (role === 'owner') {
-                // 반경 및 핫존 시각화
                 new kakao.maps.Circle({
                     center: centerPos, radius: 150,
                     strokeWeight: 0, fillColor: '#944a00', fillOpacity: 0.1
@@ -174,8 +172,6 @@
             toast.classList.remove('hidden');
             setTimeout(() => toast.classList.add('hidden'), 3000);
         }
-        
-        function setPrice(p) { /* 가격 설정 로직 */ }
     </script>
 </body>
 </html>
