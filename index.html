@@ -90,7 +90,7 @@
         <div id="map"></div>
 
         <div class="app-ui">
-            <!-- 상단 헤더: 검색바를 위로 밀착 (iOS 노치 영역 및 상단 여백 최소화) -->
+            <!-- 상단 헤더: 검색바를 위로 밀착 -->
             <header class="p-4 pt-[calc(env(safe-area-inset-top)+10px)] flex items-center gap-2 interactive">
                 <div class="flex-grow bg-white/95 backdrop-blur shadow-2xl rounded-2xl h-12 flex items-center px-4 gap-3 border border-stone-100">
                     <span class="material-symbols-outlined text-stone-400">search</span>
@@ -148,8 +148,9 @@
 
     <script>
         var map;
-        // 위치 수정: 동경당, BHC 치킨 골목 안쪽 상권 중심 (더 오른쪽으로 이동)
-        var centerPos = new kakao.maps.LatLng(37.3015, 127.0410); 
+        // 위치 수정: 오른쪽으로 약 300m, 아래로 약 300m 이동
+        // 기존 (37.3015, 127.0410) -> 신규 (37.2988, 127.0444)
+        var centerPos = new kakao.maps.LatLng(37.2988, 127.0444); 
 
         function startApp(role) {
             document.getElementById('onboarding').style.transform = 'translateY(-100%)';
@@ -167,17 +168,17 @@
             var container = document.getElementById('map');
             map = new kakao.maps.Map(container, { center: centerPos, level: 3 });
 
-            // 내 가게 위치 (동경당 인근 골목 중심)
+            // 내 가게 위치
             new kakao.maps.CustomOverlay({
                 position: centerPos,
                 content: '<div style="width:28px; height:28px; background:#944a00; border:4px solid white; border-radius:50%; box-shadow:0 0 20px rgba(0,0,0,0.4);"></div>'
             }).setMap(map);
 
-            // 핫존 3선: 음식점 밀집 구역 핵심 포인트
+            // 핫존 3선: 이동된 상권 구역의 핵심 포인트 재설정
             var hotspots = [
-                { pos: new kakao.maps.LatLng(37.3018, 127.0415), count: 268 }, // 광교역 메인 상가 (혼잡)
-                { pos: new kakao.maps.LatLng(37.3012, 127.0408), count: 142 }, // 동경당/BHC 골목 (보통)
-                { pos: new kakao.maps.LatLng(37.3005, 127.0418), count: 42 }   // 하단 카페거리 방면 (여유)
+                { pos: new kakao.maps.LatLng(37.2995, 127.0455), count: 284 }, // 신규 구역 상가 중심 (혼잡)
+                { pos: new kakao.maps.LatLng(37.2985, 127.0440), count: 156 }, // 인근 음식점가 (보통)
+                { pos: new kakao.maps.LatLng(37.2975, 127.0450), count: 35 }   // 한적한 외곽 방면 (여유)
             ];
 
             hotspots.forEach(spot => {
@@ -190,7 +191,7 @@
                     color = '#4CAF50'; labelText = '여유';
                 }
 
-                // 히트맵 시각화 (투명한 원)
+                // 히트맵 시각화
                 new kakao.maps.Circle({
                     center: spot.pos,
                     radius: 70,
