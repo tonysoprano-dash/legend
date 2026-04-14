@@ -1,0 +1,16 @@
+{
+  "name": "길목 Gilmok",
+  "short_name": "길목",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff8ef",
+  "theme_color": "#944a00",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/tonysoprano-dash/legend/main/image_8.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
