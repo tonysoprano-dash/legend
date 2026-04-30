@@ -248,64 +248,19 @@
 
         <div id="home-tab" class="tab-content active px-6 pt-20">
 
-            <!-- (1) 홈 탭 내의 사장님 모드 섹션 수정본 -->
-<div id="owner-home" class="hidden space-y-10">
-    <div class="flex justify-between items-end">
-        <h1 class="text-4xl font-black text-[#3E2723]">사장님,<br/>오늘 길목은 <span class="text-[#D2691E]">맑음</span></h1>
-        <div class="bg-white px-4 py-2 rounded-2xl shadow-sm border border-stone-100 flex items-center gap-2">
-            <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            <span class="text-xs font-black text-stone-600">영업 중</span>
-        </div>
-    </div>
+            <div id="owner-home" class="hidden space-y-10">
 
-    <!-- AI 유동인구 리포트 카드 -->
-    <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
-        <div class="relative z-10">
-            <p class="text-sm font-bold opacity-70 mb-1">오늘의 길목 리포트</p>
-            <h3 class="text-3xl font-extrabold">유동인구 240% 급증 예상</h3>
-            <div class="mt-6 flex items-end gap-2">
-                <div class="w-8 h-12 bg-white/20 rounded-t-lg"></div>
-                <div class="w-8 h-20 bg-white/20 rounded-t-lg"></div>
-                <div class="w-8 h-32 bg-[#D2691E] rounded-t-lg animate-pulse"></div>
-                <div class="w-8 h-24 bg-white/20 rounded-t-lg"></div>
-                <div class="w-8 h-16 bg-white/20 rounded-t-lg"></div>
-            </div>
-            <p class="text-[11px] mt-4 font-medium opacity-60">*내일 오후 2시~4시 경기대 중문 유입 최고조</p>
-        </div>
-        <!-- 배경 장식 아이콘 -->
-        <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl opacity-10">trending_up</span>
-    </div>
+                <h1 class="text-4xl font-black text-[#3E2723]">안녕하세요, <br/>길목 사장님!</h1>
 
-    <!-- 사장님 퀵 메뉴 -->
-    <div class="grid grid-cols-2 gap-4">
-        <button onclick="showAlert('핫딜 발행 페이지로 이동합니다.')" class="card-premium flex flex-col items-center gap-3 py-8 border border-orange-100">
-            <span class="material-symbols-outlined text-4xl text-[#D2691E]">campaign</span>
-            <span class="font-black text-sm">핫딜 발행</span>
-        </button>
-        <button onclick="switchTab('chat')" class="card-premium flex flex-col items-center gap-3 py-8 border border-stone-100">
-            <span class="material-symbols-outlined text-4xl text-stone-400">chat_bubble</span>
-            <span class="font-black text-sm">고객 문의</span>
-        </button>
-    </div>
+                <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
 
-    <!-- 실시간 매장 통계 -->
-    <div class="space-y-4">
-        <h3 class="text-xl font-black italic">매장 현황</h3>
-        <div class="space-y-3">
-            <div class="card-premium flex justify-between items-center py-5">
-                <span class="font-bold text-stone-600">오늘 내 가게 노출</span>
-                <span class="font-black text-[#3E2723]">1,242회</span>
+                    <h3 class="text-3xl font-extrabold relative z-10">유동인구 240% 급증</h3>
+
+                    <p class="opacity-70 mt-2 font-bold italic relative z-10">내일 오후 2시 예상 (AI 리포트)</p>
+
+                </div>
+
             </div>
-            <div class="card-premium flex justify-between items-center py-5">
-                <span class="font-bold text-stone-600">쿠폰 다운로드</span>
-                <span class="font-black text-[#D2691E]">48회</span>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -375,85 +330,47 @@
 
         <!-- (2) 지도 탭 (8개 마커 복구) -->
 
-       <!-- (2) 지도 탭: 사장님 모드일 때와 손님 모드일 때 UI가 분기되도록 수정 -->
-<!-- 할인율 조정 슬라이더 섹션 -->
+        <div id="near-tab" class="tab-content">
 
-        <!-- [손님 모드 전용] 상세 뷰 (기존 유지) -->
-        <div id="map-event-detail" class="hidden absolute bottom-0 left-0 right-0 z-[200] p-6 interactive">
-            <div class="glass-premium rounded-[3.5rem] p-8 shadow-2xl slide-up">
-                <h3 id="detail-title" class="text-3xl font-black text-[#3E2723] mb-4">가게 이름</h3>
-                <div class="bg-white/60 rounded-[2.5rem] p-7 mb-8"><p id="detail-desc" class="text-base font-bold italic mb-4"></p><p id="detail-price" class="text-3xl font-black text-[#D2691E]"></p></div>
-                <div class="grid grid-cols-2 gap-4">
-                    <button onclick="chatFromDetail()" class="py-5 bg-white border-2 border-stone-100 rounded-[1.8rem] font-black flex items-center justify-center gap-2"><span class="material-symbols-outlined">chat_bubble</span>채팅하기</button>
-                    <button onclick="takeCoupon(APP_STATE.currentShop)" class="py-5 bg-[#3E2723] text-white rounded-[1.8rem] font-black">쿠폰 받기</button>
+            <div id="near-tab-content" class="h-full relative overflow-hidden">
+
+                <div id="map"></div>
+
+                <div class="app-ui px-4">
+
+                    <header class="search-container glass-premium interactive mt-16 rounded-[2rem] flex items-center px-6 py-4 gap-4 border border-white">
+
+                        <span class="material-symbols-outlined text-stone-400">search</span>
+
+                        <input type="text" placeholder="경기대 근처 맛집 검색" class="bg-transparent border-none outline-none flex-grow font-bold text-base">
+
+                    </header>
+
                 </div>
+
+                <div id="map-event-detail" class="hidden absolute bottom-0 left-0 right-0 z-[200] p-6 interactive">
+
+                    <div class="glass-premium rounded-[3.5rem] p-8 shadow-2xl slide-up">
+
+                        <h3 id="detail-title" class="text-3xl font-black text-[#3E2723] mb-4">가게 이름</h3>
+
+                        <div class="bg-white/60 rounded-[2.5rem] p-7 mb-8"><p id="detail-desc" class="text-base font-bold italic mb-4"></p><p id="detail-price" class="text-3xl font-black text-[#D2691E]"></p></div>
+
+                        <div class="grid grid-cols-2 gap-4">
+
+                            <button onclick="chatFromDetail()" class="py-5 bg-white border-2 border-stone-100 rounded-[1.8rem] font-black flex items-center justify-center gap-2"><span class="material-symbols-outlined">chat_bubble</span>채팅하기</button>
+
+                            <button onclick="showAlert('쿠폰함에 저장되었습니다!')" class="py-5 bg-[#3E2723] text-white rounded-[1.8rem] font-black">쿠폰 받기</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
-    </div>
-</div>
-
-<script>
-    /* 사장님 모드 전용 전역 변수 */
-    let hotZoneCircles = [];
-
-    // switchTab 함수 수정: 모드에 따라 지도 UI 분기
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(tabName + '-tab').classList.add('active');
-        document.getElementById('nav-' + tabName).classList.add('active');
-        
-        if(tabName === 'near') {
-            initKakaoMap();
-            if(APP_STATE.role === 'owner') {
-                document.getElementById('owner-map-ui').classList.remove('hidden');
-                document.getElementById('owner-pricing-dashboard').classList.remove('hidden');
-                document.getElementById('map-event-detail').classList.add('hidden');
-                toggleHotZone(true); // 사장님은 핫존부터 시작
-            } else {
-                document.getElementById('owner-map-ui').classList.add('hidden');
-                document.getElementById('owner-pricing-dashboard').classList.add('hidden');
-            }
-        }
-    }
-
-    // 핫존 시각화 함수
-    function toggleHotZone(show) {
-        // 기존 서클 제거
-        hotZoneCircles.forEach(circle => circle.setMap(null));
-        hotZoneCircles = [];
-
-        if(show && APP_STATE.map) {
-            // 유동인구 밀집 지역 데이터 (가상)
-            const hotspots = [
-                { pos: new kakao.maps.LatLng(37.2988, 127.0444), radius: 100, color: '#ef4444' },
-                { pos: new kakao.maps.LatLng(37.3005, 127.0455), radius: 150, color: '#f97316' }
-            ];
-
-            hotspots.forEach(spot => {
-                const circle = new kakao.maps.Circle({
-                    center: spot.pos,
-                    radius: spot.radius,
-                    strokeWeight: 0,
-                    fillColor: spot.color,
-                    fillOpacity: 0.4
-                });
-                circle.setMap(APP_STATE.map);
-                hotZoneCircles.push(circle);
-            });
-            showAlert('실시간 핫존 데이터를 불러왔습니다.');
-        }
-    }
-
-    function updateDiscount(val) {
-        document.getElementById('current-discount-label').innerText = val + '%';
-    }
-
-    function applyNewPrice() {
-        const discount = document.getElementById('current-discount-label').innerText;
-        showAlert(`${discount} 할인율이 길목 전 사용자의 앱에 반영되었습니다!`);
-    }
-</script>
 
 
 
