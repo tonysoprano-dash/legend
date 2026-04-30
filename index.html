@@ -120,9 +120,28 @@
         .slide-up { animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
         ::-webkit-scrollbar { display: none; }
+
+        /* 커스텀 메시지 박스 */
+        #custom-alert {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; display: none;
+            background: rgba(62, 39, 35, 0.95); color: white;
+            padding: 12px 24px; border-radius: 20px; font-weight: 700; font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            animation: fadeInOut 2.5s forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            15% { opacity: 1; transform: translate(-50%, 0); }
+            85% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
+        }
     </style>
 </head>
 <body>
+
+    <!-- 알림 메시지 박스 -->
+    <div id="custom-alert">알림 메시지</div>
 
     <!-- [온보딩] 앱 시작 화면 -->
     <div id="onboarding" class="fixed inset-0 z-[200] bg-[#FFF8E7] flex flex-col items-center justify-between p-12 py-24 text-center transition-all duration-700">
@@ -662,6 +681,16 @@
         var currentDetailShop = '';
 
         /**
+         * 알림 메시지 표시
+         */
+        function showAlert(msg) {
+            const alertBox = document.getElementById('custom-alert');
+            alertBox.innerText = msg;
+            alertBox.style.display = 'block';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 2500);
+        }
+
+        /**
          * 앱 시작 및 역할 설정
          */
         function startApp(role) {
@@ -796,9 +825,6 @@
          * 상세 팝업에서 채팅으로 가기
          */
         function chatFromDetail() {
-            hideEventDetail();
-            switchTab('chat');
-            
             const shopToId = {
                 '소소곱창': 'gopchang',
                 '춘천숯닭': 'chicken',
@@ -807,7 +833,11 @@
             
             const id = shopToId[currentDetailShop];
             if (id) {
+                hideEventDetail();
+                switchTab('chat');
                 openChat(id);
+            } else {
+                showAlert(`${currentDetailShop} 사장님은 현재 자리에 안계셔서 곧 채팅을 오픈할 예정입니다!`);
             }
         }
 
@@ -864,9 +894,6 @@
 
             setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 200);
         }
-
-        // 초기 시작 시 손님 모드 체크 (디버깅용)
-        // startApp('user');
     </script>
 </body>
 </html>
