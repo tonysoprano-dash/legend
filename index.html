@@ -814,19 +814,26 @@
 
 
         function switchTab(tabName) {
-
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
             document.getElementById(tabName + '-tab').classList.add('active');
-
             document.getElementById('nav-' + tabName).classList.add('active');
-
-            if(tabName === 'near') initKakaoMap();
-
+            
+            if(tabName === 'near') {
+                initKakaoMap();
+                // 사장님 모드일 때 지도 UI 및 핫존 분기 처리
+                if(APP_STATE.role === 'owner') {
+                    document.getElementById('owner-map-ui')?.classList.remove('hidden');
+                    document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
+                    document.getElementById('map-event-detail')?.classList.add('hidden');
+                    toggleHotZone(true); // 사장님은 핫존 ON
+                } else {
+                    document.getElementById('owner-map-ui')?.classList.add('hidden');
+                    document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
+                    toggleHotZone(false); // 손님은 핫존 OFF
+                }
+            }
         }
-
 
 
         function initKakaoMap() {
@@ -972,8 +979,48 @@
         function closeSubView() { document.querySelectorAll('.subview').forEach(s => s.classList.remove('active')); }
 
         function showAlert(msg) { const a = document.getElementById('custom-alert'); a.innerText = msg; a.style.display = 'block'; setTimeout(() => a.style.display = 'none', 2500); }
+        // 핫존 관리용 변수 및 함수
+        let hotZoneCircles = [];
 
-    </script>
+        function toggleHotZone(show) {
+            // 기존 핫존 원 삭제
+            hotZoneCircles.forEach(circle => circle.setMap(null));
+            hotZoneCircles = [];
+
+            if(show && APP_STATE.map) {
+                // 경기대 주변 유동인구 밀집 가상 데이터
+                const hotspots = [
+                    { pos: new kakao.maps.LatLng(37.2988, 127.0444), radius: 130, color: '#ef4444' }, // 중문
+                    { pos: new kakao.maps.LatLng(37.3005, 127.0455), radius: 180, color: '#f97316' }, // 정문
+                    { pos: new kakao.maps.LatLng(37.2970, 127.0425), radius: 100, color: '#ef4444' }  // 후문
+                ];
+
+                hotspots.forEach(spot => {
+                    const circle = new kakao.maps.Circle({
+                        center: spot.pos,
+                        radius: spot.radius,
+                        strokeWeight: 0,
+                        fillColor: spot.color,
+                        fillOpacity: 0.35
+                    });
+                    circle.setMap(APP_STATE.map);
+                    hotZoneCircles.push(circle);
+                });
+            }
+        }
+
+        // 가격 슬라이더용 함수들
+        function updateDiscount(val) {
+            const label = document.getElementById('current-discount-label');
+            if(label) label.innerText = val + '%';
+        }
+
+        function applyNewPrice() {
+            const discount = document.getElementById('current-discount-label')?.innerText;
+            showAlert(`${discount} 할인율이 사장님의 가게에 실시간 반영되었습니다!`);
+        }
+
+   </script>
 
 </body>
 
