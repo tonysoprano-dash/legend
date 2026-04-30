@@ -317,7 +317,7 @@
             </div>
         </div>
 
-        <!-- (2) 지도 탭 (검색 바 및 행사 매장 표시 고도화됨) -->
+        <!-- (2) 지도 탭 -->
         <div id="near-tab" class="tab-content">
             <div id="near-tab-content">
                 <div id="map"></div>
@@ -437,7 +437,7 @@
             </div>
         </div>
 
-        <!-- (4) 나의 길목 탭 -->
+        <!-- (4) 나의 길목 탭 (명칭 개선됨) -->
         <div id="profile-tab" class="tab-content relative px-6 pt-16">
             <div id="profile-main-view">
                 <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">나의 길목</h1>
@@ -453,7 +453,7 @@
                     </div>
                 </div>
 
-                <!-- 메뉴 리스트 (쿠폰함 등) -->
+                <!-- 메뉴 리스트 -->
                 <div class="space-y-3">
                     <div onclick="openCoupons()" class="card-premium flex justify-between items-center py-5 active:scale-[0.98] transition-all cursor-pointer">
                         <div class="flex items-center gap-4 text-[#3E2723]">
@@ -466,10 +466,11 @@
                         </div>
                     </div>
 
+                    <!-- 명칭 수정: 거북골 스탬프 투어 -> 단골 매장 스탬프 -->
                     <div onclick="openStamps()" class="card-premium flex justify-between items-center py-5 active:scale-[0.98] transition-all cursor-pointer">
                         <div class="flex items-center gap-4 text-[#3E2723]">
-                            <span class="material-symbols-outlined font-bold">stars</span>
-                            <span class="font-bold">거북골 스탬프 투어</span>
+                            <span class="material-symbols-outlined font-bold">auto_awesome</span>
+                            <span class="font-bold">단골 매장 스탬프</span>
                         </div>
                         <span class="material-symbols-outlined text-stone-300">chevron_right</span>
                     </div>
@@ -484,15 +485,13 @@
                 </div>
             </div>
 
-            <!-- 내 쿠폰함 상세 보기 (숨김 상태) -->
+            <!-- 내 쿠폰함 상세 보기 -->
             <div id="coupon-detail-view" class="hidden absolute inset-0 bg-[#FFF8E7] z-50 flex flex-col p-6 overflow-y-auto">
                 <div class="flex items-center gap-4 mb-8 pt-6">
                     <button onclick="closeCoupons()" class="p-2 bg-white rounded-xl shadow-sm interactive"><span class="material-symbols-outlined">arrow_back</span></button>
                     <h1 class="text-3xl font-black text-[#3E2723] italic tracking-tighter">내 쿠폰함</h1>
                 </div>
-
                 <div class="space-y-4">
-                    <!-- 쿠폰 1 -->
                     <div class="card-premium relative overflow-hidden border-l-8 border-l-[#D2691E] shadow-md">
                         <div class="flex justify-between items-start">
                             <div>
@@ -503,37 +502,22 @@
                         </div>
                         <div class="mt-4 pt-4 border-t border-dashed border-stone-200 flex justify-between items-center">
                             <span class="text-[10px] font-bold text-stone-400">유효기간: ~ 2024.12.31</span>
-                            <button class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm interactive active:scale-95 transition-transform">사용하기</button>
-                        </div>
-                    </div>
-
-                    <!-- 쿠폰 2 -->
-                    <div class="card-premium relative overflow-hidden border-l-8 border-l-stone-800 shadow-md">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="font-black text-lg text-[#3E2723]">어랑다랑 (연무점)</h4>
-                                <p class="text-sm text-stone-500 font-medium">모듬 사시미 세트 20% 타임딜</p>
-                            </div>
-                            <span class="bg-stone-100 text-stone-800 text-[10px] font-black px-2 py-1 rounded">D-7</span>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-dashed border-stone-200 flex justify-between items-center">
-                            <span class="text-[10px] font-bold text-stone-400">유효기간: ~ 2024.12.25</span>
-                            <button class="bg-stone-800 text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm interactive">사용하기</button>
+                            <button class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm interactive">사용하기</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 스탬프 투어 상세 보기 (숨김 상태) -->
+            <!-- 단골 매장 스탬프 상세 보기 -->
             <div id="stamp-detail-view" class="hidden absolute inset-0 bg-[#FFF8E7] z-50 flex flex-col p-6 overflow-y-auto">
                 <div class="flex items-center gap-4 mb-8 pt-6">
                     <button onclick="closeStamps()" class="p-2 bg-white rounded-xl shadow-sm interactive"><span class="material-symbols-outlined">arrow_back</span></button>
-                    <h1 class="text-3xl font-black text-[#3E2723] italic tracking-tighter">스탬프 투어</h1>
+                    <h1 class="text-3xl font-black text-[#3E2723] italic tracking-tighter">단골 매장 스탬프</h1>
                 </div>
 
                 <div class="card-premium mb-8 bg-white border-orange-200 shadow-md">
                     <div class="flex justify-between items-center mb-6">
-                        <h4 class="font-black text-lg text-[#3E2723]">거북골 정복 스탬프 <span class="text-xs text-orange-600 ml-2">진행 중</span></h4>
+                        <h4 class="font-black text-lg text-[#3E2723]">거북골 단골 도장 <span class="text-xs text-orange-600 ml-2">적립 중</span></h4>
                         <span class="material-symbols-outlined text-[#D2691E]">stars</span>
                     </div>
                     <div class="grid grid-cols-5 gap-3">
@@ -543,7 +527,7 @@
                         <div class="aspect-square rounded-xl bg-orange-100 flex items-center justify-center text-orange-200 shadow-inner"><span class="material-symbols-outlined">store</span></div>
                         <div class="aspect-square rounded-xl border-2 border-dashed border-orange-200 flex items-center justify-center text-orange-200"><span class="material-symbols-outlined text-xs">add</span></div>
                     </div>
-                    <p class="text-[10px] font-bold text-stone-500 mt-6 leading-relaxed">2개만 더 모으면 <strong>핵밥 5% 할인 쿠폰</strong>이 발행됩니다!</p>
+                    <p class="text-xs font-bold text-stone-500 mt-6 leading-relaxed">거북골 상점가에서 결제 시 자동으로 적립됩니다. <br/>2개 더 모으면 <strong>'핵밥 5% 쿠폰'</strong> 지급!</p>
                 </div>
             </div>
         </div>
@@ -562,7 +546,6 @@
         var centerPos = new kakao.maps.LatLng(37.2988, 127.0444); 
         var userRole = 'user';
 
-        // 앱 시작
         function startApp(role) {
             userRole = role;
             document.getElementById('onboarding').style.transform = 'translateY(-100%)';
@@ -579,18 +562,13 @@
             }, 600);
         }
 
-        // 탭 전환
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             document.getElementById(tabName + '-tab').classList.add('active');
             document.getElementById('nav-' + tabName).classList.add('active');
             
-            // 지도 초기화
-            if(tabName === 'near') {
-                initMap();
-            }
-            // 채팅방 또는 쿠폰 상세뷰가 열려있다면 닫기
+            if(tabName === 'near') initMap();
             if(tabName !== 'chat') closeChat();
             if(tabName !== 'profile') {
                 closeCoupons();
@@ -598,7 +576,6 @@
             }
         }
 
-        // 채팅방 열기/닫기
         function openChat(shopId) {
             const list = document.getElementById('chat-list-view');
             const room = document.getElementById('chat-room-view');
@@ -640,7 +617,6 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // 쿠폰함/스탬프 상세 보기 제어
         function openCoupons() {
             document.getElementById('profile-main-view').classList.add('hidden');
             document.getElementById('coupon-detail-view').classList.remove('hidden');
@@ -658,7 +634,6 @@
             document.getElementById('stamp-detail-view').classList.add('hidden');
         }
 
-        // 카카오 지도
         function initMap() {
             if(map) {
                 setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 100);
