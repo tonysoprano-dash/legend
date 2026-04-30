@@ -317,7 +317,7 @@
             </div>
         </div>
 
-        <!-- (2) 지도 탭 (검색 바 및 행사 매장 표시 추가됨) -->
+        <!-- (2) 지도 탭 (검색 바 및 행사 매장 표시 고도화됨) -->
         <div id="near-tab" class="tab-content">
             <div id="near-tab-content">
                 <div id="map"></div>
@@ -563,17 +563,29 @@
                 content: '<div style="width:40px; height:40px; background:#D2691E; border:4px solid white; border-radius:18px; box-shadow:0 10px 20px rgba(62,39,35,0.3); display:flex; align-items:center; justify-content:center;"><span class="material-symbols-outlined text-white text-base">school</span></div>'
             }).setMap(map);
 
-            // 행사 중인 매장 데이터
+            // 행사 중인 매장 데이터 (신메뉴 행사 추가됨)
             var eventShops = [
                 { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT_DEAL' },
                 { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT_DEAL' },
                 { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
-                { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' }
+                { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' },
+                { name: '면식당', pos: new kakao.maps.LatLng(37.2970, 127.0445), type: 'NEW_MENU' },
+                { name: '핵밥', pos: new kakao.maps.LatLng(37.3000, 127.0450), type: 'EVENT' },
+                { name: '르디망슈', pos: new kakao.maps.LatLng(37.2990, 127.0425), type: 'NEW_MENU' },
+                { name: '소무실', pos: new kakao.maps.LatLng(37.2980, 127.0470), type: 'EVENT' }
             ];
 
             eventShops.forEach(shop => {
-                var badgeColor = shop.type === 'HOT_DEAL' ? '#ef4444' : '#f59e0b';
-                var badgeLabel = shop.type === 'HOT_DEAL' ? '🔥 핫딜' : '🎁 행사';
+                var badgeColor = '#f59e0b'; // 기본 행사색
+                var badgeLabel = '🎁 행사';
+                
+                if (shop.type === 'HOT_DEAL') {
+                    badgeColor = '#ef4444';
+                    badgeLabel = '🔥 핫딜';
+                } else if (shop.type === 'NEW_MENU') {
+                    badgeColor = '#a855f7'; // 신메뉴는 보라색으로 강조
+                    badgeLabel = '✨ 신메뉴';
+                }
                 
                 var content = `
                     <div class="marker-deal glass-premium px-3 py-1.5 rounded-full border border-white/50 shadow-xl flex items-center gap-2">
