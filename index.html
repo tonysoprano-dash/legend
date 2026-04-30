@@ -196,11 +196,11 @@
                         <span class="story-name">어랑다랑</span>
                     </div>
                     <div class="story-item">
-                        <div class="story-ring"><img src="https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=200&auto=format&fit=crop" class="story-img" alt="숯닭"></div>
+                        <div class="story-ring"><img src="chicken.jpg" class="story-img" alt="숯닭" onerror="this.src='https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=200&auto=format&fit=crop'"></div>
                         <span class="story-name">춘천숯닭</span>
                     </div>
                     <div class="story-item">
-                        <div class="story-ring"><img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=200&auto=format&fit=crop" class="story-img" alt="소소곱창"></div>
+                        <div class="story-ring"><img src="gopchang.jpg" class="story-img" alt="소소곱창" onerror="this.src='https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=200&auto=format&fit=crop'"></div>
                         <span class="story-name">소소곱창</span>
                     </div>
                     <div class="story-item">
@@ -212,7 +212,7 @@
                         <span class="story-name">핵밥</span>
                     </div>
                     <div class="story-item">
-                        <div class="story-ring"><img src="https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=200&auto=format&fit=crop" class="story-img" alt="훈돈가"></div>
+                        <div class="story-ring"><img src="pig.jpg" class="story-img" alt="훈돈가" onerror="this.src='https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=200&auto=format&fit=crop'"></div>
                         <span class="story-name">훈돈가</span>
                     </div>
                 </div>
@@ -240,7 +240,7 @@
                         </div>
                         <!-- 핫딜: 훈돈가 -->
                         <div class="min-w-[280px] card-premium p-0 overflow-hidden relative border-orange-200 shadow-lg cursor-pointer" onclick="switchTab('near'); setTimeout(() => showEventDetail('훈돈가'), 500);">
-                            <img src="https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?auto=format&fit=crop&q=80&w=400" class="w-full h-40 object-cover" alt="돈가스" />
+                            <img src="pig.jpg" class="w-full h-40 object-cover" alt="돈가스" onerror="this.src='https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?auto=format&fit=crop&q=80&w=400'" />
                             <div class="p-5 space-y-2">
                                 <h4 class="font-black text-lg">훈돈가 (본점)</h4>
                                 <p class="text-sm text-stone-500 font-medium italic">안심 돈가스 정식 타임딜 25%</p>
@@ -253,7 +253,7 @@
                         <!-- 핫딜: 소소곱창 -->
                         <div class="min-w-[280px] card-premium p-0 overflow-hidden border-blue-100 shadow-lg relative cursor-pointer" onclick="switchTab('near'); setTimeout(() => showEventDetail('소소곱창'), 500);">
                             <div class="absolute top-4 left-4 bg-blue-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full z-10">그룹 구매</div>
-                            <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=400" class="w-full h-40 object-cover" alt="곱창" />
+                            <img src="gopchang.jpg" class="w-full h-40 object-cover" alt="곱창" onerror="this.src='https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=400'" />
                             <div class="p-5 space-y-2">
                                 <h4 class="font-black text-lg">소소곱창</h4>
                                 <p class="text-sm text-stone-500 font-medium italic">삼겹살+고기 3인 특선 세트 출시</p>
@@ -322,7 +322,7 @@
                 
                 <div class="space-y-3">
                     <div onclick="openChat('gopchang')" class="chat-list-item flex items-center gap-4 p-4 rounded-[2rem] bg-white border border-stone-50 relative">
-                        <div class="profile-border w-16 h-16"><div class="profile-inner w-full h-full overflow-hidden"><img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=150&auto=format&fit=crop" class="w-full h-full object-cover"></div></div>
+                        <div class="profile-border w-16 h-16"><div class="profile-inner w-full h-full overflow-hidden"><img src="gopchang.jpg" class="w-full h-full object-cover" onerror="this.src='https://i.pravatar.cc/150?u=gopchang'"></div></div>
                         <div class="flex-grow">
                             <div class="flex justify-between items-center mb-1"><h4 class="font-black text-stone-800">소소곱창 사장님</h4><span class="text-[10px] text-stone-400 font-bold">오전 11:30</span></div>
                             <p class="text-xs text-stone-500 truncate">"오늘 곱창 신선도 역대급이에요!"</p>
@@ -330,14 +330,14 @@
                         <div class="absolute top-4 right-4 w-5 h-5 bg-[#D2691E] rounded-full flex items-center justify-center text-white text-[10px] font-bold">1</div>
                     </div>
                     <div onclick="openChat('chicken')" class="chat-list-item flex items-center gap-4 p-4 rounded-[2rem] bg-white border border-stone-50 relative">
-                        <div class="profile-border w-16 h-16"><div class="profile-inner w-full h-full overflow-hidden"><img src="https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=150&auto=format&fit=crop" class="w-full h-full object-cover"></div></div>
+                        <div class="profile-border w-16 h-16"><div class="profile-inner w-full h-full overflow-hidden"><img src="chicken.jpg" class="w-full h-full object-cover" onerror="this.src='https://i.pravatar.cc/150?u=chicken'"></div></div>
                         <div class="flex-grow">
                             <div class="flex justify-between items-center mb-1"><h4 class="font-black text-stone-800">춘천숯닭 경기대점</h4><span class="text-[10px] text-stone-400 font-bold">어제</span></div>
                             <p class="text-xs text-stone-500 truncate">"7시로 예약해놨으니까 시간 맞춰서 오세요!"</p>
                         </div>
                     </div>
                     <div onclick="openChat('pig')" class="chat-list-item flex items-center gap-4 p-4 rounded-[2rem] bg-white border border-stone-50 relative">
-                        <div class="profile-border w-16 h-16"><div class="profile-inner w-full h-full overflow-hidden"><img src="https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=150&auto=format&fit=crop" class="w-full h-full object-cover"></div></div>
+                        <div class="profile-border w-16 h-16"><div class="profile-inner w-full h-full overflow-hidden"><img src="pig.jpg" class="w-full h-full object-cover" onerror="this.src='https://i.pravatar.cc/150?u=pig'"></div></div>
                         <div class="flex-grow">
                             <div class="flex justify-between items-center mb-1"><h4 class="font-black text-stone-800">훈돈가 매니저</h4><span class="text-[10px] text-stone-400 font-bold">2일 전</span></div>
                             <p class="text-xs text-stone-500 truncate">"안심 돈가스 타임딜 쿠폰이 발행되었습니다."</p>
@@ -519,7 +519,7 @@
                             <span class="text-[10px] font-bold text-green-600 uppercase">배달 완료</span>
                         </div>
                         <div class="flex gap-4 mb-4">
-                            <img src="https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=200" class="w-16 h-16 rounded-xl object-cover">
+                            <img src="pig.jpg" class="w-16 h-16 rounded-xl object-cover" onerror="this.src='https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=200'">
                             <div>
                                 <h4 class="font-black text-stone-800">훈돈가 (본점)</h4>
                                 <p class="text-xs text-stone-500 italic">안심 돈가스 정식 외 1건</p>
@@ -538,7 +538,7 @@
                             <span class="text-[10px] font-bold text-stone-500 uppercase">방문 포장</span>
                         </div>
                         <div class="flex gap-4 mb-4">
-                            <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=200" class="w-16 h-16 rounded-xl object-cover">
+                            <img src="gopchang.jpg" class="w-16 h-16 rounded-xl object-cover" onerror="this.src='https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=200'">
                             <div>
                                 <h4 class="font-black text-stone-800">소소곱창</h4>
                                 <p class="text-xs text-stone-500 italic">모듬 곱창 2인분</p>
@@ -557,7 +557,7 @@
                             <span class="text-[10px] font-bold text-stone-500">배달 완료</span>
                         </div>
                         <div class="flex gap-4">
-                            <img src="https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=200" class="w-16 h-16 rounded-xl object-cover">
+                            <img src="chicken.jpg" class="w-16 h-16 rounded-xl object-cover" onerror="this.src='https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=200'">
                             <div>
                                 <h4 class="font-black text-stone-800">춘천숯닭 경기대점</h4>
                                 <p class="text-xs text-stone-500 italic">숯불 닭갈비 2인분</p>
@@ -710,9 +710,9 @@
             container.innerHTML = ''; 
 
             let shopData = {
-                'gopchang': { name: '소소곱창 사장님', img: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=150', msg: '오늘 곱창 신선도 역대급이에요! 방금 들어왔습니다.' },
-                'chicken': { name: '춘천숯닭 경기대점', img: 'https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=150', msg: '7시로 예약해놨으니까 시간 맞춰서 오세요! 준비해놓을게요.' },
-                'pig': { name: '훈돈가 매니저', img: 'https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=150', msg: '방금 안심 돈가스 타임딜 쿠폰 발행했습니다. 확인해보세요!' }
+                'gopchang': { name: '소소곱창 사장님', img: 'gopchang.jpg', msg: '오늘 곱창 신선도 역대급이에요! 방금 들어왔습니다.' },
+                'chicken': { name: '춘천숯닭 경기대점', img: 'chicken.jpg', msg: '7시로 예약해놨으니까 시간 맞춰서 오세요! 준비해놓을게요.' },
+                'pig': { name: '훈돈가 매니저', img: 'pig.jpg', msg: '방금 안심 돈가스 타임딜 쿠폰 발행했습니다. 확인해보세요!' }
             };
 
             const data = shopData[shopId];
@@ -769,7 +769,7 @@
                 '면식당': { tag: 'New Menu', desc: '신메뉴: 트러플 마제소바 출시 기념 1,000원 할인!', price: '₩8,500', old: '₩9,500' },
                 '핵밥': { tag: 'Upgrade', desc: '돈부리 전 메뉴 곱빼기 업그레이드 무료!', price: 'FREE', old: '' },
                 '르디망슈': { tag: 'Tea Time', desc: '오후 2시~5시 티타임 세트 15% 할인!', price: '₩15,000', old: '₩18,000' },
-                '소무실': { tag: '1+1 Event', desc: '오늘의 안주 1+1 깜짝 이벤트 진행 중!', price: '1+1 진행 중', old: '' }
+                '소무실': { tag: 'Coffee Deal', desc: '이의동 핫플 소무실: 모든 커피 메뉴 1,000원 할인!', price: '₩4,000', old: '₩5,000' }
             };
 
             const data = eventData[shopName] || { tag: 'Event', desc: '진행 중인 특별한 소식이 있습니다!', price: '상세 확인', old: '' };
