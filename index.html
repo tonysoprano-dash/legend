@@ -110,6 +110,26 @@
             padding: 0 2px;
         }
 
+        /* 채팅 커스텀 스타일 */
+        .chat-list-item {
+            transition: all 0.2s ease;
+        }
+        .chat-list-item:active {
+            background-color: #FDF4E3;
+            transform: scale(0.98);
+        }
+        .profile-border {
+            position: relative;
+            padding: 2px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border-radius: 50%;
+        }
+        .profile-inner {
+            background: white;
+            padding: 2px;
+            border-radius: 50%;
+        }
+
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .slide-up { animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
@@ -122,7 +142,6 @@
     <div id="onboarding" class="fixed inset-0 z-[200] bg-[#FFF8E7] flex flex-col items-center justify-between p-12 py-24 text-center transition-all duration-700">
         <div class="flex flex-col items-center gap-6 mt-10">
             <div class="w-32 h-32 rounded-[2.5rem] shadow-2xl bg-white p-3 flex items-center justify-center">
-                <!-- 사용자님이 직접 그려주신 로고 심볼 디자인 -->
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
                     <circle cx="50" cy="50" r="50" fill="#FFEAD6"/>
                     <g transform="rotate(45 50 50)">
@@ -148,7 +167,6 @@
         
         <!-- (1) 홈 탭 -->
         <div id="home-tab" class="tab-content active px-6 pt-16">
-            <!-- 사장님 홈 -->
             <div id="owner-home" class="hidden space-y-8">
                 <header class="flex justify-between items-center">
                     <div>
@@ -177,9 +195,6 @@
                                 <p class="text-xs font-bold text-orange-200">동적 가격 예약하기</p>
                             </div>
                         </div>
-                        <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                            <div class="h-full bg-orange-400 w-3/4"></div>
-                        </div>
                     </div>
                 </div>
 
@@ -192,9 +207,7 @@
                             <span class="text-xs font-bold text-stone-500">아메리카노 원두</span>
                             <div class="flex justify-between items-center">
                                 <span class="text-xl font-black">12% 남음</span>
-                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                                    <input type="checkbox" checked class="accent-[#D2691E]" />
-                                </div>
+                                <input type="checkbox" checked class="accent-[#D2691E]" />
                             </div>
                             <p class="text-[10px] font-bold text-orange-600 italic">타임세일 자동 전환 중</p>
                         </div>
@@ -202,9 +215,7 @@
                             <span class="text-xs font-bold text-stone-500">오늘의 샌드위치</span>
                             <div class="flex justify-between items-center">
                                 <span class="text-xl font-black">5개</span>
-                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                                    <input type="checkbox" class="accent-[#D2691E]" />
-                                </div>
+                                <input type="checkbox" class="accent-[#D2691E]" />
                             </div>
                             <p class="text-[10px] font-bold text-stone-400">수동 전환 대기</p>
                         </div>
@@ -212,7 +223,7 @@
                 </div>
             </div>
 
-            <!-- 손님 홈 (경기대 상권 맞춤형) -->
+            <!-- 손님 홈 -->
             <div id="user-home" class="hidden space-y-8">
                 <header class="flex justify-between items-center">
                     <div>
@@ -224,147 +235,62 @@
                     </div>
                 </header>
 
-                <!-- 경기대 맛집 스토리 피드 (이미지 업데이트) -->
+                <!-- 스토리 피드 -->
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xl font-black italic tracking-tight">실시간 경기대 길목 스토리</h3>
                         <span class="text-xs font-bold text-[#D2691E]">모두 보기</span>
                     </div>
                     <div class="story-container">
-                        <!-- 어랑다랑 (회) -->
                         <div class="story-item">
-                            <div class="story-ring">
-                                <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=200&auto=format&fit=crop" class="story-img" alt="어랑다랑 회">
-                            </div>
-                            <span class="story-name">어랑다랑</span>
+                            <div class="story-ring"><img src="chicken.jpg" class="story-img" alt="숯닭" onerror="this.src='https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=200&auto=format&fit=crop'"></div>
+                            <span class="story-name">춘천숯닭</span>
                         </div>
-                        <!-- 춘천숯닭 (사용자 제공 이미지 적용) -->
                         <div class="story-item">
-                           <!-- 배경색(background)을 곱창과 같은 브랜드 컬러로 맞췄습니다 -->
-                           <div class="story-ring">
-                             <!-- src를 chicken.jpg로 수정했습니다 -->
-                             <img src="chicken.jpg" class="story-img" alt="숯닭" 
-                             onerror="this.src='https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=200&auto=format&fit=crop'">
-                           </div>
-                           <span class="story-name">춘천숯닭</span>
+                            <div class="story-ring"><img src="gopchang.jpg" class="story-img" alt="소소곱창" onerror="this.src='https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=200&auto=format&fit=crop'"></div>
+                            <span class="story-name">소소곱창</span>
                         </div>
-                        <!-- 소소곱창 (사용자 제공 이미지 적용) -->
-                       <div class="story-item">
-                          <div class="story-ring">
-                            <!-- src 부분을 바뀐 파일명으로 수정했습니다 -->
-                            <img src="gopchang.jpg" class="story-img" alt="소소곱창 구이" 
-                             onerror="this.src='https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=200&auto=format&fit=crop'">
-                          </div>
-                           <span class="story-name">소소곱창</span>
-                       </div>
-                        <!-- 면식당 -->
                         <div class="story-item">
-                            <div class="story-ring" style="background: #ef4444;">
-                                <img src="https://images.unsplash.com/photo-1552611052-33e04de081de?q=80&w=200&auto=format&fit=crop" class="story-img" alt="면식당">
-                            </div>
+                            <div class="story-ring"><img src="pig.jpg" class="story-img" alt="훈돈가" onerror="this.src='https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=200&auto=format&fit=crop'"></div>
+                            <span class="story-name">훈돈가</span>
+                        </div>
+                        <div class="story-item">
+                            <div class="story-ring" style="background:#ef4444;"><img src="https://images.unsplash.com/photo-1552611052-33e04de081de?q=80&w=200&auto=format&fit=crop" class="story-img" alt="면식당"></div>
                             <span class="story-name">면식당</span>
-                        </div>
-                        <!-- 핵밥 -->
-                        <div class="story-item">
-                            <div class="story-ring">
-                                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=200&auto=format&fit=crop" class="story-img" alt="핵밥">
-                            </div>
-                            <span class="story-name">핵밥</span>
-                        </div>
-                        <!-- 훈돈가 (사용자 제공 이미지 적용) -->
-                        <div class="story-item">
-                           <div class="story-ring">
-                              <!-- src를 pig.jpg로 수정했습니다 -->
-                              <img src="pig.jpg" class="story-img" alt="훈돈가 돈가스" 
-                              onerror="this.src='https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?q=80&w=200&auto=format&fit=crop'">
-                           </div>
-                           <span class="story-name">훈돈가</span>
-                        </div>
-                        
-                        <!-- 소무실 -->
-                        <div class="story-item">
-                            <div class="story-ring" style="background: #3b82f6;">
-                                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=200&auto=format&fit=crop" class="story-img" alt="소무실">
-                            </div>
-                            <span class="story-name">소무실</span>
-                        </div>
-                        <!-- 르디망슈 -->
-                        <div class="story-item">
-                            <div class="story-ring">
-                                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=200&auto=format&fit=crop" class="story-img" alt="르디망슈">
-                            </div>
-                            <span class="story-name">르디망슈</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 실시간 핫딜 섹션 -->
+                <!-- 핫딜 섹션 -->
                 <div class="space-y-4">
-                    <div class="flex justify-between items-end">
-                        <h3 class="text-xl font-black italic">지금 거북골에서 담고있는 핫딜</h3>
-                        <span class="text-xs font-bold text-stone-400">새로고침</span>
-                    </div>
+                    <h3 class="text-xl font-black italic">지금 거북골에서 담고있는 핫딜</h3>
                     <div class="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6">
-                        <!-- 핫딜: 어랑다랑 -->
                         <div class="min-w-[280px] card-premium p-0 overflow-hidden relative border-orange-200 shadow-lg">
-                            <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=400" class="w-full h-40 object-cover" alt="회 세트" />
+                            <img src="pig.jpg" class="w-full h-40 object-cover" alt="돈가스" onerror="this.src='https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?auto=format&fit=crop&q=80&w=400'" />
                             <div class="p-5 space-y-2">
                                 <div class="flex justify-between items-start">
-                                    <h4 class="font-black text-lg">어랑다랑 (연무점)</h4>
-                                    <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded">마감 15분전</span>
+                                    <h4 class="font-black text-lg">훈돈가 (본점)</h4>
+                                    <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded">LIVE</span>
                                 </div>
-                                <p class="text-sm text-stone-500 font-medium">모듬 사시미 2인 세트 타임딜 20%</p>
+                                <p class="text-sm text-stone-500 font-medium">안심 돈가스 정식 타임딜 25%</p>
                                 <div class="flex justify-between items-center pt-2">
-                                    <span class="text-xl font-black text-[#D2691E]">₩32,000 <span class="text-xs text-stone-400 line-through">₩40,000</span></span>
+                                    <span class="text-xl font-black text-[#D2691E]">₩9,000</span>
                                     <button class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-xs font-bold">쿠폰받기</button>
                                 </div>
                             </div>
                         </div>
-                        <!-- 핫딜: 훈돈가 (사용자 제공 이미지 적용) -->
-                        <div class="min-w-[280px] card-premium p-0 overflow-hidden relative border-orange-200 shadow-lg">
-                           <!-- src를 pig.jpg로 수정했습니다 -->
-                           <img src="pig.jpg" class="w-full h-40 object-cover" alt="돈가스" 
-                           onerror="this.src='https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?auto=format&fit=crop&q=80&w=400'" />
-                           <div class="p-5 space-y-2">
-                              <div class="flex justify-between items-start">
-                                  <h4 class="font-black text-lg">훈돈가 (본점)</h4>
-                                  <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded">LIVE</span>
-                              </div>
-                              <p class="text-sm text-stone-500 font-medium">안심 돈가스 정식 타임딜 25%</p>
-                              <div class="flex justify-between items-center pt-2">
-                                 <span class="text-xl font-black text-[#D2691E]">₩9,000 <span class="text-xs text-stone-400 line-through">₩12,000</span></span>
-                                 <button class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-xs font-bold">쿠폰받기</button>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- 핫딜: 소소곱창 (사용자 제공 이미지 적용) -->
                         <div class="min-w-[280px] card-premium p-0 overflow-hidden border-blue-100 shadow-lg relative">
-                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg z-10">그룹 구매</div>
+                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full z-10">그룹 구매</div>
                             <img src="gopchang.jpg" class="w-full h-40 object-cover" alt="곱창" onerror="this.src='https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=400'" />
                             <div class="p-5 space-y-2">
                                 <h4 class="font-black text-lg">소소곱창</h4>
-                                <p class="text-sm text-stone-500 font-medium">모듬 곱창 3인분 주문 시 염통 1인분 서비스</p>
+                                <p class="text-sm text-stone-500 font-medium">모듬 곱창 3인분 주문 시 염통 서비스</p>
                                 <div class="flex items-center gap-1 pt-1">
-                                    <div class="flex -space-x-2">
-                                        <div class="w-6 h-6 rounded-full bg-stone-300 border-2 border-white"></div>
-                                        <div class="w-6 h-6 rounded-full bg-stone-400 border-2 border-white"></div>
-                                        <div class="w-6 h-6 rounded-full bg-orange-400 border-2 border-white flex items-center justify-center text-[8px] text-white font-bold">+2</div>
-                                    </div>
-                                    <span class="text-[10px] font-bold text-blue-600 ml-2">현재 3개 팀 대기 중!</span>
+                                    <span class="text-[10px] font-bold text-blue-600">현재 3개 팀 대기 중!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="card-premium bg-stone-900 text-white border-none">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-xs font-bold text-orange-400 tracking-widest uppercase">Gilmok x Kyonggi</span>
-                        <span class="material-symbols-outlined text-xs">open_in_new</span>
-                    </div>
-                    <h4 class="text-lg font-bold mb-2">총학생회 제휴 길목 쿠폰북</h4>
-                    <p class="text-sm opacity-60 mb-4">어랑다랑, 소무실 등 경기대 거북골 상권 15개 매장 길목 독점 혜택 공개!</p>
-                    <button class="w-full py-3 rounded-xl bg-white/10 font-bold text-sm hover:bg-white/20 transition-colors">혜택 다운로드</button>
                 </div>
             </div>
         </div>
@@ -377,45 +303,18 @@
                     <header class="search-container glass-premium interactive mt-12 rounded-2xl flex items-center px-5 py-3 gap-3 border border-stone-200">
                         <span class="material-symbols-outlined text-stone-400">search</span>
                         <input type="text" placeholder="경기대 근처 맛집/카페 검색" class="bg-transparent border-none outline-none flex-grow font-bold text-sm" />
-                        <span class="material-symbols-outlined text-[#3E2723]">tune</span>
                     </header>
-
-                    <div id="owner-insight-layer" class="hidden">
-                        <div class="insight-card glass-premium interactive slide-up mt-4">
-                            <div class="flex justify-between items-center mb-3">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
-                                    <span class="text-[10px] font-black text-[#D2691E] uppercase">AI 실시간 감지</span>
-                                </div>
-                                <button onclick="closeInsight()" class="text-stone-300"><span class="material-symbols-outlined">close</span></button>
-                            </div>
-                            <h3 class="text-sm font-black mb-1">경기대 후문 상권 <span class="text-red-500">초혼잡</span> 포착!</h3>
-                            <p class="text-[11px] text-stone-500 mb-4">현재 유동인구가 평시 대비 3배 높습니다.<br/>지금 <strong>타임 어택 세일</strong>을 시작해보세요.</p>
-                            <button onclick="publishPrice()" class="w-full btn-primary py-3 text-xs shadow-lg shadow-orange-200">수익 극대화 버튼 실행</button>
-                        </div>
-                    </div>
-
                     <div class="flex-grow"></div>
-
                     <div id="user-map-overlay" class="hidden interactive mb-28">
                         <div class="glass-premium rounded-[32px] p-6 flex flex-col gap-4 border border-orange-100 shadow-2xl">
                             <div class="flex justify-between items-center">
                                 <h4 class="font-black">경기대 연무동 현황</h4>
                                 <span class="bg-orange-100 text-orange-700 text-[10px] font-black px-2 py-1 rounded">LIVE</span>
                             </div>
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="text-center">
-                                    <p class="text-[10px] text-stone-400 font-bold mb-1 uppercase tracking-tighter">유동인구</p>
-                                    <p class="text-lg font-black text-[#3E2723]">붐빔</p>
-                                </div>
-                                <div class="text-center border-x border-stone-100">
-                                    <p class="text-[10px] text-stone-400 font-bold mb-1 uppercase tracking-tighter">평균 대기</p>
-                                    <p class="text-lg font-black text-[#3E2723]">15분</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-[10px] text-stone-400 font-bold mb-1 uppercase tracking-tighter">활성 핫딜</p>
-                                    <p class="text-lg font-black text-[#D2691E]">8곳</p>
-                                </div>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div><p class="text-[10px] text-stone-400 font-bold uppercase tracking-tighter">유동인구</p><p class="text-lg font-black">붐빔</p></div>
+                                <div class="border-x border-stone-100"><p class="text-[10px] text-stone-400 font-bold uppercase tracking-tighter">평균 대기</p><p class="text-lg font-black">15분</p></div>
+                                <div><p class="text-[10px] text-stone-400 font-bold uppercase tracking-tighter">활성 핫딜</p><p class="text-lg font-black text-[#D2691E]">8곳</p></div>
                             </div>
                         </div>
                     </div>
@@ -423,22 +322,89 @@
             </div>
         </div>
 
-        <!-- (3) 채팅 탭 -->
+        <!-- (3) 채팅 탭 (인스타그램 스타일 업데이트) -->
         <div id="chat-tab" class="tab-content px-6 pt-16">
-            <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">길목 채팅</h1>
-            <div class="space-y-4">
-                <div class="flex items-center gap-4 p-5 bg-white rounded-3xl border border-stone-100 relative">
-                    <div class="w-14 h-14 rounded-2xl bg-orange-100 overflow-hidden">
-                        <img src="https://i.pravatar.cc/150?u=soosoo" class="w-full h-full object-cover" alt="Profile" />
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-black text-[#3E2723] italic tracking-tighter">길목 메시지</h1>
+                <span class="material-symbols-outlined text-[#D2691E]">edit_square</span>
+            </div>
+            
+            <div class="space-y-2">
+                <!-- 소소곱창 채팅 -->
+                <div class="chat-list-item flex items-center gap-4 p-4 rounded-[2rem] bg-white border border-stone-50 relative overflow-hidden">
+                    <div class="profile-border w-16 h-16">
+                        <div class="profile-inner w-full h-full overflow-hidden">
+                            <img src="gopchang.jpg" class="w-full h-full object-cover" alt="소소곱창" onerror="this.src='https://i.pravatar.cc/150?u=gopchang'">
+                        </div>
                     </div>
                     <div class="flex-grow">
-                        <div class="flex justify-between mb-1">
-                            <h4 class="font-bold">소소곱창</h4>
-                            <span class="text-[10px] text-stone-400">오후 6:15</span>
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-black text-stone-800">소소곱창 사장님</h4>
+                            <span class="text-[10px] text-stone-400 font-bold">오전 11:30</span>
                         </div>
-                        <p class="text-xs text-stone-500 truncate">"사장님, 오늘 곱창 신선도 어때요?"</p>
+                        <p class="text-xs text-stone-500 mb-2 truncate">"오늘 곱창 신선도 역대급이에요!"</p>
+                        <div class="flex gap-2 interactive">
+                            <button class="bg-[#3E2723] text-white text-[10px] font-black px-3 py-1.5 rounded-lg shadow-sm">신선도 확인</button>
+                            <button class="bg-orange-50 text-[#D2691E] text-[10px] font-black px-3 py-1.5 rounded-lg border border-orange-100">위치보기</button>
+                        </div>
                     </div>
-                    <div class="absolute top-4 right-4 w-5 h-5 bg-[#D2691E] rounded-full flex items-center justify-center text-white text-[10px] font-bold shadow-lg">1</div>
+                    <div class="absolute top-4 right-4 w-5 h-5 bg-[#D2691E] rounded-full flex items-center justify-center text-white text-[10px] font-bold shadow-lg animate-pulse">1</div>
+                </div>
+
+                <!-- 춘천숯닭 채팅 -->
+                <div class="chat-list-item flex items-center gap-4 p-4 rounded-[2rem] bg-white border border-stone-50 relative">
+                    <div class="profile-border w-16 h-16">
+                        <div class="profile-inner w-full h-full overflow-hidden">
+                            <img src="chicken.jpg" class="w-full h-full object-cover" alt="춘천숯닭" onerror="this.src='https://i.pravatar.cc/150?u=chicken'">
+                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-black text-stone-800">춘천숯닭 경기대점</h4>
+                            <span class="text-[10px] text-stone-400 font-bold">어제</span>
+                        </div>
+                        <p class="text-xs text-stone-500 mb-2 truncate">"예약하신 2분, 7시까지 오시면 됩니다!"</p>
+                        <div class="flex gap-2 interactive">
+                            <button class="bg-green-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg">방문 확정</button>
+                            <button class="bg-stone-50 text-stone-400 text-[10px] font-black px-3 py-1.5 rounded-lg">예약 취소</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 훈돈가 채팅 -->
+                <div class="chat-list-item flex items-center gap-4 p-4 rounded-[2rem] bg-white border border-stone-50 relative">
+                    <div class="profile-border w-16 h-16">
+                        <div class="profile-inner w-full h-full overflow-hidden">
+                            <img src="pig.jpg" class="w-full h-full object-cover" alt="훈돈가" onerror="this.src='https://i.pravatar.cc/150?u=pig'">
+                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-black text-stone-800">훈돈가 핫딜 매니저</h4>
+                            <span class="text-[10px] text-stone-400 font-bold">2일 전</span>
+                        </div>
+                        <p class="text-xs text-stone-500 mb-2 truncate">"안심 돈가스 타임딜이 곧 시작됩니다."</p>
+                        <div class="flex gap-2 interactive">
+                            <button class="bg-red-500 text-white text-[10px] font-black px-3 py-1.5 rounded-lg shadow-md animate-bounce">쿠폰받기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 길목 AI 가이드 -->
+                <div class="chat-list-item flex items-center gap-4 p-4 rounded-[2rem] bg-stone-900 border border-stone-800 relative">
+                    <div class="w-16 h-16 rounded-full bg-orange-500 flex items-center justify-center p-1 border-2 border-white/20">
+                        <span class="material-symbols-outlined text-white text-3xl">psychology</span>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-black text-orange-400">길목 AI 매칭봇</h4>
+                            <span class="text-[10px] text-stone-500 font-bold">실시간</span>
+                        </div>
+                        <p class="text-xs text-stone-300">"지금 3명의 친구가 곱창을 원해요!"</p>
+                        <div class="mt-2 interactive">
+                            <button class="w-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-black py-2 rounded-lg transition-colors">공동구매 팀 참여하기</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -452,33 +418,20 @@
                     <span class="material-symbols-outlined text-[#D2691E]">stars</span>
                 </div>
                 <div class="grid grid-cols-5 gap-3">
-                    <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-md"><span class="material-symbols-outlined">check</span></div>
-                    <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-md"><span class="material-symbols-outlined">check</span></div>
-                    <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-md"><span class="material-symbols-outlined">check</span></div>
+                    <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">check</span></div>
+                    <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">check</span></div>
+                    <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">check</span></div>
                     <div class="aspect-square rounded-xl bg-orange-100 flex items-center justify-center text-orange-200"><span class="material-symbols-outlined">store</span></div>
                     <div class="aspect-square rounded-xl border-2 border-dashed border-orange-200 flex items-center justify-center text-orange-200"><span class="material-symbols-outlined text-xs">add</span></div>
                 </div>
-                <p class="text-[11px] font-bold text-stone-500 mt-6">2개만 더 모으면 <strong>핵밥 5% 할인 쿠폰</strong>이 발행됩니다!</p>
             </div>
         </div>
 
         <nav class="bottom-nav">
-            <div onclick="switchTab('home')" id="nav-home" class="nav-item active">
-                <span class="material-symbols-outlined">grid_view</span>
-                <span>홈</span>
-            </div>
-            <div onclick="switchTab('near')" id="nav-near" class="nav-item">
-                <span class="material-symbols-outlined">map</span>
-                <span>내 근처</span>
-            </div>
-            <div onclick="switchTab('chat')" id="nav-chat" class="nav-item">
-                <span class="material-symbols-outlined">chat_bubble</span>
-                <span>채팅</span>
-            </div>
-            <div onclick="switchTab('profile')" id="nav-profile" class="nav-item">
-                <span class="material-symbols-outlined">account_circle</span>
-                <span>나의 길목</span>
-            </div>
+            <div onclick="switchTab('home')" id="nav-home" class="nav-item active"><span class="material-symbols-outlined">grid_view</span><span>홈</span></div>
+            <div onclick="switchTab('near')" id="nav-near" class="nav-item"><span class="material-symbols-outlined">map</span><span>내 근처</span></div>
+            <div onclick="switchTab('chat')" id="nav-chat" class="nav-item"><span class="material-symbols-outlined">chat_bubble</span><span>채팅</span></div>
+            <div onclick="switchTab('profile')" id="nav-profile" class="nav-item"><span class="material-symbols-outlined">account_circle</span><span>나의 길목</span></div>
         </nav>
     </main>
 
@@ -515,17 +468,11 @@
             if(tabName === 'near') {
                 initMap();
                 if(userRole === 'owner') {
-                    document.getElementById('owner-insight-layer').classList.remove('hidden');
                     document.getElementById('user-map-overlay').classList.add('hidden');
                 } else {
-                    document.getElementById('owner-insight-layer').classList.add('hidden');
                     document.getElementById('user-map-overlay').classList.remove('hidden');
                 }
             }
-        }
-
-        function closeInsight() {
-            document.getElementById('owner-insight-layer').classList.add('hidden');
         }
 
         function initMap() {
@@ -537,36 +484,9 @@
             map = new kakao.maps.Map(container, { center: centerPos, level: 3 });
             new kakao.maps.CustomOverlay({
                 position: centerPos,
-                content: '<div style="width:40px; height:40px; background:#D2691E; border:4px solid white; border-radius:18px; box-shadow:0 10px 20px rgba(62,39,35,0.3); display:flex; align-items:center; justify-content:center;"><span class="material-symbols-outlined text-white text-base">school</span></div>'
+                content: '<div style="width:40px; height:40px; background:#D2691E; border:4px solid white; border-radius:18px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-outlined text-white text-base">school</span></div>'
             }).setMap(map);
-            var hotspots = [
-                { pos: new kakao.maps.LatLng(37.2995, 127.0455), count: 320, wait: '20분', type: 'CROWDED' }, 
-                { pos: new kakao.maps.LatLng(37.2975, 127.0435), count: 45, wait: '5분', type: 'DEAL' }
-            ];
-            hotspots.forEach(spot => {
-                var color = spot.type === 'CROWDED' ? '#D2691E' : '#4F46E5'; 
-                var label = spot.type === 'CROWDED' ? `${spot.count}명 유입 중` : `🔥 실시간 핫딜`;
-                new kakao.maps.Circle({
-                    center: spot.pos, radius: 80, strokeWeight: 0, fillColor: color, fillOpacity: 0.15
-                }).setMap(map);
-                new kakao.maps.CustomOverlay({
-                    position: spot.pos,
-                    content: `<div class="glass-premium px-3 py-1.5 rounded-full border border-white/40 shadow-lg flex items-center gap-2">
-                                <div class="w-2 h-2 rounded-full" style="background:${color}"></div>
-                                <span class="text-[10px] font-black" style="color:var(--brand-primary)">${label}</span>
-                                <span class="text-[9px] font-bold text-stone-400 border-l border-stone-200 pl-2">대기 ${spot.wait}</span>
-                             </div>`,
-                    yAnchor: 2.2
-                }).setMap(map);
-            });
             setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 200);
-        }
-
-        function publishPrice() {
-            const toast = document.getElementById('toast');
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3500);
-            closeInsight();
         }
     </script>
 </body>
