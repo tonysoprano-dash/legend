@@ -172,7 +172,7 @@
         
         <!-- (1) 홈 탭 -->
         <div id="home-tab" class="tab-content active px-6 pt-16">
-            <!-- 사장님 홈 (기본 숨김) -->
+            <!-- 사장님 홈 -->
             <div id="owner-home" class="hidden space-y-8">
                 <header class="flex justify-between items-center">
                     <div>
@@ -390,11 +390,14 @@
                 <div id="message-container" class="flex-grow overflow-y-auto p-6 flex flex-col">
                     <!-- 메시지 버블이 생성됩니다 -->
                 </div>
+                <!-- 메시지 입력 칸 -->
                 <div class="p-4 bg-white border-t border-stone-100 pb-[env(safe-area-inset-bottom)]">
                     <div class="flex items-center gap-3 bg-stone-50 px-4 py-2 rounded-full border border-stone-200">
                         <span class="material-symbols-outlined text-stone-400">add_circle</span>
-                        <input type="text" placeholder="메시지를 입력하세요" class="flex-grow bg-transparent outline-none text-sm font-medium">
-                        <span class="material-symbols-outlined text-[#D2691E]">send</span>
+                        <input id="chat-input-field" type="text" placeholder="메시지를 입력하세요" class="flex-grow bg-transparent outline-none text-sm font-medium">
+                        <button onclick="handleSendMessage()" class="flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[#D2691E]">send</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -448,18 +451,6 @@
                         <span class="material-symbols-outlined text-stone-300">chevron_right</span>
                     </div>
                 </div>
-
-                <!-- 부가 설정 -->
-                <div class="mt-10 pt-10 border-t border-stone-200 space-y-6">
-                    <div class="flex justify-between items-center text-sm font-bold text-stone-400">
-                        <span>환경 설정</span>
-                        <span class="material-symbols-outlined text-xs">settings</span>
-                    </div>
-                    <div class="flex justify-between items-center text-sm font-bold text-stone-400">
-                        <span>고객 센터</span>
-                        <span class="material-symbols-outlined text-xs">support_agent</span>
-                    </div>
-                </div>
             </div>
 
             <!-- (서브뷰) 내 쿠폰함 -->
@@ -469,7 +460,6 @@
                     <h1 class="text-3xl font-black text-[#3E2723] italic tracking-tighter">내 쿠폰함</h1>
                 </div>
                 <div class="space-y-4 pb-20">
-                    <!-- 쿠폰 리스트 5종 -->
                     <div class="card-premium border-l-8 border-l-[#D2691E] shadow-md">
                         <div class="flex justify-between">
                             <div><h4 class="font-black text-lg text-[#3E2723]">훈돈가 (본점)</h4><p class="text-sm text-stone-500 font-medium italic">안심 돈가스 정식 25% 할인</p></div>
@@ -480,7 +470,6 @@
                             <button class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm active:scale-95 transition-transform">사용하기</button>
                         </div>
                     </div>
-
                     <div class="card-premium border-l-8 border-l-blue-600 shadow-md">
                         <div class="flex justify-between">
                             <div><h4 class="font-black text-lg text-[#3E2723]">소소곱창</h4><p class="text-sm text-stone-500 font-medium italic">테이블당 음료 1캔 무료 증정</p></div>
@@ -489,39 +478,6 @@
                         <div class="mt-4 pt-4 border-t border-dashed border-stone-200 flex justify-between items-center">
                             <span class="text-[10px] font-bold text-stone-400">즉시 사용 가능</span>
                             <button class="bg-blue-600 text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm active:scale-95 transition-transform">사용하기</button>
-                        </div>
-                    </div>
-
-                    <div class="card-premium border-l-8 border-l-red-500 shadow-md">
-                        <div class="flex justify-between">
-                            <div><h4 class="font-black text-lg text-[#3E2723]">춘천숯닭</h4><p class="text-sm text-stone-500 font-medium italic">치즈 퐁듀 사리 1개 무료 추가</p></div>
-                            <span class="bg-red-100 text-red-500 text-[10px] font-black px-2 py-1 rounded">D-5</span>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-dashed border-stone-200 flex justify-between items-center">
-                            <span class="text-[10px] font-bold text-stone-400">~ 2024.12.15</span>
-                            <button class="bg-red-500 text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm active:scale-95 transition-transform">사용하기</button>
-                        </div>
-                    </div>
-
-                    <div class="card-premium border-l-8 border-l-purple-500 shadow-md">
-                        <div class="flex justify-between">
-                            <div><h4 class="font-black text-lg text-[#3E2723]">면식당</h4><p class="text-sm text-stone-500 font-medium italic">전 메뉴 곱빼기 업그레이드 무료</p></div>
-                            <span class="bg-purple-100 text-purple-600 text-[10px] font-black px-2 py-1 rounded">신메뉴기념</span>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-dashed border-stone-200 flex justify-between items-center">
-                            <span class="text-[10px] font-bold text-stone-400">~ 2024.12.20</span>
-                            <button class="bg-purple-600 text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm active:scale-95 transition-transform">사용하기</button>
-                        </div>
-                    </div>
-                    
-                    <div class="card-premium border-l-8 border-l-stone-900 shadow-md">
-                        <div class="flex justify-between">
-                            <div><h4 class="font-black text-lg text-[#3E2723]">길목 이의동 보너스</h4><p class="text-sm text-stone-500 font-medium italic">길목 스탬프 5회 적립 기념 2,000원권</p></div>
-                            <span class="bg-stone-100 text-stone-900 text-[10px] font-black px-2 py-1 rounded">Gilmok</span>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-dashed border-stone-200 flex justify-between items-center">
-                            <span class="text-[10px] font-bold text-stone-400">길목 전용 앱 쿠폰</span>
-                            <button class="bg-stone-900 text-white px-4 py-2 rounded-xl text-[10px] font-black shadow-sm active:scale-95 transition-transform">사용하기</button>
                         </div>
                     </div>
                 </div>
@@ -533,7 +489,6 @@
                     <button onclick="closeOrders()" class="p-2 bg-white rounded-xl shadow-sm"><span class="material-symbols-outlined">arrow_back</span></button>
                     <h1 class="text-3xl font-black text-[#3E2723] italic tracking-tighter">주문 내역</h1>
                 </div>
-                
                 <div class="space-y-4 pb-20">
                     <div class="card-premium shadow-sm border border-stone-100">
                         <div class="flex justify-between mb-3">
@@ -548,61 +503,6 @@
                                 <p class="text-sm font-black text-[#D2691E] mt-1">18,500원</p>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button class="flex-1 py-2 bg-white border border-stone-200 rounded-lg text-[11px] font-black text-stone-600">리뷰 쓰기</button>
-                            <button class="flex-1 py-2 bg-[#3E2723] text-white rounded-lg text-[11px] font-black">재주문</button>
-                        </div>
-                    </div>
-
-                    <div class="card-premium shadow-sm border border-stone-100">
-                        <div class="flex justify-between mb-3">
-                            <span class="text-[10px] font-bold text-stone-400 tracking-wider uppercase">2024.11.28 주문</span>
-                            <span class="text-[10px] font-bold text-stone-500 uppercase">방문 포장</span>
-                        </div>
-                        <div class="flex gap-4 mb-4">
-                            <img src="gopchang.jpg" class="w-16 h-16 rounded-xl object-cover" onerror="this.src='https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=200'">
-                            <div>
-                                <h4 class="font-black text-stone-800">소소곱창</h4>
-                                <p class="text-xs text-stone-500 italic">모듬 곱창 2인분</p>
-                                <p class="text-sm font-black text-[#D2691E] mt-1">42,000원</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="flex-1 py-2 bg-white border border-stone-200 rounded-lg text-[11px] font-black text-stone-300">작성 완료</button>
-                            <button class="flex-1 py-2 bg-[#3E2723] text-white rounded-lg text-[11px] font-black">재주문</button>
-                        </div>
-                    </div>
-
-                    <div class="card-premium shadow-sm opacity-60 border border-stone-100">
-                        <div class="flex justify-between mb-3">
-                            <span class="text-[10px] font-bold text-stone-400 tracking-wider uppercase">2024.11.20 주문</span>
-                            <span class="text-[10px] font-bold text-stone-500">배달 완료</span>
-                        </div>
-                        <div class="flex gap-4">
-                            <img src="chicken.jpg" class="w-16 h-16 rounded-xl object-cover" onerror="this.src='https://images.unsplash.com/photo-1610393790034-73d4418aa207?q=80&w=200'">
-                            <div>
-                                <h4 class="font-black text-stone-800">춘천숯닭 경기대점</h4>
-                                <p class="text-xs text-stone-500 italic">숯불 닭갈비 2인분</p>
-                                <p class="text-sm font-black text-stone-400 mt-1">26,000원</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-premium shadow-sm opacity-60 border border-stone-100">
-                        <div class="flex justify-between mb-3">
-                            <span class="text-[10px] font-bold text-stone-400 tracking-wider uppercase">2024.11.15 주문</span>
-                            <span class="text-[10px] font-bold text-stone-500">배달 완료</span>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="w-16 h-16 rounded-xl bg-orange-100 flex items-center justify-center text-orange-400">
-                                <span class="material-symbols-outlined">restaurant_menu</span>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-stone-800">면식당</h4>
-                                <p class="text-xs text-stone-500 italic">돈코츠 라멘</p>
-                                <p class="text-sm font-black text-stone-400 mt-1">9,500원</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -613,7 +513,6 @@
                     <button onclick="closeStamps()" class="p-2 bg-white rounded-xl shadow-sm"><span class="material-symbols-outlined">arrow_back</span></button>
                     <h1 class="text-3xl font-black text-[#3E2723] italic tracking-tighter">길목 스탬프</h1>
                 </div>
-
                 <div class="card-premium mb-8 bg-white border-orange-200 shadow-md">
                     <div class="flex justify-between items-center mb-6">
                         <div>
@@ -622,9 +521,7 @@
                         </div>
                         <span class="material-symbols-outlined text-[#D2691E] text-4xl">local_activity</span>
                     </div>
-                    
                     <div class="grid grid-cols-5 gap-3 mb-8">
-                        <!-- 적립 도장 8개 -->
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">restaurant</span></div>
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">restaurant</span></div>
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">restaurant</span></div>
@@ -633,34 +530,9 @@
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">restaurant</span></div>
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">restaurant</span></div>
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">restaurant</span></div>
-                        <!-- 미적립 도장 2개 -->
                         <div class="aspect-square rounded-xl bg-orange-100 flex items-center justify-center text-orange-200 shadow-inner"><span class="material-symbols-outlined">star</span></div>
                         <div class="aspect-square rounded-xl bg-orange-100 flex items-center justify-center text-orange-200 shadow-inner"><span class="material-symbols-outlined">star</span></div>
                     </div>
-                    
-                    <div class="bg-stone-50 p-4 rounded-2xl border border-stone-100 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-black text-stone-400 uppercase tracking-tighter">현재 적립 현황</span>
-                            <span class="text-xs font-black text-[#D2691E]">80% 완료</span>
-                        </div>
-                        <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
-                            <div class="bg-orange-500 h-full w-[80%]"></div>
-                        </div>
-                    </div>
-                    
-                    <p class="text-xs font-bold text-stone-600 mt-6 leading-relaxed">
-                        경기대 주변 <span class="text-[#D2691E] font-black underline">이의동 길목</span> 상점에서 10번 식사하면 <br/>길목이 직접 <span class="bg-orange-100 px-1 font-black underline">전 매장 공용 5,000원권</span>을 드려요!
-                    </p>
-                </div>
-                
-                <div class="card-premium bg-[#3E2723] text-white border-none shadow-xl">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="material-symbols-outlined text-orange-400">info</span>
-                        <h5 class="font-black text-sm text-orange-100 italic">Gilmok's Smart Tip</h5>
-                    </div>
-                    <p class="text-[11px] font-medium opacity-80 leading-relaxed italic">
-                        길목 스탬프는 '이의동' 내 제휴 상점에서 결제 시 위치 기반으로 자동 적립됩니다. 다음 도장까지 단 2걸음 남았습니다! 힘내세요!
-                    </p>
                 </div>
             </div>
         </div>
@@ -718,10 +590,7 @@
             document.getElementById(tabName + '-tab').classList.add('active');
             document.getElementById('nav-' + tabName).classList.add('active');
             
-            // 지도 탭일 때 지도 초기화
             if(tabName === 'near') initMap();
-            
-            // 다른 탭으로 갈 때 열려있는 서브뷰들 닫기
             if(tabName !== 'chat') closeChat();
             if(tabName !== 'profile') {
                 closeCoupons(); closeStamps(); closeOrders();
@@ -744,8 +613,12 @@
 
             let shopData = {
                 'gopchang': { name: '소소곱창 사장님', img: 'gopchang.jpg', msg: '오늘 곱창 신선도 역대급이에요! 방금 들어왔습니다.' },
-                'chicken': { name: '춘천숯닭 경기대점', img: 'chicken.jpg', msg: '7시로 예약해놨으니까 시간 맞춰서 오세요! 준비해놓을게요.' },
-                'pig': { name: '훈돈가 매니저', img: 'pig.jpg', msg: '방금 안심 돈가스 타임딜 쿠폰 발행했습니다. 확인해보세요!' }
+                'chicken': { name: '춘천숯닭 경기대점', img: 'chicken.jpg', msg: '7시로 예약해놨으니까 시간 맞춰서 오세요!' },
+                'pig': { name: '훈돈가 매니저', img: 'pig.jpg', msg: '안심 돈가스 타임딜 쿠폰 발행했습니다. 확인해보세요!' },
+                'noodle': { name: '면식당 경기대점', img: 'https://images.unsplash.com/photo-1552611052-33e04de081de?q=80&w=200', msg: '마제소바 신메뉴 출시했습니다. 채팅 문의 환영해요!' },
+                'haekbab': { name: '핵밥 사장님', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=200', msg: '덮밥 메뉴 단체 주문 가능합니다!' },
+                'dimanche': { name: '르디망슈 사장님', img: 'https://images.unsplash.com/photo-1511018556340-d16986a1c194?q=80&w=200', msg: '오늘 갓 구운 디저트가 나왔어요.' },
+                'somusil': { name: '소무실 매니저', img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=200', msg: '이의동 핫플 소무실입니다. 커피 할인 중이에요!' }
             };
 
             const data = shopData[shopId];
@@ -773,6 +646,28 @@
             container.appendChild(bubble);
             container.scrollTop = container.scrollHeight;
         }
+
+        /**
+         * 메시지 전송 핸들러
+         */
+        function handleSendMessage() {
+            const input = document.getElementById('chat-input-field');
+            const text = input.value.trim();
+            if (text === '') return;
+            
+            addMessage('me', text);
+            input.value = '';
+            
+            // 간단한 자동 응답 시뮬레이션
+            setTimeout(() => {
+                addMessage('other', "확인했습니다! 궁금하신 점 있으면 더 말씀해주세요.");
+            }, 1000);
+        }
+
+        // 엔터키 전송 이벤트
+        document.getElementById('chat-input-field')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleSendMessage();
+        });
 
         /**
          * 프로필 서브뷰 내비게이션
@@ -809,7 +704,6 @@
             };
 
             const data = eventData[shopName] || { tag: 'Event', desc: '진행 중인 특별한 소식이 있습니다!', price: '상세 확인', old: '' };
-            
             title.innerText = shopName;
             tag.innerText = data.tag;
             desc.innerText = data.desc;
@@ -825,10 +719,20 @@
          * 상세 팝업에서 채팅으로 가기
          */
         function chatFromDetail() {
+            // 어랑다랑만 채팅 불가 처리
+            if (currentDetailShop === '어랑다랑') {
+                showAlert(`어랑다랑 사장님은 현재 자리에 안계셔서 곧 채팅을 오픈할 예정입니다!`);
+                return;
+            }
+
             const shopToId = {
                 '소소곱창': 'gopchang',
                 '춘천숯닭': 'chicken',
-                '훈돈가': 'pig'
+                '훈돈가': 'pig',
+                '면식당': 'noodle',
+                '핵밥': 'haekbab',
+                '르디망슈': 'dimanche',
+                '소무실': 'somusil'
             };
             
             const id = shopToId[currentDetailShop];
@@ -837,7 +741,7 @@
                 switchTab('chat');
                 openChat(id);
             } else {
-                showAlert(`${currentDetailShop} 사장님은 현재 자리에 안계셔서 곧 채팅을 오픈할 예정입니다!`);
+                showAlert(`${currentDetailShop} 사장님과 연결 중입니다...`);
             }
         }
 
@@ -845,20 +749,15 @@
          * 카카오 지도 초기화 및 마커 렌더링
          */
         function initMap() {
-            if(map) { 
-                setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 100); 
-                return; 
-            }
+            if(map) { setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 100); return; }
             var container = document.getElementById('map');
             map = new kakao.maps.Map(container, { center: centerPos, level: 3 });
 
-            // 경기대 본관 커스텀 오버레이
             new kakao.maps.CustomOverlay({
                 position: centerPos,
                 content: '<div style="width:40px; height:40px; background:#D2691E; border:4px solid white; border-radius:18px; box-shadow:0 10px 20px rgba(62,39,35,0.3); display:flex; align-items:center; justify-content:center;"><span class="material-symbols-outlined text-white text-base font-bold">school</span></div>'
             }).setMap(map);
 
-            // 상점 이벤트 데이터 (마커용)
             var eventShops = [
                 { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT_DEAL' },
                 { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT_DEAL' },
@@ -878,20 +777,10 @@
                 
                 var content = document.createElement('div');
                 content.className = "marker-deal glass-premium px-3 py-1.5 rounded-full border border-white/50 shadow-xl flex items-center gap-2 interactive";
-                content.innerHTML = `
-                    <span class="text-[10px] font-black text-white px-1.5 py-0.5 rounded-md" style="background:${badgeColor}">${badgeLabel}</span>
-                    <span class="text-[11px] font-black text-[#3E2723]">${shop.name}</span>
-                `;
-                // 마커 클릭 시 상세 카드 표시
+                content.innerHTML = `<span class="text-[10px] font-black text-white px-1.5 py-0.5 rounded-md" style="background:${badgeColor}">${badgeLabel}</span><span class="text-[11px] font-black text-[#3E2723]">${shop.name}</span>`;
                 content.onclick = () => showEventDetail(shop.name);
-
-                new kakao.maps.CustomOverlay({
-                    position: shop.pos,
-                    content: content,
-                    yAnchor: 1.5
-                }).setMap(map);
+                new kakao.maps.CustomOverlay({ position: shop.pos, content: content, yAnchor: 1.5 }).setMap(map);
             });
-
             setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 200);
         }
     </script>
