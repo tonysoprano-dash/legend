@@ -303,7 +303,10 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
-                            <button onclick="hideEventDetail()" class="py-4 bg-white border border-stone-100 text-[#3E2723] rounded-2xl font-black text-sm active:scale-95 transition-transform">다음에</button>
+                            <button onclick="chatFromDetail()" class="py-4 bg-white border border-stone-100 text-[#3E2723] rounded-2xl font-black text-sm active:scale-95 transition-transform flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-sm">chat_bubble</span>
+                                채팅하기
+                            </button>
                             <button class="py-4 bg-[#3E2723] text-white rounded-2xl font-black text-sm shadow-lg active:scale-95 transition-transform">쿠폰 받기</button>
                         </div>
                     </div>
@@ -656,6 +659,7 @@
         var map;
         var centerPos = new kakao.maps.LatLng(37.2988, 127.0444); 
         var userRole = 'user';
+        var currentDetailShop = '';
 
         /**
          * 앱 시작 및 역할 설정
@@ -716,6 +720,8 @@
             };
 
             const data = shopData[shopId];
+            if (!data) return;
+            
             title.innerText = data.name;
             pImg.src = data.img;
 
@@ -753,6 +759,7 @@
          * 지도 이벤트 레이어 로직
          */
         function showEventDetail(shopName) {
+            currentDetailShop = shopName;
             const detailView = document.getElementById('map-event-detail');
             const title = document.getElementById('detail-title');
             const desc = document.getElementById('detail-desc');
@@ -784,6 +791,25 @@
         }
 
         function hideEventDetail() { document.getElementById('map-event-detail').classList.add('hidden'); }
+        
+        /**
+         * 상세 팝업에서 채팅으로 가기
+         */
+        function chatFromDetail() {
+            hideEventDetail();
+            switchTab('chat');
+            
+            const shopToId = {
+                '소소곱창': 'gopchang',
+                '춘천숯닭': 'chicken',
+                '훈돈가': 'pig'
+            };
+            
+            const id = shopToId[currentDetailShop];
+            if (id) {
+                openChat(id);
+            }
+        }
 
         /**
          * 카카오 지도 초기화 및 마커 렌더링
