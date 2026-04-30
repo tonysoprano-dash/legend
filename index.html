@@ -73,7 +73,7 @@
         .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
         .nav-item span { font-size: 10px; font-weight: 800; }
 
-        /* 채팅 시스템 심화 스타일 */
+        /* 채팅 스타일 */
         .chat-bubble { max-width: 82%; padding: 14px 18px; border-radius: 22px; font-size: 14.5px; line-height: 1.6; margin-bottom: 8px; position: relative; }
         .bubble-other { background: white; color: #333; border-bottom-left-radius: 4px; align-self: flex-start; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
         .bubble-me { background: var(--brand-primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
@@ -93,7 +93,7 @@
         .story-img { width: 100%; height: 100%; border-radius: 23px; object-fit: cover; border: 2px solid white; }
         .story-name { font-size: 11px; font-weight: 800; color: var(--brand-primary); text-align: center; }
 
-        /* 서브뷰(쿠폰함 등) 스타일 */
+        /* 서브뷰 스타일 */
         .subview { position: absolute; inset: 0; background: #FFF8E7; z-index: 200; display: none; flex-direction: column; padding: 24px; overflow-y: auto; }
         .subview.active { display: flex; animation: slideUp 0.3s ease-out; }
 
@@ -104,7 +104,7 @@
 
     <div id="custom-alert">알림</div>
 
-    <!-- [온보딩 화면] -->
+    <!-- [온보딩] -->
     <div id="onboarding" class="fixed inset-0 z-[500] bg-[#FFF8E7] flex flex-col items-center justify-between p-12 py-24 text-center transition-all duration-700">
         <div class="flex flex-col items-center gap-8 mt-12">
             <div class="w-36 h-36 rounded-[3rem] shadow-3xl bg-white p-4 flex items-center justify-center">
@@ -125,16 +125,15 @@
         <div id="home-tab" class="tab-content active px-6 pt-20">
             <div id="owner-home" class="hidden space-y-10">
                 <h1 class="text-4xl font-black text-[#3E2723]">안녕하세요, <br/>길목 사장님!</h1>
-                <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
-                    <h3 class="text-3xl font-extrabold relative z-10">유동인구 240% 급증</h3>
-                    <p class="opacity-70 mt-2 font-bold italic relative z-10">내일 오후 2시 예상 (AI 리포트)</p>
+                <div class="card-premium bg-[#3E2723] text-white p-8">
+                    <h3 class="text-3xl font-extrabold">유동인구 240% 급증</h3>
+                    <p class="opacity-70 mt-2 font-bold italic">내일 오후 2시 예상</p>
                 </div>
             </div>
 
             <div id="user-home" class="hidden space-y-10">
                 <h1 class="text-4xl font-black text-[#3E2723]">경기대 주변<br/>가장 뜨거운 길목은?</h1>
                 
-                <!-- 스토리 피드 -->
                 <div class="story-container">
                     <div class="story-item"><div class="story-ring"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=200" class="story-img"></div><span class="story-name">어랑다랑</span></div>
                     <div class="story-item"><div class="story-ring"><img src="chicken.jpg" onerror="this.src='https://i.pravatar.cc/150?u=1'" class="story-img"></div><span class="story-name">춘천숯닭</span></div>
@@ -142,51 +141,68 @@
                     <div class="story-item"><div class="story-ring"><img src="pig.jpg" onerror="this.src='https://i.pravatar.cc/150?u=3'" class="story-img"></div><span class="story-name">훈돈가</span></div>
                 </div>
 
-                <!-- 핫딜 섹션 -->
                 <div class="space-y-6">
                     <h3 class="text-2xl font-black italic">지금 경기대 주변 핫딜</h3>
                     <div class="flex gap-5 overflow-x-auto pb-8 -mx-6 px-6 no-scrollbar">
-                        <div onclick="switchTab('near'); setTimeout(() => showEventDetail('어랑다랑'), 500);" class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
+                        <!-- 어랑다랑 핫딜 -->
+                        <div class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
                             <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=450" class="w-full h-48 object-cover">
-                            <div class="p-6"><h4 class="font-black text-xl">어랑다랑 (연무점)</h4><p class="text-sm text-stone-500 font-bold mt-1 italic">회덮밥 타임세일 중!</p><p class="text-2xl font-black text-[#D2691E] mt-3">₩9,900</p></div>
+                            <div class="p-6">
+                                <h4 class="font-black text-xl">어랑다랑 (연무점)</h4>
+                                <p class="text-sm text-stone-500 font-bold mt-1">회덮밥 타임세일 중!</p>
+                                <div class="flex justify-between items-center mt-3">
+                                    <p class="text-2xl font-black text-[#D2691E]">₩9,900</p>
+                                    <button onclick="takeCoupon('어랑다랑')" class="bg-[#3E2723] text-white px-5 py-2.5 rounded-2xl text-xs font-black active:scale-90 transition-all">쿠폰받기</button>
+                                </div>
+                            </div>
                         </div>
-                        <div onclick="switchTab('near'); setTimeout(() => showEventDetail('훈돈가'), 500);" class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
+                        <!-- 훈돈가 핫딜 -->
+                        <div class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
                             <img src="pig.jpg" onerror="this.src='https://i.pravatar.cc/150?u=pig'" class="w-full h-48 object-cover">
-                            <div class="p-6"><h4 class="font-black text-xl">훈돈가 (본점)</h4><p class="text-sm text-stone-500 font-bold mt-1 italic">안심 돈가스 정식 25%</p><p class="text-2xl font-black text-[#D2691E] mt-3">₩9,000</p></div>
+                            <div class="p-6">
+                                <h4 class="font-black text-xl">훈돈가 (본점)</h4>
+                                <p class="text-sm text-stone-500 font-bold mt-1">안심 돈가스 정식 25%</p>
+                                <div class="flex justify-between items-center mt-3">
+                                    <p class="text-2xl font-black text-[#D2691E]">₩9,000</p>
+                                    <button onclick="takeCoupon('훈돈가')" class="bg-[#3E2723] text-white px-5 py-2.5 rounded-2xl text-xs font-black active:scale-90 transition-all">쿠폰받기</button>
+                                </div>
+                            </div>
                         </div>
-                        <div onclick="switchTab('near'); setTimeout(() => showEventDetail('소소곱창'), 500);" class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
+                        <!-- 소소곱창 핫딜 -->
+                        <div class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
                             <img src="gopchang.jpg" onerror="this.src='https://i.pravatar.cc/150?u=gop'" class="w-full h-48 object-cover">
-                            <div class="p-6"><h4 class="font-black text-xl">소소곱창</h4><p class="text-sm text-stone-500 font-bold mt-1 italic">3인 특선 세트 출시!</p><p class="text-2xl font-black text-blue-600 mt-3">상담하기</p></div>
+                            <div class="p-6">
+                                <h4 class="font-black text-xl">소소곱창</h4>
+                                <p class="text-sm text-stone-500 font-bold mt-1">3인 특선 세트 출시!</p>
+                                <div class="flex justify-between items-center mt-3">
+                                    <p class="text-2xl font-black text-blue-600">상담하기</p>
+                                    <button onclick="takeCoupon('소소곱창')" class="bg-[#3E2723] text-white px-5 py-2.5 rounded-2xl text-xs font-black active:scale-90 transition-all">쿠폰받기</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- (2) 지도 탭 (8개 마커 복구) -->
+        <!-- (2) 지도 탭 -->
         <div id="near-tab" class="tab-content">
             <div id="near-tab-content" class="h-full relative overflow-hidden">
                 <div id="map"></div>
-                <div class="app-ui px-4">
-                    <header class="search-container glass-premium interactive mt-16 rounded-[2rem] flex items-center px-6 py-4 gap-4 border border-white">
-                        <span class="material-symbols-outlined text-stone-400">search</span>
-                        <input type="text" placeholder="경기대 근처 맛집 검색" class="bg-transparent border-none outline-none flex-grow font-bold text-base">
-                    </header>
-                </div>
                 <div id="map-event-detail" class="hidden absolute bottom-0 left-0 right-0 z-[200] p-6 interactive">
                     <div class="glass-premium rounded-[3.5rem] p-8 shadow-2xl slide-up">
                         <h3 id="detail-title" class="text-3xl font-black text-[#3E2723] mb-4">가게 이름</h3>
                         <div class="bg-white/60 rounded-[2.5rem] p-7 mb-8"><p id="detail-desc" class="text-base font-bold italic mb-4"></p><p id="detail-price" class="text-3xl font-black text-[#D2691E]"></p></div>
                         <div class="grid grid-cols-2 gap-4">
                             <button onclick="chatFromDetail()" class="py-5 bg-white border-2 border-stone-100 rounded-[1.8rem] font-black flex items-center justify-center gap-2"><span class="material-symbols-outlined">chat_bubble</span>채팅하기</button>
-                            <button onclick="showAlert('쿠폰함에 저장되었습니다!')" class="py-5 bg-[#3E2723] text-white rounded-[1.8rem] font-black">쿠폰 받기</button>
+                            <button onclick="takeCoupon(APP_STATE.currentShop)" class="py-5 bg-[#3E2723] text-white rounded-[1.8rem] font-black">쿠폰 받기</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- (3) 채팅 탭 (히스토리 보강) -->
+        <!-- (3) 채팅 탭 -->
         <div id="chat-tab" class="tab-content relative bg-white">
             <div id="chat-list-view" class="px-7 pt-20 h-full overflow-y-auto">
                 <h1 class="text-4xl font-black text-[#3E2723] italic mb-10">길목 메시지</h1>
@@ -197,7 +213,6 @@
                             <div class="flex justify-between items-center mb-1"><h4 class="font-black text-stone-800">소소곱창 사장님</h4><span class="text-[11px] text-stone-400">오전 11:30</span></div>
                             <p class="text-sm text-stone-500 font-semibold truncate">오늘 곱창 신선도 역대급이에요!</p>
                         </div>
-                        <div class="absolute top-6 right-6 w-5 h-5 bg-[#D2691E] rounded-full flex items-center justify-center text-white text-[10px] font-black">1</div>
                     </div>
                     <div onclick="openChat('pig')" class="flex items-center gap-5 p-5 rounded-[2.5rem] bg-white border border-stone-50 active:bg-stone-50">
                         <img src="pig.jpg" onerror="this.src='https://i.pravatar.cc/150?u=pig'" class="w-16 h-16 rounded-full object-cover">
@@ -209,7 +224,7 @@
                 </div>
             </div>
 
-            <!-- 채팅방 레이아웃 -->
+            <!-- 실제 채팅방 -->
             <div id="chat-room-view" class="hidden absolute inset-0 bg-[#FFF8E7] z-50 flex flex-col">
                 <header class="h-20 flex items-center px-5 bg-white border-b border-stone-100 shrink-0">
                     <button onclick="closeChat()" class="p-3"><span class="material-symbols-outlined font-bold">arrow_back_ios_new</span></button>
@@ -229,18 +244,18 @@
             </div>
         </div>
 
-        <!-- (4) 나의 길목 (풀 기능 복구) -->
+        <!-- (4) 나의 길목 -->
         <div id="profile-tab" class="tab-content relative px-7 pt-20">
             <div id="profile-main-view">
                 <h1 class="text-4xl font-black text-[#3E2723] mb-10 italic">나의 길목</h1>
                 <div class="flex items-center gap-6 mb-12">
                     <img src="https://i.pravatar.cc/150?u=kgu" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl overflow-hidden">
-                    <div><h3 class="text-2xl font-black">길목 대장님</h3><p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg">경기대 이의동 단골손님 ✨</p></div>
+                    <div><h3 class="text-2xl font-black text-stone-800">길목 대장님</h3><p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg">경기대 이의동 단골손님 ✨</p></div>
                 </div>
                 <div class="space-y-4">
                     <div onclick="openSubView('coupon')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
                         <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">confirmation_number</span><span class="font-black">내 쿠폰함</span></div>
-                        <div class="flex items-center gap-3"><span class="bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full">5</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
+                        <div class="flex items-center gap-3"><span id="coupon-count-badge" class="bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full">0</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
                     </div>
                     <div onclick="openSubView('stamp')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
                         <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">auto_awesome</span><span class="font-black">길목 스탬프 (이의동)</span></div>
@@ -253,16 +268,17 @@
                 </div>
             </div>
 
-            <!-- 서브뷰 전용 -->
+            <!-- 서브뷰: 쿠폰함 (실제 데이터 렌더링) -->
             <div id="subview-coupon" class="subview">
                 <button onclick="closeSubView()" class="mb-8 pt-6 w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center"><span class="material-symbols-outlined">arrow_back</span></button>
                 <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">내 쿠폰함</h1>
-                <div class="card-premium border-l-8 border-l-[#D2691E] mb-4">
-                    <h4 class="font-black text-lg">훈돈가 (본점)</h4><p class="text-sm text-stone-500 font-bold italic">안심 돈가스 정식 25% 할인</p>
-                    <div class="mt-4 pt-4 border-t border-dashed flex justify-between items-center"><span class="text-xs font-bold text-stone-400">~ 2026.12.31</span><button class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-xs font-black">사용하기</button></div>
+                <div id="coupon-list-container" class="space-y-4 pb-20">
+                    <!-- 쿠폰 아이템이 여기에 동적으로 추가됩니다 -->
+                    <p id="empty-coupon-msg" class="text-center text-stone-400 py-10 font-bold">아직 받은 쿠폰이 없어요!</p>
                 </div>
             </div>
 
+            <!-- 서브뷰: 스탬프/주문내역 (동일 유지) -->
             <div id="subview-stamp" class="subview">
                 <button onclick="closeSubView()" class="mb-8 pt-6 w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center"><span class="material-symbols-outlined">arrow_back</span></button>
                 <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">길목 스탬프</h1>
@@ -282,7 +298,6 @@
                     </div>
                 </div>
             </div>
-
             <div id="subview-order" class="subview">
                 <button onclick="closeSubView()" class="mb-8 pt-6 w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center"><span class="material-symbols-outlined">arrow_back</span></button>
                 <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">주문 내역</h1>
@@ -291,14 +306,12 @@
                     <div class="flex-grow">
                         <div class="flex justify-between items-start"><span class="text-[10px] font-bold text-stone-400">2026.04.28</span><span class="text-[10px] font-black text-green-600 uppercase">배달완료</span></div>
                         <h4 class="font-black text-stone-800">훈돈가 (본점)</h4>
-                        <p class="text-xs text-stone-500">안심 돈가스 정식 외 1건</p>
                         <p class="text-sm font-black text-[#D2691E] mt-1">18,500원</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 하단 바 -->
         <nav class="bottom-nav">
             <div onclick="switchTab('home')" id="nav-home" class="nav-item active"><span class="material-symbols-outlined">grid_view</span><span>홈</span></div>
             <div onclick="switchTab('near')" id="nav-near" class="nav-item"><span class="material-symbols-outlined">map</span><span>내 근처</span></div>
@@ -308,41 +321,84 @@
     </main>
 
     <script>
-        const APP_STATE = { map: null, center: new kakao.maps.LatLng(37.2988, 127.0444), role: 'user', currentShop: null };
-
-        // 풍부한 채팅 데이터
-        const CHAT_DATA = {
-            'gopchang': { 
-                name: '소소곱창 사장님', img: 'gopchang.jpg', 
-                history: [
-                    {type:'other', text:'오늘 곱창 신선도 역대급이에요! 방금 들어왔습니다.'},
-                    {type:'me', text:'오 진짜요? 오늘 7시쯤 4명 가려고 하는데 자리 있을까요?'},
-                    {type:'other', text:'네! 예약석으로 하나 빼두겠습니다. 학생분들이죠? 음료 서비스 드릴게요.'},
-                    {type:'me', text:'넵! 감사함다 이따 뵐게요!'},
-                    {type:'other', text:'네 천천히 오세요~'}
-                ]
-            },
-            'pig': { 
-                name: '훈돈가 매니저', img: 'pig.jpg', 
-                history: [
-                    {type:'other', text:'안심 돈가스 타임딜 쿠폰 발행했습니다. 확인해보세요!'},
-                    {type:'me', text:'오 감사합니다! 지금 바로 가서 써도 되나요?'},
-                    {type:'other', text:'네 가능합니다! 매장 키오스크에서 길목 쿠폰 바코드 스캔해주세요.'},
-                    {type:'me', text:'네 금방 가겠습니다!'}
-                ]
-            }
+        // 전역 상태에 쿠폰 저장소 추가
+        const APP_STATE = { 
+            map: null, 
+            center: new kakao.maps.LatLng(37.2988, 127.0444), 
+            role: 'user', 
+            currentShop: null,
+            myCoupons: [] // 실제로 담긴 쿠폰들
         };
 
         const EVENT_DB = {
-            '어랑다랑': { tag: 'Time Deal', desc: '점심특선 회덮밥 특가!', price: '₩9,900' },
-            '소소곱창': { tag: 'Special', desc: '삼겹살+고기 3인 세트!', price: '₩39,000' },
-            '훈돈가': { tag: 'Hot Deal', desc: '안심 돈가스 25% 할인!', price: '₩9,000' },
-            '춘천숯닭': { tag: 'Freebie', desc: '막국수 서비스!', price: '무료' },
-            '면식당': { tag: 'New', desc: '마제소바 신메뉴 출시!', price: '₩8,500' },
-            '핵밥': { tag: 'Upgrade', desc: '곱빼기 무료!', price: 'FREE' },
-            '르디망슈': { tag: 'Tea Time', desc: '티타임 15% 할인!', price: '₩15,000' },
-            '소무실': { tag: 'Coffee', desc: '커피 1,000원 할인!', price: '₩4,000' }
+            '어랑다랑': { shopId: '어랑다랑', tag: 'Time Deal', desc: '점심특선 회덮밥 특가!', price: '₩9,900', color: '#D2691E' },
+            '소소곱창': { shopId: 'gopchang', tag: 'Special', desc: '삼겹살+고기 3인 세트!', price: '₩39,000', color: '#2563eb' },
+            '훈돈가': { shopId: 'pig', tag: 'Hot Deal', desc: '안심 돈가스 25% 할인!', price: '₩9,000', color: '#D2691E' },
+            '춘천숯닭': { shopId: 'chicken', tag: 'Freebie', desc: '막국수 서비스!', price: '무료', color: '#f59e0b' },
+            '면식당': { shopId: 'noodle', tag: 'New', desc: '마제소바 신메뉴 출시!', price: '₩8,500', color: '#a855f7' },
+            '핵밥': { shopId: 'haekbab', tag: 'Upgrade', desc: '곱빼기 무료!', price: 'FREE', color: '#f59e0b' },
+            '르디망슈': { shopId: 'dimanche', tag: 'Tea Time', desc: '오후 티타임 15% 할인!', price: '₩15,000', color: '#a855f7' },
+            '소무실': { shopId: 'somusil', tag: 'Coffee', desc: '커피 1,000원 할인!', price: '₩4,000', color: '#f59e0b' }
         };
+
+        const CHAT_DATA = {
+            'gopchang': { name: '소소곱창 사장님', img: 'gopchang.jpg', history: [{type:'other', text:'오늘 곱창 신선도 역대급이에요!'}] },
+            'pig': { name: '훈돈가 매니저', img: 'pig.jpg', history: [{type:'other', text:'안심 돈가스 타임딜 쿠폰 발행했습니다.'}] }
+        };
+
+        /** 쿠폰 받기 핵심 기능 */
+        function takeCoupon(shopName) {
+            if (!shopName) return;
+            const coupon = EVENT_DB[shopName];
+            
+            // 중복 체크
+            if (APP_STATE.myCoupons.find(c => c.shopId === coupon.shopId)) {
+                showAlert('이미 받은 쿠폰입니다!');
+                return;
+            }
+
+            // 저장
+            APP_STATE.myCoupons.push(coupon);
+            updateCouponUI();
+            showAlert(`${shopName} 쿠폰이 쿠폰함에 담겼습니다!`);
+        }
+
+        /** 쿠폰 UI 업데이트 */
+        function updateCouponUI() {
+            // 배지 업데이트
+            const badge = document.getElementById('coupon-count-badge');
+            badge.innerText = APP_STATE.myCoupons.length;
+
+            // 쿠폰 리스트 렌더링
+            const container = document.getElementById('coupon-list-container');
+            const emptyMsg = document.getElementById('empty-coupon-msg');
+            
+            if (APP_STATE.myCoupons.length > 0) {
+                emptyMsg.style.display = 'none';
+                // 기존 리스트 유지하면서 새 쿠폰만 추가하거나 전체 다시 그림
+                container.querySelectorAll('.coupon-card-item').forEach(el => el.remove());
+                
+                APP_STATE.myCoupons.forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = "coupon-card-item card-premium border-l-8 mb-4 shadow-md slide-up";
+                    card.style.borderLeftColor = c.color || '#D2691E';
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-black text-lg text-[#3E2723]">${c.shopId}</h4>
+                                <p class="text-sm text-stone-500 font-bold italic">${c.desc}</p>
+                            </div>
+                            <span class="bg-orange-50 text-[#D2691E] text-[10px] font-black px-2 py-1 rounded">사용가능</span>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-dashed border-stone-200 flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-stone-400">유효기간: ~ 2026.12.31</span>
+                            <button onclick="showAlert('사용 처리가 완료되었습니다.')" class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-[10px] font-black">사용하기</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
 
         function startApp(role) {
             APP_STATE.role = role;
@@ -365,23 +421,18 @@
         function initKakaoMap() {
             if(APP_STATE.map) { APP_STATE.map.relayout(); APP_STATE.map.setCenter(APP_STATE.center); return; }
             APP_STATE.map = new kakao.maps.Map(document.getElementById('map'), { center: APP_STATE.center, level: 3 });
-            const stores = [
-                { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT' },
-                { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT' },
-                { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
-                { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' },
-                { name: '면식당', pos: new kakao.maps.LatLng(37.2970, 127.0445), type: 'NEW' },
-                { name: '핵밥', pos: new kakao.maps.LatLng(37.3000, 127.0450), type: 'EVENT' },
-                { name: '르디망슈', pos: new kakao.maps.LatLng(37.2990, 127.0425), type: 'NEW' },
-                { name: '소무실', pos: new kakao.maps.LatLng(37.2980, 127.0470), type: 'EVENT' }
-            ];
-            stores.forEach(s => {
-                let color = s.type === 'HOT' ? '#ef4444' : '#f59e0b';
+            Object.keys(EVENT_DB).forEach((name, idx) => {
+                const s = EVENT_DB[name];
+                // 예시 좌표들 (경기대 주변)
+                const lat = 37.2988 + (Math.random() - 0.5) * 0.005;
+                const lng = 127.0444 + (Math.random() - 0.5) * 0.005;
+                const pos = new kakao.maps.LatLng(lat, lng);
+
                 let content = document.createElement('div');
                 content.className = "marker-deal glass-premium px-4 py-2 rounded-full border border-white flex items-center gap-2 interactive shadow-xl";
-                content.innerHTML = `<span class="text-[10px] text-white px-2 py-0.5 rounded-lg" style="background:${color}">${s.type}</span><span class="text-xs font-black">${s.name}</span>`;
-                content.onclick = () => showEventDetail(s.name);
-                new kakao.maps.CustomOverlay({ position: s.pos, content: content, yAnchor: 1.5 }).setMap(APP_STATE.map);
+                content.innerHTML = `<span class="text-[10px] text-white px-2 py-0.5 rounded-lg" style="background:${s.color}">${s.tag}</span><span class="text-xs font-black">${name}</span>`;
+                content.onclick = () => showEventDetail(name);
+                new kakao.maps.CustomOverlay({ position: pos, content: content, yAnchor: 1.5 }).setMap(APP_STATE.map);
             });
         }
 
@@ -409,14 +460,6 @@
 
         function closeChat() { document.getElementById('chat-list-view').classList.remove('hidden'); document.getElementById('chat-room-view').classList.add('hidden'); }
 
-        function handleSendMessage() {
-            const input = document.getElementById('chat-input-field');
-            if(input.value.trim() === "") return;
-            renderMessage('me', input.value);
-            input.value = "";
-            setTimeout(() => renderMessage('other', "확인했습니다! 사장님께 전달해 드릴게요."), 1000);
-        }
-
         function renderMessage(type, text) {
             const container = document.getElementById('message-container');
             const bubble = document.createElement('div');
@@ -426,12 +469,18 @@
             container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
         }
 
-        function chatFromDetail() { 
-            let id = APP_STATE.currentShop === '소소곱창' ? 'gopchang' : (APP_STATE.currentShop === '훈돈가' ? 'pig' : '어랑다랑');
-            hideEventDetail(); switchTab('chat'); openChat(id); 
+        function handleSendMessage() {
+            const input = document.getElementById('chat-input-field');
+            if(input.value.trim() === "") return;
+            renderMessage('me', input.value);
+            input.value = "";
+            setTimeout(() => renderMessage('other', "확인했습니다!"), 1000);
         }
 
-        function openSubView(type) { document.getElementById('subview-' + type).classList.add('active'); }
+        function openSubView(type) { 
+            if(type === 'coupon') updateCouponUI();
+            document.getElementById('subview-' + type).classList.add('active'); 
+        }
         function closeSubView() { document.querySelectorAll('.subview').forEach(s => s.classList.remove('active')); }
         function showAlert(msg) { const a = document.getElementById('custom-alert'); a.innerText = msg; a.style.display = 'block'; setTimeout(() => a.style.display = 'none', 2500); }
     </script>
