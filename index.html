@@ -153,6 +153,16 @@
             align-self: flex-end;
         }
 
+        /* 지도 마커 애니메이션 */
+        @keyframes pulseDeal {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .marker-deal {
+            animation: pulseDeal 2s infinite ease-in-out;
+        }
+
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .slide-up { animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
@@ -266,7 +276,7 @@
                         <h3 class="text-xl font-black italic">지금 거북골에서 담고있는 핫딜</h3>
                     </div>
                     <div class="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6">
-                        <!-- 핫딜: 어랑다랑 (추가됨) -->
+                        <!-- 핫딜: 어랑다랑 -->
                         <div class="min-w-[280px] card-premium p-0 overflow-hidden relative border-orange-200 shadow-lg">
                             <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=400" class="w-full h-40 object-cover" alt="회 세트" />
                             <div class="p-5 space-y-2">
@@ -307,7 +317,7 @@
             </div>
         </div>
 
-        <!-- (2) 지도 탭 (검색 바 추가됨) -->
+        <!-- (2) 지도 탭 (검색 바 및 행사 매장 표시 추가됨) -->
         <div id="near-tab" class="tab-content">
             <div id="near-tab-content">
                 <div id="map"></div>
@@ -538,7 +548,7 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // 카카오 지도
+        // 카카오 지도 초기화 및 행사 상점 마커 표시
         function initMap() {
             if(map) {
                 setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 100);
@@ -546,10 +556,39 @@
             }
             var container = document.getElementById('map');
             map = new kakao.maps.Map(container, { center: centerPos, level: 3 });
+
+            // 경기대 본관 마커
             new kakao.maps.CustomOverlay({
                 position: centerPos,
-                content: '<div style="width:40px; height:40px; background:#D2691E; border:4px solid white; border-radius:18px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-outlined text-white text-base">school</span></div>'
+                content: '<div style="width:40px; height:40px; background:#D2691E; border:4px solid white; border-radius:18px; box-shadow:0 10px 20px rgba(62,39,35,0.3); display:flex; align-items:center; justify-content:center;"><span class="material-symbols-outlined text-white text-base">school</span></div>'
             }).setMap(map);
+
+            // 행사 중인 매장 데이터
+            var eventShops = [
+                { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT_DEAL' },
+                { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT_DEAL' },
+                { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
+                { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' }
+            ];
+
+            eventShops.forEach(shop => {
+                var badgeColor = shop.type === 'HOT_DEAL' ? '#ef4444' : '#f59e0b';
+                var badgeLabel = shop.type === 'HOT_DEAL' ? '🔥 핫딜' : '🎁 행사';
+                
+                var content = `
+                    <div class="marker-deal glass-premium px-3 py-1.5 rounded-full border border-white/50 shadow-xl flex items-center gap-2">
+                        <span class="text-[10px] font-black text-white px-1.5 py-0.5 rounded-md" style="background:${badgeColor}">${badgeLabel}</span>
+                        <span class="text-[11px] font-black text-[#3E2723]">${shop.name}</span>
+                    </div>
+                `;
+
+                new kakao.maps.CustomOverlay({
+                    position: shop.pos,
+                    content: content,
+                    yAnchor: 1.5
+                }).setMap(map);
+            });
+
             setTimeout(() => { map.relayout(); map.setCenter(centerPos); }, 200);
         }
     </script>
