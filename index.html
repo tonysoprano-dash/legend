@@ -279,7 +279,38 @@
 
 
         #custom-alert { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; background: #3E2723; color: white; padding: 14px 28px; border-radius: 25px; font-weight: 800; }
+    /* 지도 위 실시간 유동인구 서클 마커 */
+.hotzone-marker {
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 900;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255,255,255,0.7);
+    pointer-events: auto;
+    z-index: 10;
+}
 
+/* 밀도별 색상 */
+.marker-high { 
+    background: rgba(239, 68, 68, 0.9); /* 빨강 */
+    animation: pulse-red 2s infinite; 
+}
+.marker-mid { 
+    background: rgba(245, 158, 11, 0.9); /* 주황 */
+}
+.marker-low { 
+    background: rgba(59, 130, 246, 0.85); /* 파랑 */
+}
+
+.marker-count { font-size: 16px; line-height: 1; }
+.marker-label { font-size: 10px; opacity: 0.9; margin-top: 2px; }
     </style>
 
 </head>
@@ -866,51 +897,75 @@
 
 
 
-        function initKakaoMap() {
+       function initKakaoMap() {
+    // 지도가 이미 있으면 크기 재조절 및 중심 이동만 수행
+    if(APP_STATE.map) { 
+        APP_STATE.map.relayout(); 
+        APP_STATE.map.setCenter(APP_STATE.center); 
+        return; 
+    }
+    
+    // 지도 생성
+    APP_STATE.map = new kakao.maps.Map(document.getElementById('map'), { 
+        center: APP_STATE.center, 
+        level: 3 
+    });
 
-            if(APP_STATE.map) { APP_STATE.map.relayout(); APP_STATE.map.setCenter(APP_STATE.center); return; }
+    // 1. [사장님 모드용] 실시간 유동인구 데이터 (핫존)
+    const hotzones = [
+        { name: '중문 편의점 길목', pos: new kakao.maps.LatLng(37.2995, 127.0455), count: 92, status: 'high', size: 80 },
+        { name: '정문 삼거리', pos: new kakao.maps.LatLng(37.2975, 127.0435), count: 45, status: 'mid', size: 65 },
+        { name: '카페거리 입구', pos: new kakao.maps.LatLng(37.2985, 127.0465), count: 38, status: 'mid', size: 60 },
+        { name: '공영주차장 골목', pos: new kakao.maps.LatLng(37.3005, 127.0430), count: 12, status: 'low', size: 50 }
+    ];
 
-            APP_STATE.map = new kakao.maps.Map(document.getElementById('map'), { center: APP_STATE.center, level: 3 });
+    // 2. [손님 모드용] 일반 상점 마커 데이터
+    const stores = [
+        { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT' },
+        { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT' },
+        { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
+        { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' }
+    ];
 
-            const stores = [
+    // 역할(Role)에 따라 다른 마커 표시
+    if (APP_STATE.role === 'owner') {
+        // --- 사장님 모드: 유동인구 핫존(동그라미) 표시 ---
+        hotzones.forEach(hz => {
+            let content = document.createElement('div');
+            content.className = `hotzone-marker marker-${hz.status}`;
+            content.style.width = `${hz.size}px`;
+            content.style.height = `${hz.size}px`;
+            content.innerHTML = `
+                <span class="marker-count">${hz.count}</span>
+                <span class="marker-label">명</span>
+            `;
+            
+            // 클릭 시 간단한 알림
+            content.onclick = () => showAlert(`${hz.name}: 현재 ${hz.count}명이 지나가고 있습니다.`);
 
-                { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT' },
-
-                { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT' },
-
-                { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
-
-                { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' },
-
-                { name: '면식당', pos: new kakao.maps.LatLng(37.2970, 127.0445), type: 'NEW' },
-
-                { name: '핵밥', pos: new kakao.maps.LatLng(37.3000, 127.0450), type: 'EVENT' },
-
-                { name: '르디망슈', pos: new kakao.maps.LatLng(37.2990, 127.0425), type: 'NEW' },
-
-                { name: '소무실', pos: new kakao.maps.LatLng(37.2980, 127.0470), type: 'EVENT' }
-
-            ];
-
-            stores.forEach(s => {
-
-                let color = s.type === 'HOT' ? '#ef4444' : '#f59e0b';
-
-                let content = document.createElement('div');
-
-                content.className = "marker-deal glass-premium px-4 py-2 rounded-full border border-white flex items-center gap-2 interactive shadow-xl";
-
-                content.innerHTML = `<span class="text-[10px] text-white px-2 py-0.5 rounded-lg" style="background:${color}">${s.type}</span><span class="text-xs font-black">${s.name}</span>`;
-
-                content.onclick = () => showEventDetail(s.name);
-
-                new kakao.maps.CustomOverlay({ position: s.pos, content: content, yAnchor: 1.5 }).setMap(APP_STATE.map);
-
-            });
-
-        }
-
-
+            new kakao.maps.CustomOverlay({
+                position: hz.pos,
+                content: content,
+                yAnchor: 0.5
+            }).setMap(APP_STATE.map);
+        });
+    } else {
+        // --- 손님 모드: 기존 상점 이름 마커 표시 ---
+        stores.forEach(s => {
+            let color = s.type === 'HOT' ? '#ef4444' : '#f59e0b';
+            let content = document.createElement('div');
+            content.className = "marker-deal glass-premium px-4 py-2 rounded-full border border-white flex items-center gap-2 interactive shadow-xl";
+            content.innerHTML = `<span class="text-[10px] text-white px-2 py-0.5 rounded-lg" style="background:${color}">${s.type}</span><span class="text-xs font-black">${s.name}</span>`;
+            content.onclick = () => showEventDetail(s.name);
+            
+            new kakao.maps.CustomOverlay({ 
+                position: s.pos, 
+                content: content, 
+                yAnchor: 1.5 
+            }).setMap(APP_STATE.map);
+        });
+    }
+}
 
         function showEventDetail(name) {
 
