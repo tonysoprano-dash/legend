@@ -456,48 +456,193 @@
         <!-- (4) 나의 길목 (풀 기능 복구) -->
 
        <!-- (4) 나의 길목 탭 -->
-<div id="profile-tab" class="tab-content relative px-7 pt-20">
-    <div id="profile-main-view">
-        <h1 class="text-4xl font-black text-[#3E2723] mb-8 italic">나의 길목</h1>
-        
-        <!-- 프로필 카드 영역 (JS에서 동적 렌더링: 캐릭터별 프로필이 여기에 삽입됩니다) -->
-        <div id="dynamic-profile-card"></div>
+// 1. 프로필 렌더링 함수
+// 현재 선택된 역할(role)에 따라 대학생 김지훈 또는 어랑다랑 박영호 사장님의 데이터를 화면에 그려줍니다.
+function renderProfile() {
+    const container = document.getElementById('dynamic-profile-card');
+    const ownerMenu = document.getElementById('owner-specific-menu');
+    
+    if (!container) return; // 요소가 없으면 실행 방지
 
-        <!-- 하단 메뉴 영역 (프로필 카드와의 간격을 넓혀 밑으로 배치) -->
-        <div class="space-y-4 mt-12">
-            <!-- 쿠폰함 / 이벤트 메뉴 -->
-            <div onclick="openSubView('coupon')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-                <div class="flex items-center gap-5 text-[#3E2723]">
-                    <span class="material-symbols-outlined font-bold">confirmation_number</span>
-                    <span class="font-black">내 쿠폰함 / 이벤트</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span id="profile-badge-count" class="bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full">5</span>
-                    <span class="material-symbols-outlined text-stone-300">chevron_right</span>
-                </div>
-            </div>
-
-            <!-- 사장님 모드 전용 메뉴 (정산 관리) -->
-            <div id="owner-specific-menu" class="hidden">
-                <div onclick="showAlert('정산 페이지로 이동합니다.')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-                    <div class="flex items-center gap-5 text-[#3E2723]">
-                        <span class="material-symbols-outlined font-bold">payments</span>
-                        <span class="font-black">정산 관리</span>
+    if (APP_STATE.role === 'owner') {
+        // [사장님 모드: 어랑다랑 박영호 사장님 설정]
+        if (ownerMenu) ownerMenu.classList.remove('hidden');
+        container.innerHTML = `
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center gap-6 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('owner')">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl object-cover">
+                        <span class="absolute -bottom-2 -right-2 bg-[#D2691E] text-white p-2 rounded-xl border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-sm font-bold">verified</span></span>
                     </div>
-                    <span class="material-symbols-outlined text-stone-300">chevron_right</span>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-black text-[#3E2723]">박영호 사장님</h3>
+                            <span class="material-symbols-outlined text-stone-400 text-sm">info</span>
+                        </div>
+                        <p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg inline-block">어랑다랑 대표 | 신선도 장인 🐟</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-[1.8rem] border border-stone-50 shadow-sm">
+                        <p class="text-[10px] font-bold text-stone-400 mb-1">오늘 전송 핫딜</p>
+                        <p class="text-xl font-black text-[#3E2723]">12회</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-[1.8rem] border border-stone-50 shadow-sm">
+                        <p class="text-[10px] font-bold text-stone-400 mb-1">가게 신뢰 지수</p>
+                        <p class="text-xl font-black text-blue-600">98점</p>
+                    </div>
                 </div>
             </div>
-
-            <!-- 이용 내역 메뉴 -->
-            <div onclick="openSubView('order')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-                <div class="flex items-center gap-5 text-[#3E2723]">
-                    <span class="material-symbols-outlined font-bold">history</span>
-                    <span class="font-black">이용 내역</span>
+        `;
+        const badge = document.getElementById('profile-badge-count');
+        if(badge) badge.innerText = "12"; // 사장님은 관리할 문의/이벤트 개수 표시
+    } else {
+        // [손님 모드: 대학생 김지훈 설정]
+        if (ownerMenu) ownerMenu.classList.add('hidden');
+        container.innerHTML = `
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center gap-6 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('user')">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-blue-50 shadow-2xl object-cover">
+                        <span class="absolute -bottom-2 -right-2 bg-[#004ea2] text-white p-2 rounded-xl border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-sm font-bold">school</span></span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-black text-[#3E2723]">김지훈 학생</h3>
+                            <span class="material-symbols-outlined text-stone-400 text-sm">info</span>
+                        </div>
+                        <p class="text-xs font-black text-blue-600 mt-1 bg-blue-50 px-3 py-1 rounded-lg inline-block">경영학과 | 이의동 단골 대장 🏅</p>
+                    </div>
                 </div>
-                <span class="material-symbols-outlined text-stone-300">chevron_right</span>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-[1.8rem] border border-stone-50 shadow-sm">
+                        <p class="text-[10px] font-bold text-stone-400 mb-1">지금까지 아낀 식비</p>
+                        <p class="text-xl font-black text-[#D2691E]">₩45,200</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-[1.8rem] border border-stone-50 shadow-sm">
+                        <p class="text-[10px] font-bold text-stone-400 mb-1">누적 스탬프</p>
+                        <p class="text-xl font-black text-[#3E2723]">28개</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        const badge = document.getElementById('profile-badge-count');
+        if(badge) badge.innerText = "5"; // 손님은 보유 쿠폰 개수 표시
+    }
+}
+
+// 2. 인물 페르소나 상세 정보 표시 함수
+// 사진을 클릭하면 각 캐릭터의 구체적인 페르소나 리포트가 팝업으로 나타납니다.
+function showPersonaDetail(role) {
+    let detailView = document.getElementById('persona-detail-view');
+    if (!detailView) {
+        detailView = document.createElement('div');
+        detailView.id = 'persona-detail-view';
+        detailView.className = 'fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-6';
+        document.body.appendChild(detailView);
+    }
+
+    const personaData = {
+        'owner': {
+            name: '박영호 (52세)',
+            title: '어랑다랑 대표 | 신선도 장인',
+            image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400',
+            motto: '"회는 시간이 생명입니다. 신선함이 손님상까지 가장 빠르게 닿는 길목을 찾습니다."',
+            traits: ['장인정신', '트렌드 민감', '깐깐함'],
+            desc: '매일 새벽 수산시장에서 가장 신선한 횟감을 떼오는 것으로 하루를 시작합니다. 유동인구가 줄어드는 오후 시간대 재고 손실을 막기 위해 길목 앱을 적극 활용합니다.',
+            goal: '재고 0% 도전, 학생들에게 신선한 회를 저렴하게 공급하여 신뢰 구축'
+        },
+        'user': {
+            name: '김지훈 (24세)',
+            title: '경기대학교 경영학과 3학년',
+            image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400',
+            motto: '"학교 앞 밥값이 너무 올랐어요. 길목 핫딜은 대학 생활의 필수 생존 전략이죠!"',
+            traits: ['합리적 소비', '외향적', '정보 공유'],
+            desc: '공강 시간에 친구들과 무엇을 먹을지 결정하는 것이 가장 큰 고민입니다. SNS 맛집보다는 실질적인 가성비와 실시간 할인 정보를 더 신뢰하는 실속파입니다.',
+            goal: '식비 20% 절약, 동아리 회식 시 가성비 좋은 핫존 상권 섭외'
+        }
+    };
+
+    const data = personaData[role];
+    const themeColor = role === 'owner' ? '#3E2723' : '#004ea2';
+
+    detailView.innerHTML = `
+        <div class="bg-white w-full max-w-sm rounded-[3rem] overflow-hidden shadow-2xl slide-up relative">
+            <button onclick="closePersonaDetail()" class="absolute top-6 right-6 z-10 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center shadow-md">
+                <span class="material-symbols-outlined text-stone-800">close</span>
+            </button>
+            <div class="h-48 overflow-hidden relative">
+                <img src="${data.image}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                <div class="absolute bottom-6 left-8 text-white">
+                    <h4 class="text-2xl font-black">${data.name}</h4>
+                    <p class="text-xs opacity-80">${data.title}</p>
+                </div>
+            </div>
+            <div class="p-8 space-y-6">
+                <div>
+                    <p class="text-sm italic font-bold text-stone-600 leading-relaxed">"${data.motto}"</p>
+                </div>
+                <div class="flex gap-2">
+                    ${data.traits.map(t => `<span class="px-3 py-1 bg-stone-100 text-stone-600 rounded-lg text-[10px] font-black">#${t}</span>`).join('')}
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-stone-50 p-5 rounded-2xl">
+                        <h5 class="text-[10px] font-black mb-1" style="color:${themeColor}">성향 및 특징</h5>
+                        <p class="text-xs text-stone-600 leading-relaxed font-medium">${data.desc}</p>
+                    </div>
+                    <div class="bg-stone-50 p-5 rounded-2xl">
+                        <h5 class="text-[10px] font-black mb-1" style="color:${themeColor}">앱 사용 목표</h5>
+                        <p class="text-xs text-stone-600 leading-relaxed font-medium">${data.goal}</p>
+                    </div>
+                </div>
+                <button onclick="closePersonaDetail()" class="w-full py-4 rounded-2xl font-black text-sm text-white shadow-lg active:scale-95 transition-all" style="background:${themeColor}">확인</button>
             </div>
         </div>
-    </div>
+    `;
+    detailView.classList.remove('hidden');
+}
+
+function closePersonaDetail() {
+    const detailView = document.getElementById('persona-detail-view');
+    if (detailView) detailView.classList.add('hidden');
+}
+
+// 3. startApp 함수 (모드 선택 시 실행)
+function startApp(role) {
+    APP_STATE.role = role;
+    renderProfile(); // 앱 시작 시 프로필 데이터를 역할에 맞게 생성
+    document.getElementById('onboarding').style.transform = 'translateY(-100%)';
+    setTimeout(() => {
+        document.getElementById('onboarding').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById(role + '-home').style.display = 'block';
+    }, 600);
+}
+
+// 4. switchTab 함수 (탭 전환 시 실행)
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(tabName + '-tab').classList.add('active');
+    document.getElementById('nav-' + tabName).classList.add('active');
+    
+    if(tabName === 'near') {
+        initKakaoMap();
+        if(APP_STATE.role === 'owner') {
+            document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
+            toggleHotZone(true);
+        } else {
+            document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
+            toggleHotZone(false);
+        }
+    }
+    
+    // '나의 길목(profile)' 탭으로 이동할 때마다 인물 프로필을 다시 렌더링
+    if(tabName === 'profile') {
+        renderProfile();
+    }
+}
 
     <!-- 기존 서브뷰(쿠폰함 등) 구조는 유지 -->
 </div>
