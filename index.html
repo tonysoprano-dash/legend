@@ -440,7 +440,7 @@
                 container.innerHTML = `
                     <div class="flex items-center gap-6 mb-12 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('owner')">
                         <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl object-cover overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1581579186913-45ac3e6efe93?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl object-cover overflow-hidden">
                             <div class="absolute -bottom-1 -right-1 bg-[#D2691E] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs">verified</span></div>
                         </div>
                         <div>
@@ -453,7 +453,7 @@
                 container.innerHTML = `
                     <div class="flex items-center gap-6 mb-12 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('user')">
                         <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-blue-100 shadow-2xl object-cover overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-blue-100 shadow-2xl object-cover overflow-hidden">
                             <div class="absolute -bottom-1 -right-1 bg-[#004ea2] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs">school</span></div>
                         </div>
                         <div>
@@ -469,19 +469,21 @@
             const detailView = document.getElementById('persona-detail-view');
             const data = role === 'owner' 
                 ? { 
-                    name: '박영호 (52세)', title: '어랑다랑 대표 | 신선도 장인', 
-                    img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400',
-                    motto: '회는 시간이 생명입니다. 신선함이 가장 빠르게 닿는 길목을 찾습니다.',
-                    desc: '매일 새벽 수산시장에서 신선한 횟감을 떼오는 베테랑입니다. 오후 2시~5시 유동인구가 줄어들 때 재고 손실을 막기 위해 길목 앱을 적극 활용합니다.',
-                    goal: '재고 0% 도전, 학생들에게 가성비 좋은 신뢰받는 사장님 되기',
+                    name: '박영호 사장님 (52세)', title: '어랑다랑 대표 | 상생 길목 파트너', 
+                    img: 'https://images.unsplash.com/photo-1581579186913-45ac3e6efe93?q=80&w=400',
+                    motto: '회는 시간이 생명입니다. 수조 안의 신선함이 학생들 상까지 닿는 가장 빠른 길목을 찾습니다.',
+                    desc: '매일 새벽 3시 노량진 수산시장에서 최상의 횟감을 직접 고릅니다. 오후 2시 이후 유동인구가 빠져나가는 "데드 타임"에 남은 횟감을 어떻게 처리할지가 늘 고민이었습니다.',
+                    solve: '길목 앱의 핫존 분석을 통해 학생들이 현재 어느 게이트 인근에 모여있는지 확인하고, 즉시 "회덮밥 40% 타임딜"을 발송하여 재고 손실 0%에 도전합니다.',
+                    goal: '식재료 낭비 없는 친환경 운영과 학생들에게 사랑받는 단골 맛집 유지',
                     color: '#3E2723'
                 }
                 : { 
-                    name: '김지훈 (24세)', title: '경기대 경영학과 3학년', 
-                    img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400',
-                    motto: '학교 앞 밥값이 너무 올랐어요. 길목 핫딜은 필수 생존 전략이죠!',
-                    desc: '합리적인 소비를 지향하는 실속파 대학생입니다. 친구들과 메뉴를 고를 때 길목 핫존 정보를 보고 가장 혜택이 많은 가게를 선점합니다.',
-                    goal: '한 달 식비 20만원 절약, 최고의 가성비 라이프 정착',
+                    name: '김지훈 학생 (24세)', title: '경기대 경영학과 3학년 | 실속파 과대', 
+                    img: 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=400',
+                    motto: '식비 인플레이션 시대, 길목 핫딜만 잘 잡아도 한 달 식비 15만원은 거뜬히 아끼죠!',
+                    desc: '전공 서적값과 자취방 월세로 생활비가 늘 빠듯합니다. 친구들과 점심 메뉴를 고를 때 가위바위보 대신 길목 앱을 켜서 가장 가까운 핫딜 매장을 찾는 것이 습관이 되었습니다.',
+                    solve: '수업이 끝나자마자 길목 알림으로 사장님의 "긴급 타임 세일"을 확인합니다. 과 동기들과 4인 파티를 꾸려 사장님의 재고 고민을 해결해드리고 가성비 넘치는 점심을 즐깁니다.',
+                    goal: '스마트한 소비로 아낀 돈을 모아 졸업 여행 자금 200만원 마련하기',
                     color: '#004ea2'
                 };
 
@@ -490,20 +492,32 @@
                     <div class="h-32" style="background:${data.color}"></div>
                     <div class="px-8 pb-10 -mt-16">
                         <img src="${data.img}" class="w-32 h-32 rounded-[2.5rem] border-[6px] border-white shadow-xl mx-auto object-cover">
-                        <h4 class="text-2xl font-black mt-6 text-center">${data.name}</h4>
+                        <h4 class="text-2xl font-black mt-6 text-center text-[#3E2723]">${data.name}</h4>
                         <p class="text-center font-bold text-stone-400 text-sm mt-1">${data.title}</p>
-                        <p class="mt-8 italic font-bold text-stone-600 text-center leading-relaxed">"${data.motto}"</p>
+                        
+                        <div class="mt-8 p-5 bg-stone-50 rounded-3xl border border-stone-100">
+                            <p class="italic font-bold text-stone-600 text-center text-xs leading-relaxed">"${data.motto}"</p>
+                        </div>
+
                         <div class="mt-8 space-y-4">
-                            <div class="bg-stone-50 p-5 rounded-2xl">
-                                <h5 class="text-xs font-black text-stone-400 mb-1">상태 및 특징</h5>
-                                <p class="text-sm font-bold text-stone-700 leading-relaxed">${data.desc}</p>
+                            <div class="flex flex-col gap-1">
+                                <h5 class="text-[10px] font-black text-stone-300 ml-2 uppercase tracking-widest">Pain Point & Solution</h5>
+                                <div class="bg-white border border-stone-100 p-5 rounded-2xl shadow-sm">
+                                    <p class="text-xs font-bold text-stone-700 leading-relaxed">${data.desc}</p>
+                                    <div class="h-[1px] w-full bg-stone-100 my-3"></div>
+                                    <p class="text-xs font-black text-[#D2691E] leading-relaxed">💡 ${data.solve}</p>
+                                </div>
                             </div>
-                            <div class="bg-stone-50 p-5 rounded-2xl">
-                                <h5 class="text-xs font-black text-stone-400 mb-1">진정한 목표</h5>
-                                <p class="text-sm font-bold text-stone-700 leading-relaxed">${data.goal}</p>
+                            
+                            <div class="flex flex-col gap-1">
+                                <h5 class="text-[10px] font-black text-stone-300 ml-2 uppercase tracking-widest">Final Goal</h5>
+                                <div class="bg-stone-50 p-5 rounded-2xl">
+                                    <p class="text-xs font-black text-stone-800 leading-relaxed">🎯 ${data.goal}</p>
+                                </div>
                             </div>
                         </div>
-                        <button onclick="closePersonaDetail()" class="mt-10 w-full py-5 rounded-[1.8rem] text-white font-black shadow-lg" style="background:${data.color}">확인</button>
+                        
+                        <button onclick="closePersonaDetail()" class="mt-10 w-full py-5 rounded-[1.8rem] text-white font-black shadow-lg active:scale-95 transition-all" style="background:${data.color}">스토리 닫기</button>
                     </div>
                 </div>
             `;
