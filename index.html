@@ -1,955 +1,589 @@
 <!DOCTYPE html>
-
 <html lang="ko">
-
 <head>
-
     <meta charset="utf-8"/>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
     <meta name="apple-mobile-web-app-capable" content="yes">
-
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <title>길목 (Gilmok) - 연결로, 길목</title>
-
     
-
     <!-- 구글 폰트 및 아이콘 SDK -->
-
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
-
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e03666d901543f8d3c81beeddcd6f319&libraries=services"></script>
-
     
-
     <style>
-
         :root {
-
             --brand-primary: #3E2723;
-
             --brand-secondary: #D2691E;
-
             --brand-bg: #FFF8E7;
-
             --brand-accent: #5D4037;
-
             --brand-light: #FFEAD6;
-
             --safe-area-bottom: env(safe-area-inset-bottom);
-
         }
-
-
 
         body, html { 
-
             margin: 0; padding: 0; width: 100%; height: 100%; 
-
             background-color: var(--brand-bg); 
-
             font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif; 
-
             -webkit-tap-highlight-color: transparent; 
-
             overflow: hidden;
-
         }
-
-
 
         /* 탭 및 레이아웃 */
-
         .tab-content { 
-
             display: none; height: 100%; overflow-y: auto; 
-
             padding-bottom: calc(150px + var(--safe-area-bottom)); 
-
             scrollbar-width: none;
-
         }
-
         .tab-content.active { display: block; }
-
         .tab-content::-webkit-scrollbar { display: none; }
 
-
-
         #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-
         .interactive { pointer-events: auto; }
 
-
-
         /* 프리미엄 디자인 시스템 */
-
         .glass-premium {
-
             background: rgba(255, 255, 255, 0.94);
-
             backdrop-filter: blur(25px);
-
             -webkit-backdrop-filter: blur(25px);
-
             border: 1px solid rgba(255, 255, 255, 0.6);
-
             box-shadow: 0 12px 40px rgba(62, 39, 35, 0.08);
-
         }
-
-
 
         .card-premium { 
-
             background: white; border-radius: 32px; padding: 24px; 
-
             box-shadow: 0 6px 24px rgba(0,0,0,0.03); 
-
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
         }
-
         .card-premium:active { transform: scale(0.97); }
 
-
-
         .bottom-nav {
-
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
-
             background: white; padding-bottom: var(--safe-area-bottom);
-
             height: calc(88px + var(--safe-area-bottom));
-
             display: flex; justify-content: space-around; align-items: center;
-
             border-top: 1px solid rgba(0,0,0,0.05);
-
         }
 
-
-
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #C0B1A5; cursor: pointer; transition: all 0.3s; }
-
         .nav-item.active { color: var(--brand-secondary); }
-
         .nav-item .material-symbols-outlined { font-size: 28px; font-variation-settings: 'FILL' 0; }
-
         .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
-
         .nav-item span { font-size: 10px; font-weight: 800; }
 
-
-
         /* 채팅 시스템 심화 스타일 */
-
         .chat-bubble { max-width: 82%; padding: 14px 18px; border-radius: 22px; font-size: 14.5px; line-height: 1.6; margin-bottom: 8px; position: relative; }
-
         .bubble-other { background: white; color: #333; border-bottom-left-radius: 4px; align-self: flex-start; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-
         .bubble-me { background: var(--brand-primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
 
-
-
         .chat-input-area { background: white; padding: 16px 20px; padding-bottom: calc(16px + var(--safe-area-bottom)); border-top: 1px solid rgba(0,0,0,0.05); }
-
         .chat-input-container { display: flex; align-items: center; gap: 12px; background: #F8F4F0; border-radius: 30px; padding: 6px 18px; border: 1px solid rgba(0,0,0,0.03); }
-
         .chat-input-field { flex: 1; background: transparent; border: none; outline: none; height: 44px; font-weight: 600; color: #3E2723; }
-
         .send-btn { color: var(--brand-secondary); cursor: pointer; }
 
-
-
         /* 애니메이션 */
-
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
         .slide-up { animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
-
-
         .story-container { display: flex; gap: 16px; overflow-x: auto; padding: 4px 0 16px; scrollbar-width: none; }
-
         .story-container::-webkit-scrollbar { display: none; }
-
         .story-ring { width: 78px; height: 78px; border-radius: 28px; padding: 3px; background: linear-gradient(135deg, #D2691E, #3E2723); margin-bottom: 8px; }
-
         .story-img { width: 100%; height: 100%; border-radius: 23px; object-fit: cover; border: 2px solid white; }
-
         .story-name { font-size: 11px; font-weight: 800; color: var(--brand-primary); text-align: center; }
 
-
-
         /* 서브뷰(쿠폰함 등) 스타일 */
-
         .subview { position: absolute; inset: 0; background: #FFF8E7; z-index: 200; display: none; flex-direction: column; padding: 24px; overflow-y: auto; }
-
         .subview.active { display: flex; animation: slideUp 0.3s ease-out; }
 
-
-
         #custom-alert { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; background: #3E2723; color: white; padding: 14px 28px; border-radius: 25px; font-weight: 800; }
-
     </style>
-
 </head>
-
 <body>
-
-
 
     <div id="custom-alert">알림</div>
 
-
-
     <!-- [온보딩 화면] -->
-
     <div id="onboarding" class="fixed inset-0 z-[500] bg-[#FFF8E7] flex flex-col items-center justify-between p-12 py-24 text-center transition-all duration-700">
-
         <div class="flex flex-col items-center gap-8 mt-12">
-
             <div class="w-36 h-36 rounded-[3rem] shadow-3xl bg-white p-4 flex items-center justify-center">
-
                 <svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="50" fill="#FFEAD6"/><g transform="rotate(45 50 50)"><rect x="42" y="10" width="16" height="80" rx="8" fill="#3E2723"/><rect x="10" y="42" width="80" height="16" rx="8" fill="#D2691E"/></g><circle cx="50" cy="50" r="14" fill="#D2691E"/></svg>
-
             </div>
-
             <h1 class="text-7xl font-black text-[#3E2723] italic">길목</h1>
-
         </div>
-
         <div class="grid gap-5 w-full max-w-sm">
-
             <button onclick="startApp('owner')" class="w-full py-7 bg-[#3E2723] text-white rounded-[2.5rem] font-black text-2xl shadow-2xl active:scale-95 transition-all">사장님 모드</button>
-
             <button onclick="startApp('user')" class="w-full py-7 bg-white text-[#3E2723] border-4 border-orange-50 rounded-[2.5rem] font-black text-2xl active:scale-95 transition-all shadow-xl">손님 모드</button>
-
         </div>
-
     </div>
-
-
 
     <!-- [메인 앱] -->
-
     <main id="main-app" class="hidden w-full h-full relative">
-
         
-
         <!-- (1) 홈 탭 -->
-
         <div id="home-tab" class="tab-content active px-6 pt-20">
-
             <div id="owner-home" class="hidden space-y-10">
-
                 <h1 class="text-4xl font-black text-[#3E2723]">안녕하세요, <br/>길목 사장님!</h1>
-
                 <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
-
                     <h3 class="text-3xl font-extrabold relative z-10">유동인구 240% 급증</h3>
-
                     <p class="opacity-70 mt-2 font-bold italic relative z-10">내일 오후 2시 예상 (AI 리포트)</p>
-
                 </div>
-
             </div>
-
-
 
             <div id="user-home" class="hidden space-y-10">
-
                 <h1 class="text-4xl font-black text-[#3E2723]">경기대 주변<br/>가장 뜨거운 길목은?</h1>
-
                 
-
                 <!-- 스토리 피드 -->
-
                 <div class="story-container">
-
                     <div class="story-item"><div class="story-ring"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=200" class="story-img"></div><span class="story-name">어랑다랑</span></div>
-
                     <div class="story-item"><div class="story-ring"><img src="chicken.jpg" onerror="this.src='https://i.pravatar.cc/150?u=1'" class="story-img"></div><span class="story-name">춘천숯닭</span></div>
-
                     <div class="story-item"><div class="story-ring"><img src="gopchang.jpg" onerror="this.src='https://i.pravatar.cc/150?u=2'" class="story-img"></div><span class="story-name">소소곱창</span></div>
-
                     <div class="story-item"><div class="story-ring"><img src="pig.jpg" onerror="this.src='https://i.pravatar.cc/150?u=3'" class="story-img"></div><span class="story-name">훈돈가</span></div>
-
                 </div>
-
-
 
                 <!-- 핫딜 섹션 -->
-
                 <div class="space-y-6">
-
                     <h3 class="text-2xl font-black italic">지금 경기대 주변 핫딜</h3>
-
                     <div class="flex gap-5 overflow-x-auto pb-8 -mx-6 px-6 no-scrollbar">
-
                         <div onclick="switchTab('near'); setTimeout(() => showEventDetail('어랑다랑'), 500);" class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
-
                             <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=450" class="w-full h-48 object-cover">
-
                             <div class="p-6"><h4 class="font-black text-xl">어랑다랑 (연무점)</h4><p class="text-sm text-stone-500 font-bold mt-1 italic">회덮밥 타임세일 중!</p><p class="text-2xl font-black text-[#D2691E] mt-3">₩9,900</p></div>
-
                         </div>
-
                         <div onclick="switchTab('near'); setTimeout(() => showEventDetail('훈돈가'), 500);" class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
-
                             <img src="pig.jpg" onerror="this.src='https://i.pravatar.cc/150?u=pig'" class="w-full h-48 object-cover">
-
                             <div class="p-6"><h4 class="font-black text-xl">훈돈가 (본점)</h4><p class="text-sm text-stone-500 font-bold mt-1 italic">안심 돈가스 정식 25%</p><p class="text-2xl font-black text-[#D2691E] mt-3">₩9,000</p></div>
-
                         </div>
-
                         <div onclick="switchTab('near'); setTimeout(() => showEventDetail('소소곱창'), 500);" class="min-w-[300px] card-premium p-0 overflow-hidden relative border border-stone-100">
-
                             <img src="gopchang.jpg" onerror="this.src='https://i.pravatar.cc/150?u=gop'" class="w-full h-48 object-cover">
-
                             <div class="p-6"><h4 class="font-black text-xl">소소곱창</h4><p class="text-sm text-stone-500 font-bold mt-1 italic">3인 특선 세트 출시!</p><p class="text-2xl font-black text-blue-600 mt-3">상담하기</p></div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-
-        <!-- (2) 지도 탭 (8개 마커 복구) -->
-
+        <!-- (2) 지도 탭 -->
         <div id="near-tab" class="tab-content">
-
             <div id="near-tab-content" class="h-full relative overflow-hidden">
-
                 <div id="map"></div>
                 <div id="owner-pricing-dashboard" class="hidden absolute bottom-0 left-0 right-0 z-[200] p-4 interactive">
-            <div class="glass-premium rounded-[2.5rem] p-5 shadow-2xl border-t-2 border-t-[#D2691E] slide-up">
-                <div class="flex justify-between items-center mb-3 px-2">
-                    <h3 class="text-lg font-black text-[#3E2723]">실시간 핫딜 전송</h3>
-                    <span id="current-discount-label" class="text-2xl font-black text-[#D2691E]">25%</span>
+                    <div class="glass-premium rounded-[2.5rem] p-5 shadow-2xl border-t-2 border-t-[#D2691E] slide-up">
+                        <div class="flex justify-between items-center mb-3 px-2">
+                            <h3 class="text-lg font-black text-[#3E2723]">실시간 핫딜 전송</h3>
+                            <span id="current-discount-label" class="text-2xl font-black text-[#D2691E]">25%</span>
+                        </div>
+                        <input type="range" min="5" max="70" value="25" step="5" class="w-full h-1.5 accent-[#D2691E] mb-4" oninput="updateDiscount(this.value)">
+                        <button onclick="broadcastHotDeal()" class="w-full py-4 bg-[#3E2723] text-white rounded-2xl font-black text-sm shadow-xl flex items-center justify-center gap-2 active:scale-95">
+                            <span class="material-symbols-outlined">bolt</span>
+                            주변 손님에게 핫딜 즉시 전송
+                        </button>
+                    </div>
                 </div>
-                <input type="range" min="5" max="70" value="25" step="5" class="w-full h-1.5 accent-[#D2691E] mb-4" oninput="updateDiscount(this.value)">
-                <button onclick="broadcastHotDeal()" class="w-full py-4 bg-[#3E2723] text-white rounded-2xl font-black text-sm shadow-xl flex items-center justify-center gap-2 active:scale-95">
-                    <span class="material-symbols-outlined">bolt</span>
-                    주변 손님에게 핫딜 즉시 전송
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
                 <div class="app-ui px-4">
-
                     <header class="search-container glass-premium interactive mt-16 rounded-[2rem] flex items-center px-6 py-4 gap-4 border border-white">
-
                         <span class="material-symbols-outlined text-stone-400">search</span>
-
                         <input type="text" placeholder="경기대 근처 맛집 검색" class="bg-transparent border-none outline-none flex-grow font-bold text-base">
-
                     </header>
-
                 </div>
-
                 <div id="map-event-detail" class="hidden absolute bottom-0 left-0 right-0 z-[200] p-6 interactive">
-
                     <div class="glass-premium rounded-[3.5rem] p-8 shadow-2xl slide-up">
-
                         <h3 id="detail-title" class="text-3xl font-black text-[#3E2723] mb-4">가게 이름</h3>
-
                         <div class="bg-white/60 rounded-[2.5rem] p-7 mb-8"><p id="detail-desc" class="text-base font-bold italic mb-4"></p><p id="detail-price" class="text-3xl font-black text-[#D2691E]"></p></div>
-
                         <div class="grid grid-cols-2 gap-4">
-
                             <button onclick="chatFromDetail()" class="py-5 bg-white border-2 border-stone-100 rounded-[1.8rem] font-black flex items-center justify-center gap-2"><span class="material-symbols-outlined">chat_bubble</span>채팅하기</button>
-
                             <button onclick="showAlert('쿠폰함에 저장되었습니다!')" class="py-5 bg-[#3E2723] text-white rounded-[1.8rem] font-black">쿠폰 받기</button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-
-        <!-- (3) 채팅 탭 (히스토리 보강) -->
-
+        <!-- (3) 채팅 탭 -->
         <div id="chat-tab" class="tab-content relative bg-white">
-
             <div id="chat-list-view" class="px-7 pt-20 h-full overflow-y-auto">
-
                 <h1 class="text-4xl font-black text-[#3E2723] italic mb-10">길목 메시지</h1>
-
                 <div class="space-y-4">
-
                     <div onclick="openChat('gopchang')" class="flex items-center gap-5 p-5 rounded-[2.5rem] bg-white border border-stone-50 shadow-sm relative active:bg-stone-50">
-
                         <img src="gopchang.jpg" onerror="this.src='https://i.pravatar.cc/150?u=gop'" class="w-16 h-16 rounded-full object-cover">
-
                         <div class="flex-grow">
-
                             <div class="flex justify-between items-center mb-1"><h4 class="font-black text-stone-800">소소곱창 사장님</h4><span class="text-[11px] text-stone-400">오전 11:30</span></div>
-
                             <p class="text-sm text-stone-500 font-semibold truncate">오늘 곱창 신선도 역대급이에요!</p>
-
                         </div>
-
                         <div class="absolute top-6 right-6 w-5 h-5 bg-[#D2691E] rounded-full flex items-center justify-center text-white text-[10px] font-black">1</div>
-
                     </div>
-
                     <div onclick="openChat('pig')" class="flex items-center gap-5 p-5 rounded-[2.5rem] bg-white border border-stone-50 active:bg-stone-50">
-
                         <img src="pig.jpg" onerror="this.src='https://i.pravatar.cc/150?u=pig'" class="w-16 h-16 rounded-full object-cover">
-
                         <div class="flex-grow">
-
                             <div class="flex justify-between items-center mb-1"><h4 class="font-black text-stone-800">훈돈가 매니저</h4><span class="text-[11px] text-stone-400">오후 2:15</span></div>
-
                             <p class="text-sm text-stone-500 font-semibold truncate">쿠폰 발행해 드렸습니다. 확인해 보세요!</p>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
-
-            <!-- 채팅방 레이아웃 -->
 
             <div id="chat-room-view" class="hidden absolute inset-0 bg-[#FFF8E7] z-50 flex flex-col">
-
                 <header class="h-20 flex items-center px-5 bg-white border-b border-stone-100 shrink-0">
-
                     <button onclick="closeChat()" class="p-3"><span class="material-symbols-outlined font-bold">arrow_back_ios_new</span></button>
-
                     <div class="flex items-center gap-4 ml-4">
-
                         <img id="room-profile-img" src="" class="w-12 h-12 rounded-full object-cover">
-
                         <div><h4 id="room-title" class="font-black text-base text-[#3E2723]">가게</h4><p class="text-[11px] text-green-600 font-extrabold">• 실시간 응대 중</p></div>
-
                     </div>
-
                 </header>
-
                 <div id="message-container" class="flex-grow overflow-y-auto p-6 flex flex-col gap-2"></div>
-
                 <div class="chat-input-area">
-
                     <div class="chat-input-container">
-
                         <button class="text-stone-400"><span class="material-symbols-outlined">add_circle</span></button>
-
                         <input id="chat-input-field" type="text" placeholder="메시지를 입력하세요" class="chat-input-field" onkeypress="if(event.keyCode===13) handleSendMessage()">
-
                         <button onclick="handleSendMessage()" class="send-btn"><span class="material-symbols-outlined font-bold text-2xl">send</span></button>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-
-        <!-- (4) 나의 길목 (풀 기능 복구) -->
-
+        <!-- (4) 나의 길목 -->
         <div id="profile-tab" class="tab-content relative px-7 pt-20">
-
             <div id="profile-main-view">
-
                 <h1 class="text-4xl font-black text-[#3E2723] mb-10 italic">나의 길목</h1>
+                
+                <!-- 동적으로 생성되는 페르소나 프로필 카드 -->
+                <div id="dynamic-profile-card"></div>
 
-                <div class="flex items-center gap-6 mb-12">
-
-                    <img src="https://i.pravatar.cc/150?u=kgu" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl overflow-hidden">
-
-                    <div><h3 class="text-2xl font-black">길목 대장님</h3><p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg">경기대 이의동 단골손님 ✨</p></div>
-
-                </div>
-
-                <div class="space-y-4">
-
+                <div class="space-y-4 mt-12">
                     <div onclick="openSubView('coupon')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-
                         <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">confirmation_number</span><span class="font-black">내 쿠폰함</span></div>
-
                         <div class="flex items-center gap-3"><span class="bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full">5</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
-
                     </div>
-
                     <div onclick="openSubView('stamp')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-
                         <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">auto_awesome</span><span class="font-black">길목 스탬프 (이의동)</span></div>
-
                         <div class="flex items-center gap-3"><span class="text-xs font-black text-orange-600">8 / 10</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
-
                     </div>
-
                     <div onclick="openSubView('order')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-
                         <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">history</span><span class="font-black">주문 내역</span></div>
-
                         <span class="material-symbols-outlined text-stone-300">chevron_right</span>
-
                     </div>
-
                 </div>
-
             </div>
-
-
 
             <!-- 서브뷰 전용 -->
-
             <div id="subview-coupon" class="subview">
-
                 <button onclick="closeSubView()" class="mb-8 pt-6 w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center"><span class="material-symbols-outlined">arrow_back</span></button>
-
                 <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">내 쿠폰함</h1>
-
                 <div class="card-premium border-l-8 border-l-[#D2691E] mb-4">
-
                     <h4 class="font-black text-lg">훈돈가 (본점)</h4><p class="text-sm text-stone-500 font-bold italic">안심 돈가스 정식 25% 할인</p>
-
                     <div class="mt-4 pt-4 border-t border-dashed flex justify-between items-center"><span class="text-xs font-bold text-stone-400">~ 2026.12.31</span><button class="bg-[#3E2723] text-white px-4 py-2 rounded-xl text-xs font-black">사용하기</button></div>
-
                 </div>
-
             </div>
-
-
 
             <div id="subview-stamp" class="subview">
-
                 <button onclick="closeSubView()" class="mb-8 pt-6 w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center"><span class="material-symbols-outlined">arrow_back</span></button>
-
                 <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">길목 스탬프</h1>
-
                 <div class="card-premium bg-white border-orange-200 p-8">
-
                     <h4 class="font-black text-lg mb-6 text-center">우리 동네 (이의동) 정복</h4>
-
                     <div class="grid grid-cols-5 gap-3">
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-400 flex items-center justify-center text-white"><span class="material-symbols-outlined">restaurant</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-100 flex items-center justify-center text-orange-200"><span class="material-symbols-outlined">star</span></div>
-
                         <div class="aspect-square rounded-xl bg-orange-100 flex items-center justify-center text-orange-200"><span class="material-symbols-outlined">star</span></div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
 
             <div id="subview-order" class="subview">
-
                 <button onclick="closeSubView()" class="mb-8 pt-6 w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center"><span class="material-symbols-outlined">arrow_back</span></button>
-
                 <h1 class="text-3xl font-black text-[#3E2723] mb-8 italic">주문 내역</h1>
-
                 <div class="card-premium flex gap-4 border border-stone-50">
-
                     <img src="pig.jpg" onerror="this.src='https://i.pravatar.cc/150?u=pig'" class="w-16 h-16 rounded-xl object-cover">
-
                     <div class="flex-grow">
-
                         <div class="flex justify-between items-start"><span class="text-[10px] font-bold text-stone-400">2026.04.28</span><span class="text-[10px] font-black text-green-600 uppercase">배달완료</span></div>
-
                         <h4 class="font-black text-stone-800">훈돈가 (본점)</h4>
-
                         <p class="text-xs text-stone-500">안심 돈가스 정식 외 1건</p>
-
                         <p class="text-sm font-black text-[#D2691E] mt-1">18,500원</p>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-
         <!-- 하단 바 -->
-
         <nav class="bottom-nav">
-
             <div onclick="switchTab('home')" id="nav-home" class="nav-item active"><span class="material-symbols-outlined">grid_view</span><span>홈</span></div>
-
             <div onclick="switchTab('near')" id="nav-near" class="nav-item"><span class="material-symbols-outlined">map</span><span>내 근처</span></div>
-
             <div onclick="switchTab('chat')" id="nav-chat" class="nav-item"><span class="material-symbols-outlined">chat_bubble</span><span>채팅</span></div>
-
             <div onclick="switchTab('profile')" id="nav-profile" class="nav-item"><span class="material-symbols-outlined">account_circle</span><span>나의 길목</span></div>
-
         </nav>
-
     </main>
 
-
+    <!-- 페르소나 상세 팝업 컨테이너 -->
+    <div id="persona-detail-view" class="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-6"></div>
 
     <script>
-
         const APP_STATE = { map: null, center: new kakao.maps.LatLng(37.2988, 127.0444), role: 'user', currentShop: null };
-
-
-
-        // 풍부한 채팅 데이터
+        let hotZoneCircles = [];
 
         const CHAT_DATA = {
-
             'gopchang': { 
-
                 name: '소소곱창 사장님', img: 'gopchang.jpg', 
-
                 history: [
-
                     {type:'other', text:'오늘 곱창 신선도 역대급이에요! 방금 들어왔습니다.'},
-
                     {type:'me', text:'오 진짜요? 오늘 7시쯤 4명 가려고 하는데 자리 있을까요?'},
-
                     {type:'other', text:'네! 예약석으로 하나 빼두겠습니다. 학생분들이죠? 음료 서비스 드릴게요.'},
-
                     {type:'me', text:'넵! 감사함다 이따 뵐게요!'},
-
                     {type:'other', text:'네 천천히 오세요~'}
-
                 ]
-
             },
-
             'pig': { 
-
                 name: '훈돈가 매니저', img: 'pig.jpg', 
-
                 history: [
-
                     {type:'other', text:'안심 돈가스 타임딜 쿠폰 발행했습니다. 확인해보세요!'},
-
                     {type:'me', text:'오 감사합니다! 지금 바로 가서 써도 되나요?'},
-
                     {type:'other', text:'네 가능합니다! 매장 키오스크에서 길목 쿠폰 바코드 스캔해주세요.'},
-
                     {type:'me', text:'네 금방 가겠습니다!'}
-
                 ]
-
             }
-
         };
-
-
 
         const EVENT_DB = {
-
             '어랑다랑': { tag: 'Time Deal', desc: '점심특선 회덮밥 특가!', price: '₩9,900' },
-
             '소소곱창': { tag: 'Special', desc: '삼겹살+고기 3인 세트!', price: '₩39,000' },
-
             '훈돈가': { tag: 'Hot Deal', desc: '안심 돈가스 25% 할인!', price: '₩9,000' },
-
             '춘천숯닭': { tag: 'Freebie', desc: '막국수 서비스!', price: '무료' },
-
             '면식당': { tag: 'New', desc: '마제소바 신메뉴 출시!', price: '₩8,500' },
-
             '핵밥': { tag: 'Upgrade', desc: '곱빼기 무료!', price: 'FREE' },
-
             '르디망슈': { tag: 'Tea Time', desc: '티타임 15% 할인!', price: '₩15,000' },
-
             '소무실': { tag: 'Coffee', desc: '커피 1,000원 할인!', price: '₩4,000' }
-
         };
 
-
-
         function startApp(role) {
-
             APP_STATE.role = role;
-
+            renderProfile();
             document.getElementById('onboarding').style.transform = 'translateY(-100%)';
-
             setTimeout(() => {
-
                 document.getElementById('onboarding').style.display = 'none';
-
                 document.getElementById('main-app').style.display = 'block';
-
                 document.getElementById(role + '-home').style.display = 'block';
-
             }, 600);
-
         }
 
-
-
-      // 1. 핫존(유동인구 밀집도) 관리용 변수
-let hotZoneCircles = [];
-
-// 2. 탭 전환 로직 (사장님 모드일 때만 핫존 표시)
-function switchTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(tabName + '-tab').classList.add('active');
-    document.getElementById('nav-' + tabName).classList.add('active');
-    
-    if(tabName === 'near') {
-        initKakaoMap();
-        
-        // 사장님 모드라면 핫존과 컨트롤러 표시
-        if(APP_STATE.role === 'owner') {
-            // 사장님용 UI 대시보드 (HTML에 해당 ID의 div가 있어야 합니다)
-            document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
-            toggleHotZone(true); 
-        } else {
-            document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
-            toggleHotZone(false);
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            document.getElementById('nav-' + tabName).classList.add('active');
+            
+            if(tabName === 'near') {
+                initKakaoMap();
+                if(APP_STATE.role === 'owner') {
+                    document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
+                    toggleHotZone(true); 
+                } else {
+                    document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
+                    toggleHotZone(false);
+                }
+            }
+            if(tabName === 'profile') renderProfile();
         }
-    }
-}
 
-// 3. 핫존 시각화 함수 (경기대 주요 게이트 기준)
-function toggleHotZone(show) {
-    // 기존에 그려진 원들은 싹 지우기
-    hotZoneCircles.forEach(circle => circle.setMap(null));
-    hotZoneCircles = [];
+        function toggleHotZone(show) {
+            hotZoneCircles.forEach(circle => circle.setMap(null));
+            hotZoneCircles = [];
 
-    if(show && APP_STATE.map) {
-        // 실제로는 서버에서 유동인구 API 데이터를 받아오게 될 지점입니다.
-        const hotspots = [
-            { pos: new kakao.maps.LatLng(37.2988, 127.0444), radius: 130, color: '#ef4444' }, // 중문
-            { pos: new kakao.maps.LatLng(37.3005, 127.0455), radius: 180, color: '#f97316' }, // 정문
-            { pos: new kakao.maps.LatLng(37.2970, 127.0425), radius: 100, color: '#ef4444' }  // 후문
-        ];
+            if(show && APP_STATE.map) {
+                const hotspots = [
+                    { pos: new kakao.maps.LatLng(37.2988, 127.0444), radius: 130, color: '#ef4444' },
+                    { pos: new kakao.maps.LatLng(37.3005, 127.0455), radius: 180, color: '#f97316' },
+                    { pos: new kakao.maps.LatLng(37.2970, 127.0425), radius: 100, color: '#ef4444' }
+                ];
+                hotspots.forEach(spot => {
+                    const circle = new kakao.maps.Circle({
+                        center: spot.pos,
+                        radius: spot.radius,
+                        strokeWeight: 0,
+                        fillColor: spot.color,
+                        fillOpacity: 0.35
+                    });
+                    circle.setMap(APP_STATE.map);
+                    hotZoneCircles.push(circle);
+                });
+            }
+        }
 
-        hotspots.forEach(spot => {
-            const circle = new kakao.maps.Circle({
-                center: spot.pos,
-                radius: spot.radius,
-                strokeWeight: 0,
-                fillColor: spot.color,
-                fillOpacity: 0.35 // 반투명하게 깔아서 지도 글씨가 보이게
-            });
-            circle.setMap(APP_STATE.map);
-            hotZoneCircles.push(circle);
-        });
-    }
-}
+        function updateDiscount(val) {
+            const label = document.getElementById('current-discount-label');
+            if(label) label.innerText = val + '%';
+        }
 
-// 4. 실시간 할인율 조절 및 전송 (사장님용)
-function updateDiscount(val) {
-    const label = document.getElementById('current-discount-label');
-    if(label) label.innerText = val + '%';
-}
+        function broadcastHotDeal() {
+            const discount = document.getElementById('current-discount-label')?.innerText || "25%";
+            const btn = event.currentTarget;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> 전송 중...`;
+            setTimeout(() => {
+                btn.innerHTML = `<span class="material-symbols-outlined">bolt</span> 핫딜 전송 완료!`;
+                showAlert(`✨ [길목 알림] 주변 84명의 손님에게 ${discount} 할인 쿠폰을 쐈습니다!`);
+                setTimeout(() => {
+                    btn.innerHTML = `<span class="material-symbols-outlined">bolt</span> 주변 손님에게 핫딜 즉시 전송`;
+                }, 3000);
+            }, 1000);
+        }
 
-function broadcastHotDeal() {
-    const discount = document.getElementById('current-discount-label')?.innerText || "25%";
-    
-    // 전송 버튼 애니메이션 효과
-    const btn = event.currentTarget;
-    btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> 전송 중...`;
-    
-    setTimeout(() => {
-        btn.innerHTML = `<span class="material-symbols-outlined">bolt</span> 핫딜 전송 완료!`;
-        showAlert(`✨ [길목 알림] 주변 84명의 손님에게 ${discount} 할인 쿠폰을 쐈습니다!`);
-        
-        // 3초 뒤 다시 원래 버튼으로
-        setTimeout(() => {
-            btn.innerHTML = `<span class="material-symbols-outlined">bolt</span> 주변 손님에게 핫딜 즉시 전송`;
-        }, 3000);
-    }, 1000);
-}
+        function renderProfile() {
+            const container = document.getElementById('dynamic-profile-card');
+            if (!container) return;
 
+            if (APP_STATE.role === 'owner') {
+                container.innerHTML = `
+                    <div class="flex items-center gap-6 mb-12 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('owner')">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl object-cover overflow-hidden">
+                            <div class="absolute -bottom-1 -right-1 bg-[#D2691E] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs">verified</span></div>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black">박영호 사장님</h3>
+                            <p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg">어랑다랑 대표 | 신선도 장인 🐟</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="flex items-center gap-6 mb-12 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('user')">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-blue-100 shadow-2xl object-cover overflow-hidden">
+                            <div class="absolute -bottom-1 -right-1 bg-[#004ea2] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs">school</span></div>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black">김지훈 학생</h3>
+                            <p class="text-xs font-black text-blue-600 mt-1 bg-blue-50 px-3 py-1 rounded-lg">경영학과 | 이의동 단골 대장 🏅</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
+        function showPersonaDetail(role) {
+            const detailView = document.getElementById('persona-detail-view');
+            const data = role === 'owner' 
+                ? { 
+                    name: '박영호 (52세)', title: '어랑다랑 대표 | 신선도 장인', 
+                    img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400',
+                    motto: '회는 시간이 생명입니다. 신선함이 가장 빠르게 닿는 길목을 찾습니다.',
+                    desc: '매일 새벽 수산시장에서 신선한 횟감을 떼오는 베테랑입니다. 오후 2시~5시 유동인구가 줄어들 때 재고 손실을 막기 위해 길목 앱을 적극 활용합니다.',
+                    goal: '재고 0% 도전, 학생들에게 가성비 좋은 신뢰받는 사장님 되기',
+                    color: '#3E2723'
+                }
+                : { 
+                    name: '김지훈 (24세)', title: '경기대 경영학과 3학년', 
+                    img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400',
+                    motto: '학교 앞 밥값이 너무 올랐어요. 길목 핫딜은 필수 생존 전략이죠!',
+                    desc: '합리적인 소비를 지향하는 실속파 대학생입니다. 친구들과 메뉴를 고를 때 길목 핫존 정보를 보고 가장 혜택이 많은 가게를 선점합니다.',
+                    goal: '한 달 식비 20만원 절약, 최고의 가성비 라이프 정착',
+                    color: '#004ea2'
+                };
+
+            detailView.innerHTML = `
+                <div class="bg-white w-full max-w-sm rounded-[3rem] overflow-hidden shadow-2xl slide-up relative">
+                    <div class="h-32" style="background:${data.color}"></div>
+                    <div class="px-8 pb-10 -mt-16">
+                        <img src="${data.img}" class="w-32 h-32 rounded-[2.5rem] border-[6px] border-white shadow-xl mx-auto object-cover">
+                        <h4 class="text-2xl font-black mt-6 text-center">${data.name}</h4>
+                        <p class="text-center font-bold text-stone-400 text-sm mt-1">${data.title}</p>
+                        <p class="mt-8 italic font-bold text-stone-600 text-center leading-relaxed">"${data.motto}"</p>
+                        <div class="mt-8 space-y-4">
+                            <div class="bg-stone-50 p-5 rounded-2xl">
+                                <h5 class="text-xs font-black text-stone-400 mb-1">상태 및 특징</h5>
+                                <p class="text-sm font-bold text-stone-700 leading-relaxed">${data.desc}</p>
+                            </div>
+                            <div class="bg-stone-50 p-5 rounded-2xl">
+                                <h5 class="text-xs font-black text-stone-400 mb-1">진정한 목표</h5>
+                                <p class="text-sm font-bold text-stone-700 leading-relaxed">${data.goal}</p>
+                            </div>
+                        </div>
+                        <button onclick="closePersonaDetail()" class="mt-10 w-full py-5 rounded-[1.8rem] text-white font-black shadow-lg" style="background:${data.color}">확인</button>
+                    </div>
+                </div>
+            `;
+            detailView.classList.remove('hidden');
+        }
+
+        function closePersonaDetail() { document.getElementById('persona-detail-view').classList.add('hidden'); }
 
         function initKakaoMap() {
-
             if(APP_STATE.map) { APP_STATE.map.relayout(); APP_STATE.map.setCenter(APP_STATE.center); return; }
-
             APP_STATE.map = new kakao.maps.Map(document.getElementById('map'), { center: APP_STATE.center, level: 3 });
-
             const stores = [
-
                 { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT' },
-
                 { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT' },
-
                 { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
-
                 { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' },
-
                 { name: '면식당', pos: new kakao.maps.LatLng(37.2970, 127.0445), type: 'NEW' },
-
                 { name: '핵밥', pos: new kakao.maps.LatLng(37.3000, 127.0450), type: 'EVENT' },
-
                 { name: '르디망슈', pos: new kakao.maps.LatLng(37.2990, 127.0425), type: 'NEW' },
-
                 { name: '소무실', pos: new kakao.maps.LatLng(37.2980, 127.0470), type: 'EVENT' }
-
             ];
-
             stores.forEach(s => {
-
                 let color = s.type === 'HOT' ? '#ef4444' : '#f59e0b';
-
                 let content = document.createElement('div');
-
                 content.className = "marker-deal glass-premium px-4 py-2 rounded-full border border-white flex items-center gap-2 interactive shadow-xl";
-
                 content.innerHTML = `<span class="text-[10px] text-white px-2 py-0.5 rounded-lg" style="background:${color}">${s.type}</span><span class="text-xs font-black">${s.name}</span>`;
-
                 content.onclick = () => showEventDetail(s.name);
-
                 new kakao.maps.CustomOverlay({ position: s.pos, content: content, yAnchor: 1.5 }).setMap(APP_STATE.map);
-
             });
-
         }
-
-
 
         function showEventDetail(name) {
-
             APP_STATE.currentShop = name;
-
             const data = EVENT_DB[name];
-
             document.getElementById('detail-title').innerText = name;
-
             document.getElementById('detail-desc').innerText = data.desc;
-
             document.getElementById('detail-price').innerText = data.price;
-
             document.getElementById('map-event-detail').classList.remove('hidden');
-
         }
-
-
 
         function hideEventDetail() { document.getElementById('map-event-detail').classList.add('hidden'); }
 
-
-
         function openChat(shopId) {
-
             const shop = CHAT_DATA[shopId] || { name: shopId, img: 'https://i.pravatar.cc/150', history: [{type:'other', text:'안녕하세요!'}] };
-
             document.getElementById('chat-list-view').classList.add('hidden');
-
             document.getElementById('chat-room-view').classList.remove('hidden');
-
             document.getElementById('room-title').innerText = shop.name;
-
             document.getElementById('room-profile-img').src = shop.img;
-
             const container = document.getElementById('message-container');
-
             container.innerHTML = '';
-
             shop.history.forEach(m => renderMessage(m.type, m.text));
-
         }
-
-
 
         function closeChat() { document.getElementById('chat-list-view').classList.remove('hidden'); document.getElementById('chat-room-view').classList.add('hidden'); }
 
-
-
         function handleSendMessage() {
-
             const input = document.getElementById('chat-input-field');
-
             if(input.value.trim() === "") return;
-
             renderMessage('me', input.value);
-
             input.value = "";
-
             setTimeout(() => renderMessage('other', "확인했습니다! 사장님께 전달해 드릴게요."), 1000);
-
         }
-
-
 
         function renderMessage(type, text) {
-
             const container = document.getElementById('message-container');
-
             const bubble = document.createElement('div');
-
             bubble.className = `chat-bubble bubble-${type} slide-up`;
-
             bubble.innerText = text;
-
             container.appendChild(bubble);
-
             container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-
         }
-
-
 
         function chatFromDetail() { 
-
             let id = APP_STATE.currentShop === '소소곱창' ? 'gopchang' : (APP_STATE.currentShop === '훈돈가' ? 'pig' : '어랑다랑');
-
             hideEventDetail(); switchTab('chat'); openChat(id); 
-
         }
 
-
-
         function openSubView(type) { document.getElementById('subview-' + type).classList.add('active'); }
-
         function closeSubView() { document.querySelectorAll('.subview').forEach(s => s.classList.remove('active')); }
-
         function showAlert(msg) { const a = document.getElementById('custom-alert'); a.innerText = msg; a.style.display = 'block'; setTimeout(() => a.style.display = 'none', 2500); }
-
     </script>
-
 </body>
-
 </html>
