@@ -335,6 +335,21 @@
             <div id="near-tab-content" class="h-full relative overflow-hidden">
 
                 <div id="map"></div>
+                <div id="owner-pricing-dashboard" class="hidden absolute bottom-0 left-0 right-0 z-[200] p-4 interactive">
+            <div class="glass-premium rounded-[2.5rem] p-5 shadow-2xl border-t-2 border-t-[#D2691E] slide-up">
+                <div class="flex justify-between items-center mb-3 px-2">
+                    <h3 class="text-lg font-black text-[#3E2723]">실시간 핫딜 전송</h3>
+                    <span id="current-discount-label" class="text-2xl font-black text-[#D2691E]">25%</span>
+                </div>
+                <input type="range" min="5" max="70" value="25" step="5" class="w-full h-1.5 accent-[#D2691E] mb-4" oninput="updateDiscount(this.value)">
+                <button onclick="broadcastHotDeal()" class="w-full py-4 bg-[#3E2723] text-white rounded-2xl font-black text-sm shadow-xl flex items-center justify-center gap-2 active:scale-95">
+                    <span class="material-symbols-outlined">bolt</span>
+                    주변 손님에게 핫딜 즉시 전송
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <div class="app-ui px-4">
 
@@ -710,19 +725,82 @@
 
 
 
-        function switchTab(tabName) {
+      // 1. 핫존(유동인구 밀집도) 관리용 변수
+let hotZoneCircles = [];
 
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-            document.getElementById(tabName + '-tab').classList.add('active');
-
-            document.getElementById('nav-' + tabName).classList.add('active');
-
-            if(tabName === 'near') initKakaoMap();
-
+// 2. 탭 전환 로직 (사장님 모드일 때만 핫존 표시)
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(tabName + '-tab').classList.add('active');
+    document.getElementById('nav-' + tabName).classList.add('active');
+    
+    if(tabName === 'near') {
+        initKakaoMap();
+        
+        // 사장님 모드라면 핫존과 컨트롤러 표시
+        if(APP_STATE.role === 'owner') {
+            // 사장님용 UI 대시보드 (HTML에 해당 ID의 div가 있어야 합니다)
+            document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
+            toggleHotZone(true); 
+        } else {
+            document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
+            toggleHotZone(false);
         }
+    }
+}
+
+// 3. 핫존 시각화 함수 (경기대 주요 게이트 기준)
+function toggleHotZone(show) {
+    // 기존에 그려진 원들은 싹 지우기
+    hotZoneCircles.forEach(circle => circle.setMap(null));
+    hotZoneCircles = [];
+
+    if(show && APP_STATE.map) {
+        // 실제로는 서버에서 유동인구 API 데이터를 받아오게 될 지점입니다.
+        const hotspots = [
+            { pos: new kakao.maps.LatLng(37.2988, 127.0444), radius: 130, color: '#ef4444' }, // 중문
+            { pos: new kakao.maps.LatLng(37.3005, 127.0455), radius: 180, color: '#f97316' }, // 정문
+            { pos: new kakao.maps.LatLng(37.2970, 127.0425), radius: 100, color: '#ef4444' }  // 후문
+        ];
+
+        hotspots.forEach(spot => {
+            const circle = new kakao.maps.Circle({
+                center: spot.pos,
+                radius: spot.radius,
+                strokeWeight: 0,
+                fillColor: spot.color,
+                fillOpacity: 0.35 // 반투명하게 깔아서 지도 글씨가 보이게
+            });
+            circle.setMap(APP_STATE.map);
+            hotZoneCircles.push(circle);
+        });
+    }
+}
+
+// 4. 실시간 할인율 조절 및 전송 (사장님용)
+function updateDiscount(val) {
+    const label = document.getElementById('current-discount-label');
+    if(label) label.innerText = val + '%';
+}
+
+function broadcastHotDeal() {
+    const discount = document.getElementById('current-discount-label')?.innerText || "25%";
+    
+    // 전송 버튼 애니메이션 효과
+    const btn = event.currentTarget;
+    btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> 전송 중...`;
+    
+    setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined">bolt</span> 핫딜 전송 완료!`;
+        showAlert(`✨ [길목 알림] 주변 84명의 손님에게 ${discount} 할인 쿠폰을 쐈습니다!`);
+        
+        // 3초 뒤 다시 원래 버튼으로
+        setTimeout(() => {
+            btn.innerHTML = `<span class="material-symbols-outlined">bolt</span> 주변 손님에게 핫딜 즉시 전송`;
+        }, 3000);
+    }, 1000);
+}
 
 
 
