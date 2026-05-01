@@ -30,104 +30,22 @@
 
     <style>
 
-       <style>
-    :root {
-        --brand-primary: #3E2723;
-        --brand-secondary: #D2691E;
-        --brand-bg: #FFF8E7;
-        --brand-accent: #5D4037;
-        --brand-light: #FFEAD6;
-        --safe-area-bottom: env(safe-area-inset-bottom);
-    }
+        :root {
 
-    /* 👇 여기에 아래 내용을 복사해서 붙여넣으세요 */
+            --brand-primary: #3E2723;
 
-    /* 핫존 프로그레스 바 스타일 */
-    .hotzone-bar {
-        height: 8px;
-        border-radius: 4px;
-        background: #E5E7EB;
-        overflow: hidden;
-        position: relative;
-    }
-    .hotzone-fill {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        border-radius: 4px;
-        background: linear-gradient(90deg, #D2691E, #FF4500);
-        transition: width 1.5s ease-in-out;
-    }
-    /* LIVE 표시 깜빡임 애니메이션 */
-    .pulse-red {
-        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-        animation: pulse-red 2s infinite;
-    }
-    @keyframes pulse-red {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
+            --brand-secondary: #D2691E;
 
-    /* 👆 여기까지 추가 */
-        /* 핫존 서클 리포트 스타일 */
-.hot-spot-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 20px;
-}
+            --brand-bg: #FFF8E7;
 
-.hot-circle-card {
-    background: white;
-    padding: 20px;
-    border-radius: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    border: 1px solid rgba(0,0,0,0.03);
-}
+            --brand-accent: #5D4037;
 
-/* 유동인구 밀도 원형 */
-.density-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 12px;
-    font-weight: 900;
-    color: white;
-    position: relative;
-}
+            --brand-light: #FFEAD6;
 
-/* 밀도에 따른 상태 클래스 */
-.density-high { 
-    background: radial-gradient(circle, #ff4d4d, #b30000); 
-    box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
-    transform: scale(1.1); /* 사람이 많으면 더 커보이게 */
-}
+            --safe-area-bottom: env(safe-area-inset-bottom);
 
-.density-mid { 
-    background: radial-gradient(circle, #ff9933, #e67300); 
-    box-shadow: 0 0 15px rgba(255, 153, 51, 0.3);
-}
+        }
 
-.density-low { 
-    background: radial-gradient(circle, #ffcc80, #ffb347);
-    color: #3E2723;
-}
-
-/* 원 안의 숫자 */
-.density-val { font-size: 20px; letter-spacing: -1px; }
-.density-unit { font-size: 10px; margin-left: 2px; opacity: 0.8; }
-
-    body, html { 
-        margin: 0; padding: 0; width: 100%; height: 100%; 
-        ... (기존 코드들) ...
 
 
         body, html { 
@@ -279,38 +197,7 @@
 
 
         #custom-alert { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; background: #3E2723; color: white; padding: 14px 28px; border-radius: 25px; font-weight: 800; }
-    /* 지도 위 실시간 유동인구 서클 마커 */
-.hotzone-marker {
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 900;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.15);
-    backdrop-filter: blur(4px);
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255,255,255,0.7);
-    pointer-events: auto;
-    z-index: 10;
-}
 
-/* 밀도별 색상 */
-.marker-high { 
-    background: rgba(239, 68, 68, 0.9); /* 빨강 */
-    animation: pulse-red 2s infinite; 
-}
-.marker-mid { 
-    background: rgba(245, 158, 11, 0.9); /* 주황 */
-}
-.marker-low { 
-    background: rgba(59, 130, 246, 0.85); /* 파랑 */
-}
-
-.marker-count { font-size: 16px; line-height: 1; }
-.marker-label { font-size: 10px; opacity: 0.9; margin-top: 2px; }
     </style>
 
 </head>
@@ -361,78 +248,20 @@
 
         <div id="home-tab" class="tab-content active px-6 pt-20">
 
-<div id="owner-home" class="hidden space-y-8">
-    <header>
-        <h1 class="text-3xl font-black text-[#3E2723] leading-tight">지금 사장님 가게 주변<br/><span class="text-[#D2691E]">실시간 길목 상황</span></h1>
-    </header>
+            <div id="owner-home" class="hidden space-y-10">
 
-    <!-- 메인 요약 서클 -->
-    <div class="flex justify-center py-4">
-        <div class="w-56 h-56 rounded-full bg-white shadow-2xl flex flex-col items-center justify-center border-[10px] border-[#FFF8E7] relative">
-            <div class="absolute -top-2 bg-red-600 text-white text-[10px] font-black px-3 py-1 rounded-full pulse-red">LIVE</div>
-            <span class="text-stone-400 font-bold text-sm mb-1">통합 혼잡도</span>
-            <span class="text-6xl font-black text-[#3E2723]">매우 높음</span>
-            <span class="text-orange-500 font-black mt-2">약 142명 접근 중</span>
-        </div>
-    </div>
+                <h1 class="text-4xl font-black text-[#3E2723]">안녕하세요, <br/>길목 사장님!</h1>
 
-    <!-- 구역별 서클 리드 (숫자에 따른 색상/크기 변화) -->
-    <div class="space-y-4">
-        <h3 class="text-xl font-black flex items-center gap-2">
-            <span class="material-symbols-outlined text-[#D2691E]">location_on</span>
-            구역별 밀도 리포트
-        </h3>
+                <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
 
-        <div class="hot-spot-grid">
-            <!-- 1번 구역: 인구 많음 (빨간색/큼) -->
-            <div class="hot-circle-card shadow-sm">
-                <div class="density-circle density-high">
-                    <span class="density-val">92</span><span class="density-unit">명</span>
+                    <h3 class="text-3xl font-extrabold relative z-10">유동인구 240% 급증</h3>
+
+                    <p class="opacity-70 mt-2 font-bold italic relative z-10">내일 오후 2시 예상 (AI 리포트)</p>
+
                 </div>
-                <h4 class="font-black text-sm text-[#3E2723]">중문 편의점</h4>
-                <p class="text-[10px] text-red-500 font-bold mt-1">즉시 마케팅 권장</p>
+
             </div>
 
-            <!-- 2번 구역: 인구 보통 (주황색) -->
-            <div class="hot-circle-card shadow-sm">
-                <div class="density-circle density-mid">
-                    <span class="density-val">45</span><span class="density-unit">명</span>
-                </div>
-                <h4 class="font-black text-sm text-[#3E2723]">정문 카페거리</h4>
-                <p class="text-[10px] text-stone-400 font-bold mt-1">안정적 흐름</p>
-            </div>
-
-            <!-- 3번 구역: 인구 보통 -->
-            <div class="hot-circle-card shadow-sm">
-                <div class="density-circle density-mid">
-                    <span class="density-val">38</span><span class="density-unit">명</span>
-                </div>
-                <h4 class="font-black text-sm text-[#3E2723]">후문 원룸촌</h4>
-                <p class="text-[10px] text-stone-400 font-bold mt-1">유입 증가 중</p>
-            </div>
-
-            <!-- 4번 구역: 인구 적음 (연한 색/작음) -->
-            <div class="hot-circle-card shadow-sm scale-90 opacity-80">
-                <div class="density-circle density-low">
-                    <span class="density-val">12</span><span class="density-unit">명</span>
-                </div>
-                <h4 class="font-black text-sm text-[#3E2723]">외곽 주차장</h4>
-                <p class="text-[10px] text-stone-400 font-bold mt-1">한산함</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- 하단 액션 -->
-    <div class="card-premium bg-[#3E2723] p-6 flex justify-between items-center">
-        <div>
-            <p class="text-white/60 text-xs font-bold">인근 유동인구 대상</p>
-            <h4 class="text-white font-black text-lg">타임딜 발송하기</h4>
-        </div>
-        <button onclick="showAlert('핫존 손님들에게 쿠폰이 전송되었습니다!')" class="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-90 transition-all">
-            <span class="material-symbols-outlined font-bold">send</span>
-        </button>
-    </div>
-</div>
 
 
             <div id="user-home" class="hidden space-y-10">
@@ -881,91 +710,75 @@
 
 
 
-        function switchTab(tabName) {
-
+       function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
             document.getElementById(tabName + '-tab').classList.add('active');
-
             document.getElementById('nav-' + tabName).classList.add('active');
-
-            if(tabName === 'near') initKakaoMap();
-
+            
+            if(tabName === 'near') {
+                initKakaoMap();
+                // 사장님 모드일 때 지도 UI 및 핫존 분기 처리
+                if(APP_STATE.role === 'owner') {
+                    document.getElementById('owner-map-ui')?.classList.remove('hidden');
+                    document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
+                    document.getElementById('map-event-detail')?.classList.add('hidden');
+                    toggleHotZone(true); // 사장님은 핫존 ON
+                } else {
+                    document.getElementById('owner-map-ui')?.classList.add('hidden');
+                    document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
+                    toggleHotZone(false); // 손님은 핫존 OFF
+                }
+            }
         }
 
 
 
-       function initKakaoMap() {
-    // 지도가 이미 있으면 크기 재조절 및 중심 이동만 수행
-    if(APP_STATE.map) { 
-        APP_STATE.map.relayout(); 
-        APP_STATE.map.setCenter(APP_STATE.center); 
-        return; 
-    }
-    
-    // 지도 생성
-    APP_STATE.map = new kakao.maps.Map(document.getElementById('map'), { 
-        center: APP_STATE.center, 
-        level: 3 
-    });
+        function initKakaoMap() {
 
-    // 1. [사장님 모드용] 실시간 유동인구 데이터 (핫존)
-    const hotzones = [
-        { name: '중문 편의점 길목', pos: new kakao.maps.LatLng(37.2995, 127.0455), count: 92, status: 'high', size: 80 },
-        { name: '정문 삼거리', pos: new kakao.maps.LatLng(37.2975, 127.0435), count: 45, status: 'mid', size: 65 },
-        { name: '카페거리 입구', pos: new kakao.maps.LatLng(37.2985, 127.0465), count: 38, status: 'mid', size: 60 },
-        { name: '공영주차장 골목', pos: new kakao.maps.LatLng(37.3005, 127.0430), count: 12, status: 'low', size: 50 }
-    ];
+            if(APP_STATE.map) { APP_STATE.map.relayout(); APP_STATE.map.setCenter(APP_STATE.center); return; }
 
-    // 2. [손님 모드용] 일반 상점 마커 데이터
-    const stores = [
-        { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT' },
-        { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT' },
-        { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
-        { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' }
-    ];
+            APP_STATE.map = new kakao.maps.Map(document.getElementById('map'), { center: APP_STATE.center, level: 3 });
 
-    // 역할(Role)에 따라 다른 마커 표시
-    if (APP_STATE.role === 'owner') {
-        // --- 사장님 모드: 유동인구 핫존(동그라미) 표시 ---
-        hotzones.forEach(hz => {
-            let content = document.createElement('div');
-            content.className = `hotzone-marker marker-${hz.status}`;
-            content.style.width = `${hz.size}px`;
-            content.style.height = `${hz.size}px`;
-            content.innerHTML = `
-                <span class="marker-count">${hz.count}</span>
-                <span class="marker-label">명</span>
-            `;
-            
-            // 클릭 시 간단한 알림
-            content.onclick = () => showAlert(`${hz.name}: 현재 ${hz.count}명이 지나가고 있습니다.`);
+            const stores = [
 
-            new kakao.maps.CustomOverlay({
-                position: hz.pos,
-                content: content,
-                yAnchor: 0.5
-            }).setMap(APP_STATE.map);
-        });
-    } else {
-        // --- 손님 모드: 기존 상점 이름 마커 표시 ---
-        stores.forEach(s => {
-            let color = s.type === 'HOT' ? '#ef4444' : '#f59e0b';
-            let content = document.createElement('div');
-            content.className = "marker-deal glass-premium px-4 py-2 rounded-full border border-white flex items-center gap-2 interactive shadow-xl";
-            content.innerHTML = `<span class="text-[10px] text-white px-2 py-0.5 rounded-lg" style="background:${color}">${s.type}</span><span class="text-xs font-black">${s.name}</span>`;
-            content.onclick = () => showEventDetail(s.name);
-            
-            new kakao.maps.CustomOverlay({ 
-                position: s.pos, 
-                content: content, 
-                yAnchor: 1.5 
-            }).setMap(APP_STATE.map);
-        });
-    }
-}
+                { name: '어랑다랑', pos: new kakao.maps.LatLng(37.2995, 127.0455), type: 'HOT' },
+
+                { name: '소소곱창', pos: new kakao.maps.LatLng(37.2975, 127.0435), type: 'HOT' },
+
+                { name: '훈돈가', pos: new kakao.maps.LatLng(37.2985, 127.0465), type: 'EVENT' },
+
+                { name: '춘천숯닭', pos: new kakao.maps.LatLng(37.3005, 127.0430), type: 'EVENT' },
+
+                { name: '면식당', pos: new kakao.maps.LatLng(37.2970, 127.0445), type: 'NEW' },
+
+                { name: '핵밥', pos: new kakao.maps.LatLng(37.3000, 127.0450), type: 'EVENT' },
+
+                { name: '르디망슈', pos: new kakao.maps.LatLng(37.2990, 127.0425), type: 'NEW' },
+
+                { name: '소무실', pos: new kakao.maps.LatLng(37.2980, 127.0470), type: 'EVENT' }
+
+            ];
+
+            stores.forEach(s => {
+
+                let color = s.type === 'HOT' ? '#ef4444' : '#f59e0b';
+
+                let content = document.createElement('div');
+
+                content.className = "marker-deal glass-premium px-4 py-2 rounded-full border border-white flex items-center gap-2 interactive shadow-xl";
+
+                content.innerHTML = `<span class="text-[10px] text-white px-2 py-0.5 rounded-lg" style="background:${color}">${s.type}</span><span class="text-xs font-black">${s.name}</span>`;
+
+                content.onclick = () => showEventDetail(s.name);
+
+                new kakao.maps.CustomOverlay({ position: s.pos, content: content, yAnchor: 1.5 }).setMap(APP_STATE.map);
+
+            });
+
+        }
+
+
 
         function showEventDetail(name) {
 
@@ -1064,6 +877,46 @@
         function closeSubView() { document.querySelectorAll('.subview').forEach(s => s.classList.remove('active')); }
 
         function showAlert(msg) { const a = document.getElementById('custom-alert'); a.innerText = msg; a.style.display = 'block'; setTimeout(() => a.style.display = 'none', 2500); }
+        // 핫존 관리용 변수 및 함수
+        let hotZoneCircles = [];
+
+        function toggleHotZone(show) {
+            // 기존 핫존 원 삭제
+            hotZoneCircles.forEach(circle => circle.setMap(null));
+            hotZoneCircles = [];
+
+            if(show && APP_STATE.map) {
+                // 경기대 주변 유동인구 밀집 가상 데이터
+                const hotspots = [
+                    { pos: new kakao.maps.LatLng(37.2988, 127.0444), radius: 130, color: '#ef4444' }, // 중문
+                    { pos: new kakao.maps.LatLng(37.3005, 127.0455), radius: 180, color: '#f97316' }, // 정문
+                    { pos: new kakao.maps.LatLng(37.2970, 127.0425), radius: 100, color: '#ef4444' }  // 후문
+                ];
+
+                hotspots.forEach(spot => {
+                    const circle = new kakao.maps.Circle({
+                        center: spot.pos,
+                        radius: spot.radius,
+                        strokeWeight: 0,
+                        fillColor: spot.color,
+                        fillOpacity: 0.35
+                    });
+                    circle.setMap(APP_STATE.map);
+                    hotZoneCircles.push(circle);
+                });
+            }
+        }
+
+        // 가격 슬라이더용 함수들
+        function updateDiscount(val) {
+            const label = document.getElementById('current-discount-label');
+            if(label) label.innerText = val + '%';
+        }
+
+        function applyNewPrice() {
+            const discount = document.getElementById('current-discount-label')?.innerText;
+            showAlert(`${discount} 할인율이 사장님의 가게에 실시간 반영되었습니다!`);
+        }
 
     </script>
 
