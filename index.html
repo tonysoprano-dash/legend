@@ -248,20 +248,78 @@
 
         <div id="home-tab" class="tab-content active px-6 pt-20">
 
-            <div id="owner-home" class="hidden space-y-10">
+           <div id="owner-home" class="hidden space-y-10">
+    <div class="flex justify-between items-start">
+        <h1 class="text-4xl font-black text-[#3E2723]">안녕하세요, <br/>길목 사장님!</h1>
+        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-[#3E2723]">notifications</span>
+        </div>
+    </div>
 
-                <h1 class="text-4xl font-black text-[#3E2723]">안녕하세요, <br/>길목 사장님!</h1>
+    <!-- AI 요약 카드 -->
+    <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
+        <div class="relative z-10">
+            <span class="text-xs font-bold bg-orange-500 px-3 py-1 rounded-full mb-3 inline-block">AI 분석 리포트</span>
+            <h3 class="text-3xl font-extrabold">유동인구 240% 급증</h3>
+            <p class="opacity-70 mt-2 font-bold italic">내일 오후 2시, 경기대 정문 삼거리 축제 영향</p>
+        </div>
+        <!-- 배경 장식용 원 -->
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-orange-600/20 rounded-full blur-3xl"></div>
+    </div>
 
-                <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
-
-                    <h3 class="text-3xl font-extrabold relative z-10">유동인구 240% 급증</h3>
-
-                    <p class="opacity-70 mt-2 font-bold italic relative z-10">내일 오후 2시 예상 (AI 리포트)</p>
-
+    <!-- 실시간 핫존 리포트 섹션 -->
+    <div class="space-y-6">
+        <div class="flex justify-between items-end">
+            <h3 class="text-2xl font-black italic">실시간 우리동네 핫존</h3>
+            <span class="text-xs font-bold text-red-500 flex items-center gap-1">
+                <span class="w-2 h-2 bg-red-500 rounded-full pulse-red"></span> LIVE
+            </span>
+        </div>
+        
+        <div class="grid gap-4">
+            <!-- 핫존 아이템 1 -->
+            <div class="card-premium border border-stone-100 p-6">
+                <div class="flex justify-between mb-4">
+                    <div>
+                        <h4 class="font-black text-lg">경기대 중문 (편의점 앞)</h4>
+                        <p class="text-xs text-stone-400 font-bold">현재 가장 많은 사람이 머무는 곳</p>
+                    </div>
+                    <span class="text-xl font-black text-[#D2691E]">혼잡</span>
                 </div>
-
+                <div class="hotzone-bar">
+                    <div class="hotzone-fill" style="width: 85%;"></div>
+                </div>
+                <div class="flex justify-between mt-2 text-[10px] font-bold text-stone-400">
+                    <span>쾌적</span>
+                    <span>92명 / 100m²</span>
+                </div>
             </div>
 
+            <!-- 핫존 아이템 2 -->
+            <div class="card-premium border border-stone-100 p-6">
+                <div class="flex justify-between mb-4">
+                    <div>
+                        <h4 class="font-black text-lg">연무동 공영주차장 골목</h4>
+                        <p class="text-xs text-stone-400 font-bold">평소보다 유동인구 1.5배 증가 중</p>
+                    </div>
+                    <span class="text-xl font-black text-orange-400">보통</span>
+                </div>
+                <div class="hotzone-bar">
+                    <div class="hotzone-fill" style="width: 45%;"></div>
+                </div>
+                <div class="flex justify-between mt-2 text-[10px] font-bold text-stone-400">
+                    <span>쾌적</span>
+                    <span>34명 / 100m²</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 행동 유도 버튼 -->
+        <button onclick="showAlert('타임딜 쿠폰 발송 화면으로 이동합니다.')" class="w-full py-5 bg-[#D2691E] text-white rounded-[1.8rem] font-black text-lg shadow-lg active:scale-95 transition-all">
+            핫존 손님 잡으러 가기 (쿠폰발행)
+        </button>
+    </div>
+</div>
 
 
             <div id="user-home" class="hidden space-y-10">
