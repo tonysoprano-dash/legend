@@ -475,27 +475,18 @@
 
 
 
-       
-
-       <!-- (4) 나의 길목 -->
+        <!-- (4) 나의 길목 -->
 <div id="profile-tab" class="tab-content relative px-7 pt-20">
     <div id="profile-main-view">
         <h1 class="text-4xl font-black text-[#3E2723] mb-10 italic">나의 길목</h1>
         
-        <!-- ★ 기존 '길목 대장님' 섹션 대신 이게 들어갑니다 -->
+        <!-- 동적으로 생성되는 프로필 카드 (페르소나) -->
         <div id="dynamic-profile-card"></div>
 
         <div class="space-y-4 mt-12">
             <div onclick="openSubView('coupon')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
                 <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">confirmation_number</span><span class="font-black">내 쿠폰함 / 이벤트</span></div>
                 <div class="flex items-center gap-3"><span id="profile-badge-count" class="bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full">5</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
-            </div>
-            <!-- 사장님 모드일 때만 보이는 정산 메뉴 (필요시) -->
-            <div id="owner-specific-menu" class="hidden">
-                 <div onclick="showAlert('정산 페이지로 이동합니다.')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-                    <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">payments</span><span class="font-black">정산 관리</span></div>
-                    <span class="material-symbols-outlined text-stone-300">chevron_right</span>
-                </div>
             </div>
             <div onclick="openSubView('order')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
                 <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">history</span><span class="font-black">이용 내역</span></div>
@@ -505,7 +496,7 @@
     </div>
 </div>
 
-<!-- ★ 팝업용 창은 탭 바깥, </body> 직전에 넣어주세요 -->
+<!-- 페르소나 상세 팝업 (모달) -->
 <div id="persona-detail-view" class="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-6"></div>
 
 
@@ -704,6 +695,76 @@
         document.getElementById(role + '-home').style.display = 'block';
     }, 600);
 }
+        // 1. 프로필 카드 렌더링 (사장님/손님 모드별)
+function renderProfile() {
+    const container = document.getElementById('dynamic-profile-card');
+    if (!container) return;
+
+    if (APP_STATE.role === 'owner') {
+        container.innerHTML = `
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center gap-6 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('owner')">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl object-cover">
+                        <span class="absolute -bottom-2 -right-2 bg-[#D2691E] text-white p-2 rounded-xl border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-sm font-bold">verified</span></span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-black text-[#3E2723]">박영호 사장님</h3>
+                            <span class="material-symbols-outlined text-stone-400 text-sm">info</span>
+                        </div>
+                        <p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg inline-block">어랑다랑 대표 | 신선도 장인 🐟</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('profile-badge-count').innerText = "12";
+    } else {
+        container.innerHTML = `
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center gap-6 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('user')">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-blue-50 shadow-2xl object-cover">
+                        <span class="absolute -bottom-2 -right-2 bg-[#004ea2] text-white p-2 rounded-xl border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-sm font-bold">school</span></span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-black text-[#3E2723]">김지훈 학생</h3>
+                            <span class="material-symbols-outlined text-stone-400 text-sm">info</span>
+                        </div>
+                        <p class="text-xs font-black text-blue-600 mt-1 bg-blue-50 px-3 py-1 rounded-lg inline-block">경영학과 | 이의동 단골 대장 🏅</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('profile-badge-count').innerText = "5";
+    }
+}
+
+// 2. 페르소나 상세 정보 표시
+function showPersonaDetail(role) {
+    const detailView = document.getElementById('persona-detail-view');
+    const data = role === 'owner' 
+        ? { name: '박영호 (52세)', title: '어랑다랑 대표', motto: '회는 시간이 생명입니다.', desc: '경기대 정문 앞에서 10년째 횟집을 운영 중인 장인입니다.', goal: '재고 0% 도전!', color: '#3E2723' }
+        : { name: '김지훈 (24세)', title: '경영학과 3학년', motto: '식비 아껴서 아이패드 사자!', desc: '가성비와 실시간 할인을 사랑하는 스마트한 대학생입니다.', goal: '한 달 식비 20만원 절약', color: '#004ea2' };
+
+    detailView.innerHTML = `
+        <div class="bg-white w-full max-w-sm rounded-[3rem] overflow-hidden shadow-2xl slide-up">
+            <div class="h-32" style="background:${data.color}"></div>
+            <div class="p-8 -mt-16 text-center">
+                <img src="${role === 'owner' ? 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400' : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400'}" class="w-32 h-32 rounded-[2rem] border-8 border-white mx-auto object-cover shadow-lg">
+                <h4 class="text-2xl font-black mt-4">${data.name}</h4>
+                <p class="font-bold text-stone-400 text-sm">${data.title}</p>
+                <p class="mt-6 italic font-bold text-stone-600">"${data.motto}"</p>
+                <div class="mt-6 bg-stone-50 p-6 rounded-2xl text-left text-sm text-stone-600 leading-relaxed">${data.desc}</div>
+                <button onclick="closePersonaDetail()" class="mt-8 w-full py-4 rounded-2xl text-white font-black shadow-lg" style="background:${data.color}">확인</button>
+            </div>
+        </div>
+    `;
+    detailView.classList.remove('hidden');
+}
+
+function closePersonaDetail() { document.getElementById('persona-detail-view').classList.add('hidden'); }
 
 
 
@@ -712,20 +773,27 @@ let hotZoneCircles = [];
 
 // 2. 탭 전환 로직 (사장님 모드일 때만 핫존 표시)
 function switchTab(tabName) {
-    // 모든 탭 콘텐츠와 네비 아이콘 초기화
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    
-    // 선택한 탭 활성화
     document.getElementById(tabName + '-tab').classList.add('active');
     document.getElementById('nav-' + tabName).classList.add('active');
     
-    // 지도 탭일 때 지도 로드 (기존 로직)
-    if(tabName === 'near') initKakaoMap();
-
-    // ★ [추가] '나의 길목' 탭을 누를 때마다 페르소나 정보를 다시 확인해서 그립니다.
-    if(tabName === 'profile') {
+    if(tabName === 'near') {
+        initKakaoMap();
+        if(tabName === 'profile') {
         renderProfile();
+    }
+}
+        
+        // 사장님 모드라면 핫존과 컨트롤러 표시
+        if(APP_STATE.role === 'owner') {
+            // 사장님용 UI 대시보드 (HTML에 해당 ID의 div가 있어야 합니다)
+            document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
+            toggleHotZone(true); 
+        } else {
+            document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
+            toggleHotZone(false);
+        }
     }
 }
 
