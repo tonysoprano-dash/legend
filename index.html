@@ -440,12 +440,12 @@
                 container.innerHTML = `
                     <div class="flex items-center gap-6 mb-12 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('owner')">
                         <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1581579186913-45ac3e6efe93?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl object-cover overflow-hidden">
-                            <div class="absolute -bottom-1 -right-1 bg-[#D2691E] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs">verified</span></div>
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl object-cover overflow-hidden">
+                            <div class="absolute -bottom-1 -right-1 bg-[#D2691E] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs font-bold">verified</span></div>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-black">박영호 사장님</h3>
-                            <p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg">어랑다랑 대표 | 신선도 장인 🐟</p>
+                            <h3 class="text-2xl font-black text-[#3E2723]">박영호 사장님</h3>
+                            <p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg">어랑다랑 대표 | 상생 길목 파트너 🐟</p>
                         </div>
                     </div>
                 `;
@@ -453,11 +453,11 @@
                 container.innerHTML = `
                     <div class="flex items-center gap-6 mb-12 cursor-pointer active:scale-95 transition-transform" onclick="showPersonaDetail('user')">
                         <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=400" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-blue-100 shadow-2xl object-cover overflow-hidden">
-                            <div class="absolute -bottom-1 -right-1 bg-[#004ea2] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs">school</span></div>
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-blue-100 shadow-2xl object-cover overflow-hidden">
+                            <div class="absolute -bottom-1 -right-1 bg-[#004ea2] text-white p-1 rounded-lg border-4 border-[#FFF8E7]"><span class="material-symbols-outlined text-xs font-bold">school</span></div>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-black">김지훈 학생</h3>
+                            <h3 class="text-2xl font-black text-[#3E2723]">김지훈 학생</h3>
                             <p class="text-xs font-black text-blue-600 mt-1 bg-blue-50 px-3 py-1 rounded-lg">경영학과 | 이의동 단골 대장 🏅</p>
                         </div>
                     </div>
@@ -469,21 +469,21 @@
             const detailView = document.getElementById('persona-detail-view');
             const data = role === 'owner' 
                 ? { 
-                    name: '박영호 사장님 (52세)', title: '어랑다랑 대표 | 상생 길목 파트너', 
-                    img: 'https://images.unsplash.com/photo-1581579186913-45ac3e6efe93?q=80&w=400',
-                    motto: '회는 시간이 생명입니다. 수조 안의 신선함이 학생들 상까지 닿는 가장 빠른 길목을 찾습니다.',
-                    desc: '매일 새벽 3시 노량진 수산시장에서 최상의 횟감을 직접 고릅니다. 오후 2시 이후 유동인구가 빠져나가는 "데드 타임"에 남은 횟감을 어떻게 처리할지가 늘 고민이었습니다.',
-                    solve: '길목 앱의 핫존 분석을 통해 학생들이 현재 어느 게이트 인근에 모여있는지 확인하고, 즉시 "회덮밥 40% 타임딜"을 발송하여 재고 손실 0%에 도전합니다.',
-                    goal: '식재료 낭비 없는 친환경 운영과 학생들에게 사랑받는 단골 맛집 유지',
+                    name: '박영호 사장님 (52세)', title: '어랑다랑 대표 | 신선도 장인', 
+                    img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop',
+                    motto: '버려지는 생선은 죄악입니다. 가장 싱싱할 때 배고픈 학생들에게 가는 "길목"을 지킵니다.',
+                    desc: '매일 새벽 3시 노량진 수산시장에서 최상급 횟감을 직접 고릅니다. 오후 2시~5시 사이, 수조 안의 광어가 선도가 가장 좋을 때 손님이 없어 버려지는 재고가 늘 큰 고민이었습니다.',
+                    solve: '길목 앱의 실시간 핫존을 확인하여 강의가 끝난 학생들이 가장 많이 지나가는 "후문 길목"에 딱 1시간만 "광어 회덮밥 50% 타임딜"을 발송하여 재고를 즉시 해결합니다.',
+                    goal: '식재료 낭비 없는 효율적 매장 운영과 경기대 학생들의 든든한 한 끼 책임지기',
                     color: '#3E2723'
                 }
                 : { 
                     name: '김지훈 학생 (24세)', title: '경기대 경영학과 3학년 | 실속파 과대', 
-                    img: 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=400',
-                    motto: '식비 인플레이션 시대, 길목 핫딜만 잘 잡아도 한 달 식비 15만원은 거뜬히 아끼죠!',
-                    desc: '전공 서적값과 자취방 월세로 생활비가 늘 빠듯합니다. 친구들과 점심 메뉴를 고를 때 가위바위보 대신 길목 앱을 켜서 가장 가까운 핫딜 매장을 찾는 것이 습관이 되었습니다.',
-                    solve: '수업이 끝나자마자 길목 알림으로 사장님의 "긴급 타임 세일"을 확인합니다. 과 동기들과 4인 파티를 꾸려 사장님의 재고 고민을 해결해드리고 가성비 넘치는 점심을 즐깁니다.',
-                    goal: '스마트한 소비로 아낀 돈을 모아 졸업 여행 자금 200만원 마련하기',
+                    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+                    motto: '식권 한 장에 8,000원인 시대, 길목 핫딜은 제 지갑을 지켜주는 가장 든든한 방패입니다.',
+                    desc: '학자금 대출과 자취방 월세로 생활비가 늘 빠듯합니다. 에브리타임에는 매일 밥값 비싸다는 한탄이 올라오고, 과 동기들과 회식 장소를 잡는 것도 큰 부담이 되었습니다.',
+                    solve: '수업이 끝나자마자 길목 알림을 켜서 사장님의 "번개 타임 세일"을 확인합니다. 동기 5명과 함께 박영호 사장님 가게의 재고 회덮밥을 반값에 해결하며 영양가 높은 식사를 즐깁니다.',
+                    goal: '스마트한 소비로 아낀 돈을 모아 졸업 전 배낭여행 자금 300만원 마련하기',
                     color: '#004ea2'
                 };
 
