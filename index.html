@@ -71,6 +71,59 @@
     }
 
     /* 👆 여기까지 추가 */
+        /* 핫존 서클 리포트 스타일 */
+.hot-spot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.hot-circle-card {
+    background: white;
+    padding: 20px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* 유동인구 밀도 원형 */
+.density-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-weight: 900;
+    color: white;
+    position: relative;
+}
+
+/* 밀도에 따른 상태 클래스 */
+.density-high { 
+    background: radial-gradient(circle, #ff4d4d, #b30000); 
+    box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
+    transform: scale(1.1); /* 사람이 많으면 더 커보이게 */
+}
+
+.density-mid { 
+    background: radial-gradient(circle, #ff9933, #e67300); 
+    box-shadow: 0 0 15px rgba(255, 153, 51, 0.3);
+}
+
+.density-low { 
+    background: radial-gradient(circle, #ffcc80, #ffb347);
+    color: #3E2723;
+}
+
+/* 원 안의 숫자 */
+.density-val { font-size: 20px; letter-spacing: -1px; }
+.density-unit { font-size: 10px; margin-left: 2px; opacity: 0.8; }
 
     body, html { 
         margin: 0; padding: 0; width: 100%; height: 100%; 
@@ -277,75 +330,75 @@
 
         <div id="home-tab" class="tab-content active px-6 pt-20">
 
-           <div id="owner-home" class="hidden space-y-10">
-    <div class="flex justify-between items-start">
-        <h1 class="text-4xl font-black text-[#3E2723]">안녕하세요, <br/>길목 사장님!</h1>
-        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
-            <span class="material-symbols-outlined text-[#3E2723]">notifications</span>
+<div id="owner-home" class="hidden space-y-8">
+    <header>
+        <h1 class="text-3xl font-black text-[#3E2723] leading-tight">지금 사장님 가게 주변<br/><span class="text-[#D2691E]">실시간 길목 상황</span></h1>
+    </header>
+
+    <!-- 메인 요약 서클 -->
+    <div class="flex justify-center py-4">
+        <div class="w-56 h-56 rounded-full bg-white shadow-2xl flex flex-col items-center justify-center border-[10px] border-[#FFF8E7] relative">
+            <div class="absolute -top-2 bg-red-600 text-white text-[10px] font-black px-3 py-1 rounded-full pulse-red">LIVE</div>
+            <span class="text-stone-400 font-bold text-sm mb-1">통합 혼잡도</span>
+            <span class="text-6xl font-black text-[#3E2723]">매우 높음</span>
+            <span class="text-orange-500 font-black mt-2">약 142명 접근 중</span>
         </div>
     </div>
 
-    <!-- AI 요약 카드 -->
-    <div class="card-premium bg-[#3E2723] text-white p-8 relative overflow-hidden">
-        <div class="relative z-10">
-            <span class="text-xs font-bold bg-orange-500 px-3 py-1 rounded-full mb-3 inline-block">AI 분석 리포트</span>
-            <h3 class="text-3xl font-extrabold">유동인구 240% 급증</h3>
-            <p class="opacity-70 mt-2 font-bold italic">내일 오후 2시, 경기대 정문 삼거리 축제 영향</p>
+    <!-- 구역별 서클 리드 (숫자에 따른 색상/크기 변화) -->
+    <div class="space-y-4">
+        <h3 class="text-xl font-black flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#D2691E]">location_on</span>
+            구역별 밀도 리포트
+        </h3>
+
+        <div class="hot-spot-grid">
+            <!-- 1번 구역: 인구 많음 (빨간색/큼) -->
+            <div class="hot-circle-card shadow-sm">
+                <div class="density-circle density-high">
+                    <span class="density-val">92</span><span class="density-unit">명</span>
+                </div>
+                <h4 class="font-black text-sm text-[#3E2723]">중문 편의점</h4>
+                <p class="text-[10px] text-red-500 font-bold mt-1">즉시 마케팅 권장</p>
+            </div>
+
+            <!-- 2번 구역: 인구 보통 (주황색) -->
+            <div class="hot-circle-card shadow-sm">
+                <div class="density-circle density-mid">
+                    <span class="density-val">45</span><span class="density-unit">명</span>
+                </div>
+                <h4 class="font-black text-sm text-[#3E2723]">정문 카페거리</h4>
+                <p class="text-[10px] text-stone-400 font-bold mt-1">안정적 흐름</p>
+            </div>
+
+            <!-- 3번 구역: 인구 보통 -->
+            <div class="hot-circle-card shadow-sm">
+                <div class="density-circle density-mid">
+                    <span class="density-val">38</span><span class="density-unit">명</span>
+                </div>
+                <h4 class="font-black text-sm text-[#3E2723]">후문 원룸촌</h4>
+                <p class="text-[10px] text-stone-400 font-bold mt-1">유입 증가 중</p>
+            </div>
+
+            <!-- 4번 구역: 인구 적음 (연한 색/작음) -->
+            <div class="hot-circle-card shadow-sm scale-90 opacity-80">
+                <div class="density-circle density-low">
+                    <span class="density-val">12</span><span class="density-unit">명</span>
+                </div>
+                <h4 class="font-black text-sm text-[#3E2723]">외곽 주차장</h4>
+                <p class="text-[10px] text-stone-400 font-bold mt-1">한산함</p>
+            </div>
         </div>
-        <!-- 배경 장식용 원 -->
-        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-orange-600/20 rounded-full blur-3xl"></div>
     </div>
 
-    <!-- 실시간 핫존 리포트 섹션 -->
-    <div class="space-y-6">
-        <div class="flex justify-between items-end">
-            <h3 class="text-2xl font-black italic">실시간 우리동네 핫존</h3>
-            <span class="text-xs font-bold text-red-500 flex items-center gap-1">
-                <span class="w-2 h-2 bg-red-500 rounded-full pulse-red"></span> LIVE
-            </span>
+    <!-- 하단 액션 -->
+    <div class="card-premium bg-[#3E2723] p-6 flex justify-between items-center">
+        <div>
+            <p class="text-white/60 text-xs font-bold">인근 유동인구 대상</p>
+            <h4 class="text-white font-black text-lg">타임딜 발송하기</h4>
         </div>
-        
-        <div class="grid gap-4">
-            <!-- 핫존 아이템 1 -->
-            <div class="card-premium border border-stone-100 p-6">
-                <div class="flex justify-between mb-4">
-                    <div>
-                        <h4 class="font-black text-lg">경기대 중문 (편의점 앞)</h4>
-                        <p class="text-xs text-stone-400 font-bold">현재 가장 많은 사람이 머무는 곳</p>
-                    </div>
-                    <span class="text-xl font-black text-[#D2691E]">혼잡</span>
-                </div>
-                <div class="hotzone-bar">
-                    <div class="hotzone-fill" style="width: 85%;"></div>
-                </div>
-                <div class="flex justify-between mt-2 text-[10px] font-bold text-stone-400">
-                    <span>쾌적</span>
-                    <span>92명 / 100m²</span>
-                </div>
-            </div>
-
-            <!-- 핫존 아이템 2 -->
-            <div class="card-premium border border-stone-100 p-6">
-                <div class="flex justify-between mb-4">
-                    <div>
-                        <h4 class="font-black text-lg">연무동 공영주차장 골목</h4>
-                        <p class="text-xs text-stone-400 font-bold">평소보다 유동인구 1.5배 증가 중</p>
-                    </div>
-                    <span class="text-xl font-black text-orange-400">보통</span>
-                </div>
-                <div class="hotzone-bar">
-                    <div class="hotzone-fill" style="width: 45%;"></div>
-                </div>
-                <div class="flex justify-between mt-2 text-[10px] font-bold text-stone-400">
-                    <span>쾌적</span>
-                    <span>34명 / 100m²</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 행동 유도 버튼 -->
-        <button onclick="showAlert('타임딜 쿠폰 발송 화면으로 이동합니다.')" class="w-full py-5 bg-[#D2691E] text-white rounded-[1.8rem] font-black text-lg shadow-lg active:scale-95 transition-all">
-            핫존 손님 잡으러 가기 (쿠폰발행)
+        <button onclick="showAlert('핫존 손님들에게 쿠폰이 전송되었습니다!')" class="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-90 transition-all">
+            <span class="material-symbols-outlined font-bold">send</span>
         </button>
     </div>
 </div>
