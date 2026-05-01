@@ -657,6 +657,8 @@
         </nav>
     </main>
 
+    <!-- 페르소나 상세 뷰 모달 (JS에서 동적으로 생성됨) -->
+
     <script>
         const APP_STATE = { 
             map: null, 
@@ -750,28 +752,61 @@
                 detailView.className = 'fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-6';
                 document.body.appendChild(detailView);
             }
-            const data = role === 'owner' ? {
-                name: '박영호 (52세)', title: '어랑다랑 대표', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400',
-                motto: '회는 시간이 생명입니다.', desc: '매일 새벽 수산시장에서 신선한 횟감을 떼옵니다.', goal: '학생들에게 저렴하고 신선한 회를 공급합니다.'
-            } : {
-                name: '김지훈 (24세)', title: '경영학과 3학년', image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400',
-                motto: '길목 핫딜은 필수 생존 전략이죠!', desc: '실속 있는 소비를 지향하는 대학생입니다.', goal: '친구들과 가성비 맛집을 찾는 재미로 삽니다.'
+            const personaData = {
+                'owner': {
+                    name: '박영호 (52세)', 
+                    title: '어랑다랑 대표 | 신선도 장인', 
+                    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400',
+                    motto: '회는 시간이 생명입니다. 신선함이 손님상까지 가장 빠르게 닿는 길목을 찾습니다.',
+                    traits: ['장인정신', '트렌드 민감', '깐깐함'],
+                    desc: '매일 새벽 수산시장에서 가장 신선한 횟감을 떼오는 것으로 하루를 시작합니다. 유동인구가 줄어드는 오후 시간대 재고 손실을 막기 위해 길목 앱을 적극 활용합니다.',
+                    goal: '재고 0% 도전, 학생들에게 신선한 회를 저렴하게 공급하여 신뢰 구축'
+                },
+                'user': {
+                    name: '김지훈 (24세)', 
+                    title: '경기대학교 경영학과 3학년', 
+                    image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400',
+                    motto: '학교 앞 밥값이 너무 올랐어요. 길목 핫딜은 대학 생활의 필수 생존 전략이죠!',
+                    traits: ['합리적 소비', '외향적', '정보 공유'],
+                    desc: '공강 시간에 친구들과 무엇을 먹을지 결정하는 것이 가장 큰 고민입니다. SNS 맛집보다는 실질적인 가성비와 실시간 할인 정보를 더 신뢰하는 실속파입니다.',
+                    goal: '식비 20% 절약, 동아리 회식 시 가성비 좋은 핫존 상권 섭외'
+                }
             };
+            
+            const data = personaData[role];
             const theme = role === 'owner' ? '#3E2723' : '#004ea2';
+            
             detailView.innerHTML = `
                 <div class="bg-white w-full max-w-sm rounded-[3rem] overflow-hidden shadow-2xl slide-up relative">
                     <button onclick="closePersonaDetail()" class="absolute top-6 right-6 z-10 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center shadow-md">
-                        <span class="material-symbols-outlined">close</span>
+                        <span class="material-symbols-outlined text-stone-800">close</span>
                     </button>
-                    <img src="${data.image}" class="w-full h-48 object-cover">
-                    <div class="p-8 space-y-6">
-                        <h4 class="text-2xl font-black">${data.name}</h4>
-                        <p class="text-sm italic font-bold text-stone-600">"${data.motto}"</p>
-                        <div class="bg-stone-50 p-5 rounded-2xl">
-                            <h5 class="text-[10px] font-black mb-1" style="color:${theme}">소개</h5>
-                            <p class="text-xs text-stone-600 leading-relaxed">${data.desc}</p>
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${data.image}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-8 text-white">
+                            <h4 class="text-2xl font-black">${data.name}</h4>
+                            <p class="text-xs opacity-80">${data.title}</p>
                         </div>
-                        <button onclick="closePersonaDetail()" class="w-full py-4 rounded-2xl font-black text-sm text-white" style="background:${theme}">확인</button>
+                    </div>
+                    <div class="p-8 space-y-6">
+                        <div>
+                            <p class="text-sm italic font-bold text-stone-600 leading-relaxed">"${data.motto}"</p>
+                        </div>
+                        <div class="flex gap-2">
+                            ${data.traits.map(t => `<span class="px-3 py-1 bg-stone-100 text-stone-600 rounded-lg text-[10px] font-black">#${t}</span>`).join('')}
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-stone-50 p-5 rounded-2xl">
+                                <h5 class="text-[10px] font-black mb-1" style="color:${theme}">성향 및 특징</h5>
+                                <p class="text-xs text-stone-600 leading-relaxed font-medium">${data.desc}</p>
+                            </div>
+                            <div class="bg-stone-50 p-5 rounded-2xl">
+                                <h5 class="text-[10px] font-black mb-1" style="color:${theme}">앱 사용 목표</h5>
+                                <p class="text-xs text-stone-600 leading-relaxed font-medium">${data.goal}</p>
+                            </div>
+                        </div>
+                        <button onclick="closePersonaDetail()" class="w-full py-4 rounded-2xl font-black text-sm text-white shadow-lg active:scale-95 transition-all" style="background:${theme}">확인</button>
                     </div>
                 </div>
             `;
@@ -880,6 +915,8 @@
             div.className = `chat-bubble bubble-${type} slide-up`;
             div.innerText = text;
             document.getElementById('message-container').appendChild(div);
+            const container = document.getElementById('message-container');
+            container.scrollTop = container.scrollHeight;
         }
         function openSubView(type) { document.getElementById('subview-' + type).classList.add('active'); }
         function closeSubView() { document.querySelectorAll('.subview').forEach(s => s.classList.remove('active')); }
