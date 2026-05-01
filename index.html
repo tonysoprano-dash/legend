@@ -475,52 +475,38 @@
 
 
 
-        <!-- (4) 나의 길목 (풀 기능 복구) -->
+       
 
-        <div id="profile-tab" class="tab-content relative px-7 pt-20">
+       <!-- (4) 나의 길목 -->
+<div id="profile-tab" class="tab-content relative px-7 pt-20">
+    <div id="profile-main-view">
+        <h1 class="text-4xl font-black text-[#3E2723] mb-10 italic">나의 길목</h1>
+        
+        <!-- ★ 기존 '길목 대장님' 섹션 대신 이게 들어갑니다 -->
+        <div id="dynamic-profile-card"></div>
 
-            <div id="profile-main-view">
-
-                <h1 class="text-4xl font-black text-[#3E2723] mb-10 italic">나의 길목</h1>
-
-                <div class="flex items-center gap-6 mb-12">
-
-                    <img src="https://i.pravatar.cc/150?u=kgu" class="w-24 h-24 rounded-[2.5rem] bg-white border-[6px] border-orange-100 shadow-2xl overflow-hidden">
-
-                    <div><h3 class="text-2xl font-black">길목 대장님</h3><p class="text-xs font-black text-[#D2691E] mt-1 bg-orange-50 px-3 py-1 rounded-lg">경기대 이의동 단골손님 ✨</p></div>
-
-                </div>
-
-                <div class="space-y-4">
-
-                    <div onclick="openSubView('coupon')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-
-                        <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">confirmation_number</span><span class="font-black">내 쿠폰함</span></div>
-
-                        <div class="flex items-center gap-3"><span class="bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full">5</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
-
-                    </div>
-
-                    <div onclick="openSubView('stamp')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-
-                        <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">auto_awesome</span><span class="font-black">길목 스탬프 (이의동)</span></div>
-
-                        <div class="flex items-center gap-3"><span class="text-xs font-black text-orange-600">8 / 10</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
-
-                    </div>
-
-                    <div onclick="openSubView('order')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
-
-                        <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">history</span><span class="font-black">주문 내역</span></div>
-
-                        <span class="material-symbols-outlined text-stone-300">chevron_right</span>
-
-                    </div>
-
-                </div>
-
+        <div class="space-y-4 mt-12">
+            <div onclick="openSubView('coupon')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
+                <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">confirmation_number</span><span class="font-black">내 쿠폰함 / 이벤트</span></div>
+                <div class="flex items-center gap-3"><span id="profile-badge-count" class="bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full">5</span><span class="material-symbols-outlined text-stone-300">chevron_right</span></div>
             </div>
+            <!-- 사장님 모드일 때만 보이는 정산 메뉴 (필요시) -->
+            <div id="owner-specific-menu" class="hidden">
+                 <div onclick="showAlert('정산 페이지로 이동합니다.')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
+                    <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">payments</span><span class="font-black">정산 관리</span></div>
+                    <span class="material-symbols-outlined text-stone-300">chevron_right</span>
+                </div>
+            </div>
+            <div onclick="openSubView('order')" class="card-premium flex justify-between items-center py-6 border border-stone-100 cursor-pointer">
+                <div class="flex items-center gap-5 text-[#3E2723]"><span class="material-symbols-outlined font-bold">history</span><span class="font-black">이용 내역</span></div>
+                <span class="material-symbols-outlined text-stone-300">chevron_right</span>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- ★ 팝업용 창은 탭 바깥, </body> 직전에 넣어주세요 -->
+<div id="persona-detail-view" class="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-6"></div>
 
 
             <!-- 서브뷰 전용 -->
@@ -706,22 +692,18 @@
 
 
         function startApp(role) {
+    APP_STATE.role = role; // 사장님인지 손님인지 저장
+    
+    // ★ [추가] 선택된 역할에 맞는 페르소나(사진, 이름 등)를 화면에 그립니다.
+    renderProfile(); 
 
-            APP_STATE.role = role;
-
-            document.getElementById('onboarding').style.transform = 'translateY(-100%)';
-
-            setTimeout(() => {
-
-                document.getElementById('onboarding').style.display = 'none';
-
-                document.getElementById('main-app').style.display = 'block';
-
-                document.getElementById(role + '-home').style.display = 'block';
-
-            }, 600);
-
-        }
+    document.getElementById('onboarding').style.transform = 'translateY(-100%)';
+    setTimeout(() => {
+        document.getElementById('onboarding').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById(role + '-home').style.display = 'block';
+    }, 600);
+}
 
 
 
@@ -730,23 +712,20 @@ let hotZoneCircles = [];
 
 // 2. 탭 전환 로직 (사장님 모드일 때만 핫존 표시)
 function switchTab(tabName) {
+    // 모든 탭 콘텐츠와 네비 아이콘 초기화
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    // 선택한 탭 활성화
     document.getElementById(tabName + '-tab').classList.add('active');
     document.getElementById('nav-' + tabName).classList.add('active');
     
-    if(tabName === 'near') {
-        initKakaoMap();
-        
-        // 사장님 모드라면 핫존과 컨트롤러 표시
-        if(APP_STATE.role === 'owner') {
-            // 사장님용 UI 대시보드 (HTML에 해당 ID의 div가 있어야 합니다)
-            document.getElementById('owner-pricing-dashboard')?.classList.remove('hidden');
-            toggleHotZone(true); 
-        } else {
-            document.getElementById('owner-pricing-dashboard')?.classList.add('hidden');
-            toggleHotZone(false);
-        }
+    // 지도 탭일 때 지도 로드 (기존 로직)
+    if(tabName === 'near') initKakaoMap();
+
+    // ★ [추가] '나의 길목' 탭을 누를 때마다 페르소나 정보를 다시 확인해서 그립니다.
+    if(tabName === 'profile') {
+        renderProfile();
     }
 }
 
